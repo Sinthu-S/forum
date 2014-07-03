@@ -1,0 +1,10 @@
+<div class="row">
+	<h2>Nouvelle discussion</h2>
+	<article class="twelve cell">
+		<label class="two cell">Sujet</label><input type="text" placeholder="Sujet de la discussion" class="ten cell" ng-model="subject.title" />
+		<html-editor ng-model="message.content"></html-editor>
+
+		<button class="right-magnet" ng-click="addSubject()">Envoyer</button>
+		<input type="button" class="cancel right-magnet" value="Annuler" />
+	</article>
+</div>

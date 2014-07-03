@@ -1,0 +1,19 @@
+<nav class="vertical twelve cell">
+	<ul>
+		<li ng-repeat="category in categories.all">
+			<a ng-click="openCategory(category)">
+				<img ng-src="[[category.icon]]" />
+				<strong>[[category.name]]</strong>
+				<span class="right-magnet" style="line-height: 50px" ng-if="category.nbNewMessages > 1">
+					[[category.nbNewMessages]] nouveaux messages
+				</span>
+				<span class="right-magnet" style="line-height: 50px" ng-if="category.nbNewMessages === 1">
+					[[category.nbNewMessages]] nouveau message
+				</span>
+				<span class="right-magnet" style="line-height: 50px" ng-if="category.nbNewMessages === 0">
+					Aucun nouveau message
+				</span>
+			</a>
+		</li>
+	</ul>
+</nav>

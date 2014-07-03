@@ -1,0 +1,26 @@
+[
+	{
+		"content": "<p>Oui.</p>",
+		"publicationDate": "2014-06-19T09:16:40.811Z",
+		"author": {
+			"id": "b509f520-e04e-4420-bd85-567bc254859a",
+			"username": "Antoine FARGEAU"
+		}
+	},
+	{
+		"content": "<p>Non.</p>",
+		"publicationDate": "2014-06-19T09:16:40.811Z",
+		"author": {
+			"id": "b509f520-e04e-4420-bd85-567bc254859a",
+			"username": "Antoine FARGEAU"
+		}
+	},
+	{
+		"content": "<p>Obi-wan Kenobi.</p>",
+		"publicationDate": "2014-06-19T09:16:40.811Z",
+		"author": {
+			"id": "b509f520-e04e-4420-bd85-567bc254859a",
+			"username": "Antoine FARGEAU"
+		}
+	}
+]

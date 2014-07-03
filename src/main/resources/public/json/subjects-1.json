@@ -1,0 +1,50 @@
+[
+	{
+		"title": "Avez-vous déjà vu un yak ?",
+		"nbMessages": 3,
+		"id": "1",
+		"lastMessage": {
+			"publicationDate": "2014-06-19T09:16:40.811Z",
+			"author": {
+				"id": "b509f520-e04e-4420-bd85-567bc254859a",
+				"username": "Antoine FARGEAU"
+			}
+		}
+	},
+	{
+		"title": "Votre yak préféré !",
+		"nbMessages": 4,
+		"id": "2",
+		"lastMessage": {
+			"publicationDate": "2014-06-19T09:16:40.811Z",
+			"author": {
+				"id": "b509f520-e04e-4420-bd85-567bc254859a",
+				"username": "Antoine FARGEAU"
+			}
+		}
+	},
+	{
+		"title": "Postez vos images de yaks",
+		"nbMessages": 9,
+		"id": "3",
+		"lastMessage": {
+			"publicationDate": "2014-06-19T09:16:40.811Z",
+			"author": {
+				"id": "b509f520-e04e-4420-bd85-567bc254859a",
+				"username": "Antoine FARGEAU"
+			}
+		}
+	},
+	{
+		"title": "Jeux de mots sur les yaks",
+		"nbMessages": 25,
+		"id": "4",
+		"lastMessage": {
+			"publicationDate": "2014-06-19T09:16:40.811Z",
+			"author": {
+				"id": "b509f520-e04e-4420-bd85-567bc254859a",
+				"username": "Antoine FARGEAU"
+			}
+		}
+	}
+]

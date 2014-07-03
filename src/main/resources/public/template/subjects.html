@@ -1,0 +1,26 @@
+<div class="twelve cell">
+	<div class="contextual-buttons row">
+		<div class="action-buttons">
+			<button ng-click="newSubject()">Nouveau sujet</button>
+		</div>
+	</div>
+	<table class="twelve">
+		<thead>
+			<tr>
+				<th><input type="checkbox" ng-model="display.selectSubjects" ng-click="selectAll" /></th>
+				<th>Sujet</th>
+				<th>Réponses</th>
+				<th>Dernier message</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="subject in subjects.all" ng-click="openSubject(subject)">
+				<td><input type="checkbox" ng-model="subject.selected" /></td>
+				<td><a>[[subject.title]]</a></td>
+				<td>[[subject.nbMessages]]</td>
+				<td>Par [[subject.lastMessage.author.username]] le [[date.calendar(subject.lastMessage.publicationDate)]]</td>
+			</tr>
+		</tbody>
+
+	</table>
+</div>
