@@ -31,7 +31,12 @@ function Subject(){
 	});
 }
 
-Subject.prototype.open = function(){
+Subject.prototype.open = function(cb){
+	this.messages.on('sync', function(){
+		if(typeof cb === 'function'){
+			cb();
+		}
+	});
 	this.messages.sync();
 };
 
@@ -56,13 +61,35 @@ function Category(){
 	});
 }
 
-Category.prototype.open = function(){
+Category.prototype.open = function(cb){
+	this.subjects.on('sync', function(){
+		if(typeof cb === 'function'){
+			cb();
+		}
+	}.bind(this));
 	this.subjects.sync();
 };
 
 Category.prototype.addSubject = function(subject){
 	this.subjects.push(subject);
 	subject.save();
+};
+
+Category.prototype.createCategory = function(){
+
+};
+
+Category.prototype.saveModifications = function(){
+	notify.info('Modifications enregistrées');
+};
+
+Category.prototype.save = function(){
+	if(this.id){
+		this.saveModifications();
+	}
+	else{
+		this.createCategory();
+	}
 };
 
 model.build = function(){

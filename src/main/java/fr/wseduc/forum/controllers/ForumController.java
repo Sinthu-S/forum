@@ -13,4 +13,9 @@ public class ForumController extends BaseController {
 		renderView(request);
 	}
 
+	@Get("/admin")
+	@SecuredAction("forum.view.admin")
+	public void adminView(HttpServerRequest request) {
+		renderView(request);
+	}
 }

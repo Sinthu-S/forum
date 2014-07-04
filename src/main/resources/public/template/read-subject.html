@@ -19,7 +19,7 @@
 	</div>
 </article>
 
-<div class="row">
+<div class="row" ng-if="!subject.locked">
 	<h2>Répondre</h2>
 	<article class="twelve cell">
 		<html-editor ng-model="message.content" watch-collections="['messages.all']"></html-editor>

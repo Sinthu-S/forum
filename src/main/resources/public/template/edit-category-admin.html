@@ -1,0 +1,17 @@
+<h2>Modifier</h2>
+<div class="row">
+	<div class="four cell">
+		<image-select ng-model="category.icon" default="/img/illustrations/blog.png"></image-select>
+	</div>
+	<div class="eight cell">
+		<div class="row">
+			<label class="four cell">Catégorie</label>
+			<input type="text" class="eight cell" ng-model="category.name" />
+		</div>
+	</div>
+	<div class="row">
+		<button class="right-magnet" ng-click="saveCategoryEdit()">Enregistrer</button>
+		<input type="button" class="cancel right-magnet" value="Annuler" ng-click="cancelCategoryEdit()" />
+
+	</div>
+</div>

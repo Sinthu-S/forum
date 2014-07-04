@@ -3,6 +3,7 @@
 		"title": "Avez-vous déjà vu un yak ?",
 		"nbMessages": 3,
 		"id": "1",
+		"locked": true,
 		"lastMessage": {
 			"publicationDate": "2014-06-19T09:16:40.811Z",
 			"author": {

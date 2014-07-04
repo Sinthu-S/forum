@@ -7,20 +7,30 @@
 	<table class="twelve">
 		<thead>
 			<tr>
-				<th><input type="checkbox" ng-model="display.selectSubjects" ng-click="selectAll" /></th>
+				<th><input type="checkbox" ng-model="display.selectSubjects" ng-change="switchAllSubjects()" /></th>
 				<th>Sujet</th>
 				<th>Réponses</th>
 				<th>Dernier message</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="subject in subjects.all" ng-click="openSubject(subject)">
+			<tr ng-repeat="subject in subjects.all" ng-class="{ checked: subject.selected }">
 				<td><input type="checkbox" ng-model="subject.selected" /></td>
-				<td><a>[[subject.title]]</a></td>
-				<td>[[subject.nbMessages]]</td>
-				<td>Par [[subject.lastMessage.author.username]] le [[date.calendar(subject.lastMessage.publicationDate)]]</td>
+				<td ng-click="openSubject(subject)"><i class="prive" ng-if="subject.locked"></i> <a>[[subject.title]]</a></td>
+				<td ng-click="openSubject(subject)">[[subject.nbMessages]]</td>
+				<td ng-click="openSubject(subject)">Par [[subject.lastMessage.author.username]] le [[date.calendar(subject.lastMessage.publicationDate)]]</td>
 			</tr>
 		</tbody>
 
 	</table>
 </div>
+
+<section class="toggle-buttons" ng-class="{ hide: subjects.selection().length === 0 }">
+	<div class="toggle block-container">
+		<div class="row">
+			<button>Supprimer</button>
+			<button ng-if="subjects.where({ locked: undefined, selected: true}).length > 0 && subjects.where({ locked: true, selected: true}).length === 0">Bloquer</button>
+			<button ng-if="subjects.where({ locked: true, selected: true}).length > 0 && subjects.where({ locked: undefined, selected: true}).length === 0">Débloquer</button>
+		</div>
+	</div>
+</section>
