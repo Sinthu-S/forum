@@ -2,12 +2,14 @@ function ForumController($scope, template, model, date){
 	template.open('main', 'categories');
 	template.open('admin-main', 'categories-admin');
 
+	$scope.template = template;
+
+	$scope.me = model.me;
 	$scope.categories = model.categories;
 	$scope.date = date;
 
 	$scope.display = {};
-
-	$scope.message = new Message();
+	$scope.editedMessage = new Message();
 
 	$scope.switchAllSubjects = function(){
 		if($scope.display.selectSubjects){
@@ -50,7 +52,7 @@ function ForumController($scope, template, model, date){
 
 	$scope.addSubject = function(){
 		$scope.category.addSubject($scope.subject);
-		$scope.subject.addMessage($scope.message);
+		$scope.subject.addMessage($scope.editedMessage);
 		template.open('main', 'read-subject');
 	};
 
@@ -60,8 +62,26 @@ function ForumController($scope, template, model, date){
 	};
 
 	$scope.addMessage = function(){
-		$scope.subject.addMessage($scope.message);
-		$scope.message = new Message();
+		$scope.subject.addMessage($scope.editedMessage);
+		$scope.editedMessage = new Message();
+	};
+
+	$scope.editMessage = function(message){
+		$scope.editedMessage = message;
+	};
+
+	$scope.removeMessage = function(message){
+		$scope.subject.messages.remove(message);
+		message.remove();
+	};
+
+	$scope.saveEditMessage = function(){
+		$scope.editedMessage.save();
+		$scope.editedMessage = new Message();
+	};
+
+	$scope.cancelEditMessage = function(){
+		$scope.editedMessage = new Message();
 	};
 
 	$scope.editCategory = function(){
@@ -72,6 +92,7 @@ function ForumController($scope, template, model, date){
 	$scope.saveCategoryEdit = function(){
 		$scope.category.save();
 		$scope.category = undefined;
+		$scope.categories.sync();
 		template.open('admin-main', 'categories-admin');
 	};
 

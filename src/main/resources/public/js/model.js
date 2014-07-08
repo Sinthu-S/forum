@@ -2,21 +2,34 @@ function Message(){
 
 }
 
-Message.prototype.createMessage = function(){
+Message.prototype.createMessage = function(cb){
 	notify.info('Message envoyé');
+	http().postJson('/').done(function(){
+		if(typeof cb === 'function'){
+			cb();
+		}
+	});
 };
 
-Message.prototype.editMessage = function(){
-
+Message.prototype.editMessage = function(cb){
+	http().putJson('/').done(function(){
+		if(typeof cb === 'function'){
+			cb();
+		}
+	});
 };
 
-Message.prototype.save = function(){
+Message.prototype.save = function(cb){
 	if(!this.id){
-		this.createMessage();
+		this.createMessage(cb);
 	}
 	else{
-		this.editMessage();
+		this.editMessage(cb);
 	}
+};
+
+Message.prototype.remove = function(){
+	notify.info('Message supprimé');
 };
 
 function Subject(){
@@ -32,7 +45,7 @@ function Subject(){
 }
 
 Subject.prototype.open = function(cb){
-	this.messages.on('sync', function(){
+	this.messages.one('sync', function(){
 		if(typeof cb === 'function'){
 			cb();
 		}
@@ -42,7 +55,9 @@ Subject.prototype.open = function(cb){
 
 Subject.prototype.addMessage = function(message){
 	this.messages.push(message);
-	message.save();
+	message.save(function(){
+		this.messages.sync();
+	}.bind(this));
 };
 
 Subject.prototype.save = function(){
@@ -57,12 +72,28 @@ function Category(){
 			http().get('/forum/public/json/subjects-' + category.id + '.json').done(function(subjects){
 				this.load(subjects);
 			}.bind(this))
+		},
+		removeSelection: function(){
+			http().delete('/');
+			Collection.prototype.removeSelection.call(this);
+		},
+		lockSelection: function(){
+			this.selection().forEach(function(item){
+				item.locked = true;
+			});
+			http().putJson('/');
+		},
+		unlockSelection: function(){
+			this.selection().forEach(function(item){
+				item.locked = undefined;
+			});
+			http().putJson('/');
 		}
 	});
 }
 
 Category.prototype.open = function(cb){
-	this.subjects.on('sync', function(){
+	this.subjects.one('sync', function(){
 		if(typeof cb === 'function'){
 			cb();
 		}

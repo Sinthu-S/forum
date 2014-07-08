@@ -2,17 +2,17 @@
 	{
 		"id": "1",
 		"name": "Yaks",
-		"icon": "/workspace/document/aa448045-66ec-443f-b6f9-a395c655e843?thumbnail=48x48",
+		"icon": "/workspace/document/aa448045-66ec-443f-b6f9-a395c655e843",
 		"nbNewMessages": 4
 	}, {
 		"id": "2",
 		"name": "Chenilles",
-		"icon": "/workspace/document/eeb4456f-0fde-4949-bbf1-1359066aaa60?thumbnail=48x48",
+		"icon": "/workspace/document/eeb4456f-0fde-4949-bbf1-1359066aaa60",
 		"nbNewMessages": 1
 	}, {
 		"id": "3",
 		"name": "Grenouilles",
-		"icon": "/workspace/document/135209e1-ebe6-4308-90f7-821982afd8ba?thumbnail=48x48",
+		"icon": "/workspace/document/135209e1-ebe6-4308-90f7-821982afd8ba",
 		"nbNewMessages": 0
 	}
 ]

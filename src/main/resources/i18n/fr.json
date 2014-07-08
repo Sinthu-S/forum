@@ -1,3 +1,22 @@
 {
-	"forum.title": "Forum"
+	"forum.title": "Forum",
+	"forum.back.to.subjects": "Retour à la liste des sujets",
+	"forum.back.to.categories": "Retour aux catégories",
+	"forum.message.by": ", par ",
+	"forum.remove": "supprimer",
+	"forum.or": " ou ",
+	"forum.edit": "modifier",
+	"forum.subject.new": "Nouvelle discussion",
+	"forum.subject": "Sujet",
+	"forum.subject.placeholder": "Sujet de la discussion",
+	"forum.replies": "Réponses",
+	"forum.message.last": "Dernier message",
+	"forum.by": "Par ",
+	"forum.on.the": ", le ",
+	"forum.category": "Catégorie",
+	"forum.category.new": "Nouvelle catégorie",
+	"forum.category.icon": "Icône",
+	"forum.message.new.plural": "nouveaux messages",
+	"forum.message.new.single": "nouveau message",
+	"forum.message.new.none": "Aucun nouveau message"
 }

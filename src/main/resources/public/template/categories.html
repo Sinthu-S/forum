@@ -2,16 +2,18 @@
 	<ul>
 		<li ng-repeat="category in categories.all">
 			<a ng-click="openCategory(category)">
-				<img ng-src="[[category.icon]]" />
+				<img ng-src="[[category.icon]]?thumbnail=48x48" />
 				<strong>[[category.name]]</strong>
 				<span class="right-magnet" style="line-height: 50px" ng-if="category.nbNewMessages > 1">
-					[[category.nbNewMessages]] nouveaux messages
+					[[category.nbNewMessages]]
+					<i18n>forum.message.new.plural</i18n>
 				</span>
 				<span class="right-magnet" style="line-height: 50px" ng-if="category.nbNewMessages === 1">
-					[[category.nbNewMessages]] nouveau message
+					[[category.nbNewMessages]]
+					<i18n>forum.message.new.single</i18n>
 				</span>
 				<span class="right-magnet" style="line-height: 50px" ng-if="category.nbNewMessages === 0">
-					Aucun nouveau message
+					<i18n>forum.message.new.none</i18n>
 				</span>
 			</a>
 		</li>

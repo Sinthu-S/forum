@@ -1,6 +1,6 @@
 
 <h2 class="upper-title">[[subject.title]]</h2>
-<a ng-click="closeSubject()" class="row">Retour à l'index</a>
+<a ng-click="closeSubject()" class="row"><i18n>forum.back.to.subjects</i18n></a>
 <hr />
 
 <article ng-repeat="message in messages.all" class="twelve cell">
@@ -8,21 +8,38 @@
 		<div class="height-one one cell">
 			<img ng-src="/userbook/avatar/[[message.author.id]]" />
 		</div>
-		<div class="eleven cell horizontal-spacing-twice">
-			<em class="small-text">[[date.calendar(message.publicationDate)]], par <a href="/userbook/annuaire/[[message.author.id]]">[[message.author.username]]</a></em>
-			<span class="right-magnet small-text">
-				<a ng-click="subject.messages.remove(message)">supprimer</a> ou
-				<a ng-click="edit(message)">modifier</a>
+		<div class="eleven cell horizontal-spacing-twice" ng-if="message !== editedMessage">
+			<em class="small-text">
+				[[date.calendar(message.publicationDate)]]
+				<i18n>forum.message.by</i18n>
+				<a href="/userbook/annuaire/[[message.author.id]]">[[message.author.username]]</a>
+			</em>
+			<span class="right-magnet small-text" ng-if="me.userId === message.author.id">
+				<a ng-click="removeMessage(message)">
+					<i18n>forum.remove</i18n>
+				</a>
+				<i18n>forum.or</i18n>
+				<a ng-click="editMessage(message)">
+					<i18n>forum.edit</i18n>
+				</a>
 			</span>
 			<p bind-html="message.content"></p>
 		</div>
+		<div class="eleven cell horizontal-spacing-twice" ng-if="message === editedMessage">
+			<html-editor ng-model="editedMessage.content"></html-editor>
+			<div class="row">
+				<button class="right-magnet" ng-click="saveEditMessage()"><i18n>edit</i18n></button>
+				<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelEditMessage()" />
+			</div>
+		</div>
 	</div>
+
 </article>
 
-<div class="row" ng-if="!subject.locked">
-	<h2>Répondre</h2>
+<div class="row" ng-if="!subject.locked && !editedMessage._id">
+	<h2><i18n>reply</i18n></h2>
 	<article class="twelve cell">
-		<html-editor ng-model="message.content" watch-collections="['messages.all']"></html-editor>
-		<button class="right-magnet" ng-click="addMessage()">Répondre</button>
+		<html-editor ng-model="editedMessage.content" watch-collections="['messages.all']"></html-editor>
+		<button class="right-magnet" ng-click="addMessage()"><i18n>reply</i18n></button>
 	</article>
 </div>

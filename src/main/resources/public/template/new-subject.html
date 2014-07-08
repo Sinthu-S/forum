@@ -1,10 +1,11 @@
 <div class="row">
-	<h2>Nouvelle discussion</h2>
+	<h2><i18n>forum.subject.new</i18n></h2>
 	<article class="twelve cell">
-		<label class="two cell">Sujet</label><input type="text" placeholder="Sujet de la discussion" class="ten cell" ng-model="subject.title" />
-		<html-editor ng-model="message.content"></html-editor>
+		<label class="two cell"><i18n>forum.subject</i18n></label>
+		<input type="text" i18n-placeholder="forum.subject.placeholder" class="ten cell" ng-model="subject.title" required />
+		<html-editor ng-model="editedMessage.content"></html-editor>
 
-		<button class="right-magnet" ng-click="addSubject()">Envoyer</button>
-		<input type="button" class="cancel right-magnet" value="Annuler" />
+		<button class="right-magnet" ng-click="addSubject()"><i18n>submit</i18n></button>
+		<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="closeSubject()" />
 	</article>
 </div>

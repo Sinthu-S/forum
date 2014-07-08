@@ -1,27 +1,27 @@
 <div class="row contextual-buttons">
 	<div class="action-buttons">
-		<button ng-click="newCategory()">Nouvelle catégorie</button>
+		<button ng-click="newCategory()"><i18n>forum.category.new</i18n></button>
 	</div>
 </div>
 
 <table class="twelve">
 	<tr>
 		<th><input type="checkbox" ng-model="display.selectCategories" ng-change="switchAllCategories()" /></th>
-		<th>Catégorie</th>
-		<th>Icône</th>
+		<th><i18n>forum.category</i18n></th>
+		<th><i18n>forum.category.icon</i18n></th>
 	</tr>
 	<tr ng-repeat="category in categories.all" ng-class="{ checked: category.selected }">
 		<td><input type="checkbox" ng-model="category.selected" /></td>
 		<td>[[category.name]]</td>
-		<td><img ng-src="[[category.icon]]" /></td>
+		<td><img ng-src="[[category.icon]]?thumbnail=48x48" /></td>
 	</tr>
 </table>
 
 <section class="toggle-buttons" ng-class="{ hide: categories.selection().length === 0 }">
 	<div class="toggle block-container">
 		<div class="row">
-			<button ng-click="editCategory()" ng-if="categories.selection().length === 1">Modifier</button>
-			<button ng-click="categories.removeSelection()">Supprimer</button>
+			<button ng-click="editCategory()" ng-if="categories.selection().length === 1"><i18n>edit</i18n></button>
+			<button ng-click="categories.removeSelection()"><i18n>remove</i18n></button>
 		</div>
 	</div>
 </section>
