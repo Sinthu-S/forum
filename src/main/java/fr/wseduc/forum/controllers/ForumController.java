@@ -176,11 +176,10 @@ public class ForumController extends BaseController {
 	}
 	
 	@Put("/category/:id/subject/:subjectid/message/:messageid")
-	@ResourceFilter("updateMine")
+	@ResourceFilter("messageMine")
 	@SecuredAction(value = "category.contrib", type = ActionType.RESOURCE)
 	public void updateMessage(HttpServerRequest request) {
 		messageHelper.update(request);
-		// TODO IMPLEMENT : custom filter for mine / shared
 	}
 	
 	@Delete("/category/:id/subject/:subjectid/message/:messageid")

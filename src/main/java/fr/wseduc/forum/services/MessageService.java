@@ -18,4 +18,7 @@ public interface MessageService {
 	public void update(String categoryId, String subjectId, String messageId, JsonObject body, UserInfos user, Handler<Either<String, JsonObject>> handler);
 
 	public void delete(String categoryId, String subjectId, String messageId, UserInfos user, Handler<Either<String, JsonObject>> handler);
+	
+	
+	public void checkIsMine(String categoryId, String subjectId, String messageId, UserInfos user, String sharedMethod, Handler<Boolean> handler);
 }

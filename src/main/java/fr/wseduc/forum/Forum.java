@@ -13,19 +13,20 @@ import org.entcore.common.http.BaseServer;
 
 public class Forum extends BaseServer {
 
-	private final String COLLECTION = "forum.categories";
+	private final String CATEGORY_COLLECTION = "forum.categories";
+	private final String SUBJECT_COLLECTION = "forum.subjects";
 	
 	@Override
 	public void start() {
 		
-		final CategoryService categoryService = new MongoDbCategoryService(COLLECTION);
-		final SubjectService subjectService = new MongoDbSubjectService(COLLECTION);
-		final MessageService messageService = new MongoDbMessageService(COLLECTION);
+		final CategoryService categoryService = new MongoDbCategoryService(CATEGORY_COLLECTION);
+		final SubjectService subjectService = new MongoDbSubjectService(CATEGORY_COLLECTION, SUBJECT_COLLECTION);
+		final MessageService messageService = new MongoDbMessageService(CATEGORY_COLLECTION, SUBJECT_COLLECTION);
 		
-		setResourceProvider(new ForumResourceFilter(COLLECTION, messageService));
+		setResourceProvider(new ForumResourceFilter(CATEGORY_COLLECTION, messageService));
 		
 		super.start();
-		addController(new ForumController(COLLECTION, categoryService, subjectService, messageService));
+		addController(new ForumController(CATEGORY_COLLECTION, categoryService, subjectService, messageService));
 	}
 
 }

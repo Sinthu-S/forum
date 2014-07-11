@@ -13,14 +13,16 @@ import fr.wseduc.webutils.security.SecuredAction;
 
 public abstract class AbstractService {
 
-	protected final String collection;
+	protected final String categories_collection;
+	protected final String subjects_collection;
 	
 	protected EventBus eb;
 	protected MongoDb mongo;
 	protected TimelineHelper notification;
 	
-	public AbstractService(final String collection) {
-		this.collection = collection;
+	public AbstractService(final String categories_collection, final String subjects_collection) {
+		this.categories_collection = categories_collection;
+		this.subjects_collection = subjects_collection;
 	}
 	
 	public void init(Vertx vertx, Container container, RouteMatcher rm, Map<String, SecuredAction> securedActions) {
