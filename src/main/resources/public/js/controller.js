@@ -105,4 +105,8 @@ function ForumController($scope, template, model, date){
 		$scope.category = new Category();
 		template.open('admin-main', 'edit-category-admin');
 	};
+
+	$scope.viewAuthor = function(message){
+		window.location.href = '/userbook/annuaire#/' + message.author.id;
+	}
 }

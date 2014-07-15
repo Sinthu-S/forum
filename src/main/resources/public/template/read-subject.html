@@ -3,17 +3,20 @@
 <a ng-click="closeSubject()" class="row"><i18n>forum.back.to.subjects</i18n></a>
 <hr />
 
-<article ng-repeat="message in messages.all" class="twelve cell">
-	<div class="row">
-		<div class="height-one one cell">
-			<img ng-src="/userbook/avatar/[[message.author.id]]" />
+
+<div ng-repeat="message in messages.all">
+	<div class="row vertical-spacing"></div>
+	<div class="illustrated-article">
+		<div class="illustration" ng-click="viewAuthor(message)">
+			<div class="image">
+				<img ng-src="/userbook/avatar/[[message.author.id]]" />
+			</div>
+			<legend>
+				<strong><a href="/userbook/annuaire/[[message.author.id]]">[[message.author.username]]</a></strong>
+				<br />[[date.calendar(message.publicationDate)]]
+			</legend>
 		</div>
-		<div class="eleven cell horizontal-spacing-twice" ng-if="message !== editedMessage">
-			<em class="small-text">
-				[[date.calendar(message.publicationDate)]]
-				<i18n>forum.message.by</i18n>
-				<a href="/userbook/annuaire/[[message.author.id]]">[[message.author.username]]</a>
-			</em>
+		<article class="illustrated-text" ng-if="message !== editedMessage">
 			<span class="right-magnet small-text" ng-if="me.userId === message.author.id">
 				<a ng-click="removeMessage(message)">
 					<i18n>forum.remove</i18n>
@@ -24,17 +27,19 @@
 				</a>
 			</span>
 			<p bind-html="message.content"></p>
-		</div>
-		<div class="eleven cell horizontal-spacing-twice" ng-if="message === editedMessage">
+
+			<div class="row"></div>
+		</article>
+		<article class="illustrated-text" ng-if="message === editedMessage">
 			<html-editor ng-model="editedMessage.content"></html-editor>
 			<div class="row">
 				<button class="right-magnet" ng-click="saveEditMessage()"><i18n>edit</i18n></button>
 				<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelEditMessage()" />
 			</div>
-		</div>
+		</article>
 	</div>
 
-</article>
+</div>
 
 <div class="row" ng-if="!subject.locked && !editedMessage._id">
 	<h2><i18n>reply</i18n></h2>
