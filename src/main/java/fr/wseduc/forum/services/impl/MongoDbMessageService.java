@@ -47,8 +47,12 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 					try {
 						// Extract messages
 						JsonObject subject = event.right().getValue();
-						JsonArray messages = subject.getArray("messages");
-						handler.handle(new Either.Right<String, JsonArray>(messages));
+						if (subject.containsField("messages")) {
+							 handler.handle(new Either.Right<String, JsonArray>(subject.getArray("messages")));
+						}
+						else {
+							 handler.handle(new Either.Right<String, JsonArray>(new JsonArray()));
+						}
 					}
 					catch (Exception e) {
 						handler.handle(new Either.Left<String, JsonArray>("Malformed response : " + e.getClass().getName() + " : " + e.getMessage()));
@@ -64,7 +68,7 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 	@Override
 	public void create(final String categoryId, final String subjectId, final JsonObject body, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
 		// Prepare Message object
-		ObjectId newId = new ObjectId();
+		final ObjectId newId = new ObjectId();
 		JsonObject now = MongoDb.now();
 		body.putString("_id", newId.toStringMongod())
 			.putObject("owner", new JsonObject()
@@ -79,7 +83,20 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 		modifier.push("messages", body);
 		
 		// Execute query
-		mongo.update(subjects_collection, MongoQueryBuilder.build(query), modifier.build(), validActionResultHandler(handler));
+		mongo.update(subjects_collection, MongoQueryBuilder.build(query), modifier.build(), validActionResultHandler(new Handler<Either<String, JsonObject>>(){
+			@Override
+			public void handle(Either<String, JsonObject> event) {
+				if (event.isRight()) {
+					// Respond with created message Id
+					JsonObject created = new JsonObject();
+					created.putString("_id", newId.toStringMongod());
+					handler.handle(new Either.Right<String, JsonObject>(created));
+				}
+				else {
+					handler.handle(event);
+				}
+			}
+		}));
 	}
 
 	@Override
@@ -104,9 +121,14 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 					try {
 						// Extract message
 						JsonObject subject = event.right().getValue();
-						JsonArray messages = subject.getArray("messages");
-						JsonObject extractedMessage = messages.get(0);
-						handler.handle(new Either.Right<String, JsonObject>(extractedMessage));
+						if (subject.containsField("messages")) {
+							JsonArray messages = subject.getArray("messages");
+							JsonObject extractedMessage = messages.get(0);
+							handler.handle(new Either.Right<String, JsonObject>(extractedMessage));
+						}
+						else {
+							handler.handle(new Either.Right<String, JsonObject>(null));
+						}
 					}
 					catch (Exception e) {
 						handler.handle(new Either.Left<String, JsonObject>("Malformed response : " + e.getClass().getName() + " : " + e.getMessage()));
@@ -151,7 +173,7 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 				.put("messages").elemMatch(new BasicDBObject("_id", messageId));
 		
 		MongoUpdateBuilder modifier = new MongoUpdateBuilder();
-		// Prepare Info delete
+		// Prepare Message delete
 		JsonObject messageMatcher = new JsonObject();
 		modifier.pull("messages", messageMatcher.putString("_id", messageId));
 		
@@ -179,7 +201,7 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 					DBObject messageMatch = new BasicDBObject();
 					messageMatch.put("_id", messageId);
 					messageMatch.put("owner.userId", user.getUserId());
-					query.put("infos").elemMatch(messageMatch);
+					query.put("messages").elemMatch(messageMatch);
 					
 					// Check Subject and Message
 					executeCountQuery(subjects_collection, MongoQueryBuilder.build(query), 1, handler);

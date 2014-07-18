@@ -2,15 +2,18 @@ package fr.wseduc.forum.controllers;
 
 import java.util.Map;
 
+import org.vertx.java.core.Vertx;
+import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.http.RouteMatcher;
+import org.vertx.java.platform.Container;
+
 import fr.wseduc.forum.controllers.helpers.CategoryHelper;
 import fr.wseduc.forum.controllers.helpers.MessageHelper;
 import fr.wseduc.forum.controllers.helpers.SubjectHelper;
+import fr.wseduc.forum.filters.impl.ForumMessageMine;
 import fr.wseduc.forum.services.CategoryService;
 import fr.wseduc.forum.services.MessageService;
 import fr.wseduc.forum.services.SubjectService;
-import fr.wseduc.forum.services.impl.MongoDbCategoryService;
-import fr.wseduc.forum.services.impl.MongoDbMessageService;
-import fr.wseduc.forum.services.impl.MongoDbSubjectService;
 import fr.wseduc.rs.ApiDoc;
 import fr.wseduc.rs.Delete;
 import fr.wseduc.rs.Get;
@@ -21,25 +24,13 @@ import fr.wseduc.security.ResourceFilter;
 import fr.wseduc.security.SecuredAction;
 import fr.wseduc.webutils.http.BaseController;
 
-import org.vertx.java.core.Vertx;
-import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.http.RouteMatcher;
-import org.vertx.java.platform.Container;
-
 public class ForumController extends BaseController {
-
-	private final CategoryService categoryService;
-	private final SubjectService subjectService;
-	private final MessageService messageService;
 	
 	private final CategoryHelper categoryHelper;
 	private final SubjectHelper subjectHelper;
 	private final MessageHelper messageHelper;
 	
 	public ForumController(final String collection, final CategoryService categoryService, final SubjectService subjectService, final MessageService messageService) {
-		this.categoryService = categoryService;
-		this.subjectService = subjectService;
-		this.messageService = messageService;
 		
 		this.categoryHelper = new CategoryHelper(collection, categoryService);
 		this.subjectHelper = new SubjectHelper(subjectService);
@@ -52,11 +43,6 @@ public class ForumController extends BaseController {
 		this.categoryHelper.init(vertx, container, rm, securedActions);
 		this.subjectHelper.init(vertx, container, rm, securedActions);
 		this.messageHelper.init(vertx, container, rm, securedActions);
-		
-		// Init the Services
-		((MongoDbCategoryService) this.categoryService).init(vertx, container, rm, securedActions);
-		((MongoDbSubjectService) this.subjectService).init(vertx, container, rm, securedActions);
-		((MongoDbMessageService) this.messageService).init(vertx, container, rm, securedActions);
 	}
 	
 	
@@ -176,7 +162,7 @@ public class ForumController extends BaseController {
 	}
 	
 	@Put("/category/:id/subject/:subjectid/message/:messageid")
-	@ResourceFilter("messageMine")
+	@ResourceFilter(ForumMessageMine.class)
 	@SecuredAction(value = "category.contrib", type = ActionType.RESOURCE)
 	public void updateMessage(HttpServerRequest request) {
 		messageHelper.update(request);

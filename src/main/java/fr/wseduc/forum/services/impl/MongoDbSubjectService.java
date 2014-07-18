@@ -4,15 +4,11 @@ import static org.entcore.common.mongodb.MongoDbResult.validActionResultHandler;
 import static org.entcore.common.mongodb.MongoDbResult.validResultHandler;
 import static org.entcore.common.mongodb.MongoDbResult.validResultsHandler;
 
-import org.entcore.common.service.VisibilityFilter;
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
-import sun.security.krb5.Config;
-
-import com.mongodb.DBRef;
 import com.mongodb.QueryBuilder;
 
 import fr.wseduc.forum.services.SubjectService;

@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.entcore.common.mongodb.MongoDbControllerHelper;
-import org.entcore.common.service.VisibilityFilter;
 import org.entcore.common.share.ShareService;
 import org.entcore.common.share.impl.MongoDbShareService;
 import org.entcore.common.user.UserInfos;
@@ -80,15 +79,16 @@ public class CategoryHelper extends MongoDbControllerHelper {
 	}
 	
 	public void create(final HttpServerRequest request) {
-		create(request);
+		super.create(request);
 	}
 	
 	public void update(final HttpServerRequest request) {
-		update(request);
+		super.update(request);
 	}
 	
 	public void delete(final HttpServerRequest request) {
-		delete(request);
+		super.delete(request);
+		// TODO IMPROVE : Should also Delete all subjects in this Category
 	}
 	
 	public void share(final HttpServerRequest request) {

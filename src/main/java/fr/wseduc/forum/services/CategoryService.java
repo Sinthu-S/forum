@@ -1,6 +1,5 @@
 package fr.wseduc.forum.services;
 
-import org.entcore.common.service.VisibilityFilter;
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.json.JsonArray;
