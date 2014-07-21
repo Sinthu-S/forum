@@ -1,10 +1,10 @@
 function Message(){
-
+	// content
 }
 
 Message.prototype.createMessage = function(cb){
 	notify.info('Message envoyé');
-	http().postJson('/forum/category/' + this.subject.category._id + '/subject/' + this.subject._id + '/messages').done(function(){
+	http().postJson('/forum/category/' + this.subject.category._id + '/subject/' + this.subject._id + '/messages', this).done(function(){
 		if(typeof cb === 'function'){
 			cb();
 		}
@@ -12,7 +12,7 @@ Message.prototype.createMessage = function(cb){
 };
 
 Message.prototype.editMessage = function(cb){
-	http().putJson('/forum/category/' + this.subject.category._id + '/subject/' + this.subject._id + '/message/' + this._id).done(function(){
+	http().putJson('/forum/category/' + this.subject.category._id + '/subject/' + this.subject._id + '/message/' + this._id, this).done(function(){
 		if(typeof cb === 'function'){
 			cb();
 		}
@@ -34,6 +34,13 @@ Message.prototype.remove = function(){
 	});
 };
 
+Message.prototype.toJSON = function(){
+	return {
+		content: this.content
+	}
+};
+
+
 function Subject(){
 	var subject = this;
 
@@ -45,7 +52,8 @@ function Subject(){
 				});
 				this.load(messages);
 			}.bind(this));
-		}
+		},
+		behaviours: 'forum'
 	});
 }
 
@@ -59,6 +67,11 @@ Subject.prototype.open = function(cb){
 };
 
 Subject.prototype.addMessage = function(message){
+	message.subject = this;
+	message.owner = {
+		userId: model.me.userId,
+		displayName: model.me.username
+	}
 	this.messages.push(message);
 	message.save(function(){
 		this.messages.sync();
@@ -128,7 +141,8 @@ function Category(){
 			});
 			// TODO BACK : Unlock Subjects
 			//http().putJson('/');
-		}
+		},
+		behaviours: 'forum'
 	});
 }
 
@@ -142,8 +156,15 @@ Category.prototype.open = function(cb){
 };
 
 Category.prototype.addSubject = function(subject){
+	subject.category = this;
+	subject.owner = {
+		userId: model.me.userId,
+		displayName: model.me.username
+	}
 	this.subjects.push(subject);
-	subject.save();
+	subject.save(function(){
+		this.subjects.sync();
+	}.bind(this));
 };
 
 Category.prototype.createCategory = function(){
@@ -182,6 +203,7 @@ model.build = function(){
 			http().get('/forum/categories').done(function(categories){
 				this.load(categories);
 			}.bind(this));
-		}
+		},
+		behaviours: 'forum'
 	})
 };

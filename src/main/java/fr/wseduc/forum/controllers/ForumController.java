@@ -107,7 +107,7 @@ public class ForumController extends BaseController {
 	@Put("/share/remove/:id")
 	@ApiDoc("Remove Share by id.")
 	@SecuredAction(value = "category.manager", type = ActionType.RESOURCE)
-	public void shareShareCategory(final HttpServerRequest request) {
+	public void removeShareCategory(final HttpServerRequest request) {
 		categoryHelper.shareRemove(request);
 	}
 	
@@ -119,7 +119,7 @@ public class ForumController extends BaseController {
 	}
 	
 	@Post("/category/:id/subjects")
-	@SecuredAction(value = "category.manager", type = ActionType.RESOURCE)
+	@SecuredAction(value = "category.publish", type = ActionType.RESOURCE)
 	public void createSubject(HttpServerRequest request) {
 		subjectHelper.create(request);
 	}
@@ -163,7 +163,7 @@ public class ForumController extends BaseController {
 	
 	@Put("/category/:id/subject/:subjectid/message/:messageid")
 	@ResourceFilter(ForumMessageMine.class)
-	@SecuredAction(value = "category.contrib", type = ActionType.RESOURCE)
+	@SecuredAction(value = "category.publish", type = ActionType.RESOURCE)
 	public void updateMessage(HttpServerRequest request) {
 		messageHelper.update(request);
 	}

@@ -109,4 +109,8 @@ function ForumController($scope, template, model, date){
 	$scope.viewAuthor = function(message){
 		window.location.href = '/userbook/annuaire#/' + message.author.id;
 	}
+
+	$scope.formatDate = function(date){
+		return moment(date).format('DD MMMM YYYY');
+	}
 }

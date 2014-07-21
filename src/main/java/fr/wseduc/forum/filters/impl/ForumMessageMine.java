@@ -41,7 +41,7 @@ public class ForumMessageMine implements ResourcesProvider {
 		}
 		
 		request.pause();
-		messageService.checkIsMine(categoryId, subjectId, messageId, user, sharedMethod, new Handler<Boolean>(){
+		messageService.checkIsSharedOrMine(categoryId, subjectId, messageId, user, sharedMethod, new Handler<Boolean>(){
 			@Override
 			public void handle(Boolean event) {
 				request.resume();

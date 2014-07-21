@@ -9,29 +9,33 @@
 	<div class="illustrated-article">
 		<div class="illustration" ng-click="viewAuthor(message)">
 			<div class="image">
-				<img ng-src="/userbook/avatar/[[message.author.id]]" />
+				<img ng-src="/userbook/avatar/[[message.owner.userId]]" />
 			</div>
 			<legend>
-				<strong><a href="/userbook/annuaire/[[message.author.id]]">[[message.author.username]]</a></strong>
-				<br />[[date.calendar(message.publicationDate)]]
+				<strong><a href="/userbook/annuaire/[[message.owner.userId]]">[[message.owner.displayName]]</a></strong>
+				<br />[[formatDate(message.created)]]
 			</legend>
 		</div>
 		<article class="illustrated-text" ng-if="message !== editedMessage">
-			<span class="right-magnet small-text" ng-if="me.userId === message.author.id">
-				<a ng-click="removeMessage(message)">
-					<i18n>forum.remove</i18n>
-				</a>
+			<span class="right-magnet small-text">
+				<behaviour name="publish" resource="subject" class="contextual-buttons row">
+					<a ng-click="removeMessage(message)">
+						<i18n>forum.remove</i18n>
+					</a>
+				</behaviour>
 				<i18n>forum.or</i18n>
-				<a ng-click="editMessage(message)">
-					<i18n>forum.edit</i18n>
-				</a>
+				<behaviour name="publish" resource="message" class="contextual-buttons row">
+					<a ng-click="editMessage(message)">
+						<i18n>forum.edit</i18n>
+					</a>
+				</behaviour>
 			</span>
 			<p bind-html="message.content"></p>
 
 			<div class="row"></div>
 		</article>
 		<article class="illustrated-text" ng-if="message === editedMessage">
-			<html-editor ng-model="editedMessage.content"></html-editor>
+			<html-editor ng-model="editedMessage.content" required></html-editor>
 			<div class="row">
 				<button class="right-magnet" ng-click="saveEditMessage()"><i18n>edit</i18n></button>
 				<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelEditMessage()" />
@@ -41,10 +45,12 @@
 
 </div>
 
-<div class="row" ng-if="!subject.locked && !editedMessage._id">
-	<h2><i18n>reply</i18n></h2>
-	<article class="twelve cell">
-		<html-editor ng-model="editedMessage.content" watch-collections="['messages.all']"></html-editor>
-		<button class="right-magnet" ng-click="addMessage()"><i18n>reply</i18n></button>
-	</article>
-</div>
+<behaviour name="contrib" resource="subject">
+	<div class="row" ng-if="!subject.locked && !editedMessage._id">
+		<h2><i18n>reply</i18n></h2>
+		<article class="twelve cell">
+			<html-editor ng-model="editedMessage.content" watch-collections="['messages.all']" required></html-editor>
+			<button class="right-magnet" ng-click="addMessage()"><i18n>reply</i18n></button>
+		</article>
+	</div>
+</behaviour>

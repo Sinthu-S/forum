@@ -3,7 +3,7 @@
 	<article class="twelve cell">
 		<label class="two cell"><i18n>forum.subject</i18n></label>
 		<input type="text" i18n-placeholder="forum.subject.placeholder" class="ten cell" ng-model="subject.title" required />
-		<html-editor ng-model="editedMessage.content"></html-editor>
+		<html-editor ng-model="editedMessage.content" required></html-editor>
 
 		<button class="right-magnet" ng-click="addSubject()"><i18n>submit</i18n></button>
 		<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="closeSubject()" />

@@ -183,37 +183,51 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 	
 
 	@Override
-	public void checkIsMine(final String categoryId, final String subjectId, final String messageId, final UserInfos user, final String sharedMethod, final Handler<Boolean> handler) {
+	public void checkIsSharedOrMine(final String categoryId, final String subjectId, final String messageId, final UserInfos user, final String sharedMethod, final Handler<Boolean> handler) {
 		// Prepare Category Query
-		final QueryBuilder categoryQuery = QueryBuilder.start();
-		prepareIsSharedQuery(categoryQuery, user, categoryId, sharedMethod);
+		final QueryBuilder methodSharedQuery = QueryBuilder.start();
+		prepareIsSharedMethodQuery(methodSharedQuery, user, categoryId, sharedMethod);
 		
-		// Check Category Sharing
-		executeCountQuery(categories_collection, MongoQueryBuilder.build(categoryQuery), 1, new Handler<Boolean>() {
+		// Check Category Sharing with method
+		executeCountQuery(categories_collection, MongoQueryBuilder.build(methodSharedQuery), 1, new Handler<Boolean>() {
 			@Override
 			public void handle(Boolean event) {
 				if (event) {
-					
-					// Prepare Subject and Message query
-					QueryBuilder query = QueryBuilder.start("_id").is(subjectId)
-							.put("category").is(categoryId);
-					
-					DBObject messageMatch = new BasicDBObject();
-					messageMatch.put("_id", messageId);
-					messageMatch.put("owner.userId", user.getUserId());
-					query.put("messages").elemMatch(messageMatch);
-					
-					// Check Subject and Message
-					executeCountQuery(subjects_collection, MongoQueryBuilder.build(query), 1, handler);
+					handler.handle(true);
 				}
 				else {
-					handler.handle(false);
+					// Prepare Category Query
+					final QueryBuilder anySharedQuery = QueryBuilder.start();
+					prepareIsSharedAnyQuery(anySharedQuery, user, categoryId);
+					
+					// Check Category Sharing with any method
+					executeCountQuery(categories_collection, MongoQueryBuilder.build(anySharedQuery), 1, new Handler<Boolean>() {
+						@Override
+						public void handle(Boolean event) {
+							if (event) {
+								// Prepare Subject and Message query
+								QueryBuilder query = QueryBuilder.start("_id").is(subjectId)
+										.put("category").is(categoryId);
+								
+								DBObject messageMatch = new BasicDBObject();
+								messageMatch.put("_id", messageId);
+								messageMatch.put("owner.userId", user.getUserId());
+								query.put("messages").elemMatch(messageMatch);
+								
+								// Check Message is mine
+								executeCountQuery(subjects_collection, MongoQueryBuilder.build(query), 1, handler);
+							}
+							else {
+								handler.handle(false);
+							}
+						}
+					});
 				}
 			}
 		});
 	}
 	
-	protected void prepareIsSharedQuery(final QueryBuilder query, final UserInfos user, final String threadId, final String sharedMethod) {
+	protected void prepareIsSharedMethodQuery(final QueryBuilder query, final UserInfos user, final String threadId, final String sharedMethod) {
 		// ThreadId
 		query.put("_id").is(threadId);
 		
@@ -224,6 +238,25 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 		for (String gpId: user.getProfilGroupsIds()) {
 			groups.add(QueryBuilder.start("groupId").is(gpId)
 					.put(sharedMethod).is(true).get());
+		}
+		query.or(
+				QueryBuilder.start("owner.userId").is(user.getUserId()).get(),
+				QueryBuilder.start("visibility").is(VisibilityFilter.PUBLIC.name()).get(),
+				QueryBuilder.start("visibility").is(VisibilityFilter.PROTECTED.name()).get(),
+				QueryBuilder.start("shared").elemMatch(
+						new QueryBuilder().or(groups.toArray(new DBObject[groups.size()])).get()).get()
+		);
+	}
+	
+	protected void prepareIsSharedAnyQuery(final QueryBuilder query, final UserInfos user, final String threadId) {
+		// ThreadId
+		query.put("_id").is(threadId);
+		
+		// Permissions
+		List<DBObject> groups = new ArrayList<>();
+		groups.add(QueryBuilder.start("userId").is(user.getUserId()).get());
+		for (String gpId: user.getProfilGroupsIds()) {
+			groups.add(QueryBuilder.start("groupId").is(gpId).get());
 		}
 		query.or(
 				QueryBuilder.start("owner.userId").is(user.getUserId()).get(),
