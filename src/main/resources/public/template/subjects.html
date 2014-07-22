@@ -21,7 +21,7 @@
 				<td ng-click="openSubject(subject)"><i class="prive" ng-if="subject.locked"></i> <a>[[subject.title]]</a></td>
 				<td ng-click="openSubject(subject)">[[subject.nbMessages]]</td>
 				<td ng-click="openSubject(subject)">
-					<i18n>forum.by</i18n>[[subject.lastMessage.author.username]]<i18n>forum.on.the</i18n>[[date.calendar(subject.lastMessage.publicationDate)]]
+					<i18n>forum.by</i18n>[[subject.lastMessage.owner.displayName]]<i18n>forum.on.the</i18n>[[formatDate(subject.lastMessage.created)]]
 				</td>
 			</tr>
 		</tbody>

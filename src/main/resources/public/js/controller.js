@@ -107,10 +107,14 @@ function ForumController($scope, template, model, date){
 	};
 
 	$scope.viewAuthor = function(message){
-		window.location.href = '/userbook/annuaire#/' + message.author.id;
+		window.location.href = '/userbook/annuaire#/' + message.owner.userId;
 	}
 
 	$scope.formatDate = function(date){
-		return moment(date).format('DD MMMM YYYY');
+		return moment(date).format('DD MMMM YYYY hh[h]mm');
+	}
+
+	$scope.formatDateShort = function(date){
+		return moment(date).format('DD/MM/YYYY hh[h]mm');
 	}
 }

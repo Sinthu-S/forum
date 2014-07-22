@@ -13,23 +13,23 @@
 			</div>
 			<legend>
 				<strong><a href="/userbook/annuaire/[[message.owner.userId]]">[[message.owner.displayName]]</a></strong>
-				<br />[[formatDate(message.created)]]
+				<br />
+				<span class="small-text">[[formatDateShort(message.created)]]</span>
 			</legend>
 		</div>
 		<article class="illustrated-text" ng-if="message !== editedMessage">
-			<span class="right-magnet small-text">
-				<behaviour name="publish" resource="subject" class="contextual-buttons row">
-					<a ng-click="removeMessage(message)">
-						<i18n>forum.remove</i18n>
-					</a>
-				</behaviour>
+			<behaviour name="publish" resource="subject" class="contextual-buttons right-magnet small-text">
+				&nbsp;
 				<i18n>forum.or</i18n>
-				<behaviour name="publish" resource="message" class="contextual-buttons row">
-					<a ng-click="editMessage(message)">
-						<i18n>forum.edit</i18n>
-					</a>
-				</behaviour>
-			</span>
+				<a ng-click="removeMessage(message)">
+					<i18n>forum.remove</i18n>
+				</a>
+			</behaviour>
+			<behaviour name="publish" resource="message" class="contextual-buttons right-magnet small-text">
+				<a ng-click="editMessage(message)">
+					<i18n>forum.edit</i18n>
+				</a>
+			</behaviour>
 			<p bind-html="message.content"></p>
 
 			<div class="row"></div>
@@ -44,6 +44,8 @@
 	</div>
 
 </div>
+
+<hr />
 
 <behaviour name="contrib" resource="subject">
 	<div class="row" ng-if="!subject.locked && !editedMessage._id">

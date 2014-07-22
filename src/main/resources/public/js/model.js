@@ -101,7 +101,8 @@ Subject.prototype.save = function(){
 
 Subject.prototype.toJSON = function(){
 	return {
-		title: this.title
+		title: this.title,
+		locked: this.locked
 	}
 };
 
@@ -113,6 +114,12 @@ function Category(){
 			http().get('/forum/category/' + category._id + '/subjects').done(function(subjects){
 				_.each(subjects, function(subject){
 					subject.category = category;
+					if (! subject.nbMessages) {
+						subject.nbMessages = 0;
+					}
+					if (subject.messages instanceof Array) {
+						subject.lastMessage = subject.messages[0];
+					}
 				});
 				this.load(subjects);
 			}.bind(this))

@@ -24,15 +24,29 @@ public class MongoDbSubjectService extends AbstractService implements SubjectSer
 	}
 
 	@Override
-	public void list(String categoryId, UserInfos user, Handler<Either<String, JsonArray>> handler) {
+	public void list(final String categoryId, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
+		// Query
 		QueryBuilder query = QueryBuilder.start("category").is(categoryId);
 		JsonObject sort = new JsonObject().putNumber("modified", -1);
-		mongo.find(subjects_collection, MongoQueryBuilder.build(query), sort, null, validResultsHandler(handler));
+		
+		// Projection
+		JsonObject projection = new JsonObject();
+		JsonObject slice = new JsonObject();
+		slice.putNumber("$slice", -1);
+		projection.putObject("messages", slice);
+		
+		mongo.find(subjects_collection, MongoQueryBuilder.build(query), sort, projection, validResultsHandler(handler));
 	}
 
 	@Override
 	public void create(String categoryId, JsonObject body, UserInfos user, Handler<Either<String, JsonObject>> handler) {
 		
+		// Clean data
+		body.removeField("_id");
+		body.removeField("category");
+		body.removeField("messages");
+		
+		// Prepare data
 		JsonObject now = MongoDb.now();
 		body.putObject("owner", new JsonObject()
 				.putString("userId", user.getUserId())
@@ -46,9 +60,17 @@ public class MongoDbSubjectService extends AbstractService implements SubjectSer
 
 	@Override
 	public void retrieve(String categoryId, String subjectId, UserInfos user, Handler<Either<String, JsonObject>> handler) {
+		// Query
 		QueryBuilder query = QueryBuilder.start("_id").is(subjectId);
 		query.put("category").is(categoryId);
-		mongo.findOne(subjects_collection,  MongoQueryBuilder.build(query), validResultHandler(handler));
+		
+		// Projection
+		JsonObject projection = new JsonObject();
+		JsonObject slice = new JsonObject();
+		slice.putNumber("$slice", -1);
+		projection.putObject("messages", slice);
+		
+		mongo.findOne(subjects_collection,  MongoQueryBuilder.build(query), projection, validResultHandler(handler));
 	}
 
 	@Override

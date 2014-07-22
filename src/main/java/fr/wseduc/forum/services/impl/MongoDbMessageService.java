@@ -81,6 +81,8 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 		query.put("category").is(categoryId);
 		MongoUpdateBuilder modifier = new MongoUpdateBuilder();
 		modifier.push("messages", body);
+		modifier.inc("nbMessages", 1);
+		modifier.set("modified", MongoDb.now());
 		
 		// Execute query
 		mongo.update(subjects_collection, MongoQueryBuilder.build(query), modifier.build(), validActionResultHandler(new Handler<Either<String, JsonObject>>(){
@@ -166,7 +168,7 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 	}
 
 	@Override
-	public void delete(final String categoryId, final String subjectId, final String messageId, final UserInfos user, Handler<Either<String, JsonObject>> handler) {
+	public void delete(final String categoryId, final String subjectId, final String messageId, final UserInfos user, final Handler<Either<String, JsonObject>> handler) {
 		// Prepare Query
 		QueryBuilder query = QueryBuilder.start("_id").is(subjectId)
 				.put("category").is(categoryId)
@@ -176,6 +178,8 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 		// Prepare Message delete
 		JsonObject messageMatcher = new JsonObject();
 		modifier.pull("messages", messageMatcher.putString("_id", messageId));
+		modifier.inc("nbMessages", -1);
+		modifier.set("modified", MongoDb.now());
 		
 		// Execute query
 		mongo.update(subjects_collection, MongoQueryBuilder.build(query), modifier.build(), validActionResultHandler(handler));

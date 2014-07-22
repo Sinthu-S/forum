@@ -21,20 +21,11 @@ var forumBehaviours = {
 Behaviours.register('forum', {
 	behaviours: forumBehaviours,
 	resource: function(resource){
-		// debug
-		console.log("== Behaviour: " + resource._id + " ==");
-		// /debug
 		var rightsContainer = resource;
 		if(resource instanceof Subject && resource.category){
-			// debug
-			console.log("Behaviour on Subject");
-			// /debug
 			rightsContainer = resource.category;
 		}
 		if(resource instanceof Message && resource.subject && resource.subject.category){
-			// debug
-			console.log("Behaviour on Message");
-			// /debug
 			rightsContainer = resource.subject.category;
 		}
 		if(!resource.myRights){
@@ -42,24 +33,13 @@ Behaviours.register('forum', {
 		}
 
 		for(var behaviour in forumBehaviours.resources){
-			// debug
-			console.log(" - trying: " + behaviour);
-			// /debug
 			if(model.me.hasRight(rightsContainer, forumBehaviours.resources[behaviour]) || model.me.userId === resource.owner.userId){
-				// debug
-				console.log("   -> ok: " + (model.me.userId === resource.owner.userId ? "me" : "right"));
-				// /debug
 				if(resource.myRights[behaviour] !== undefined){
 					resource.myRights[behaviour] = resource.myRights[behaviour] && forumBehaviours.resources[behaviour];
 				}
 				else{
 					resource.myRights[behaviour] = forumBehaviours.resources[behaviour];
 				}
-			}
-			else {
-				// debug
-				console.log("   -x ko");
-				// /debug
 			}
 		}
 		return resource;
