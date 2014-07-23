@@ -78,24 +78,31 @@ Subject.prototype.addMessage = function(message){
 	}.bind(this));
 };
 
-Subject.prototype.createSubject = function(){
+Subject.prototype.createSubject = function(cb){
+	var subject = this;
 	http().postJson('/forum/category/' + this.category._id + '/subjects', this).done(function(e){
-		model.categories.sync();
+		subject._id = e._id;
+		if(typeof cb === 'function'){
+			cb();
+		}
 	}.bind(this));
 };
 
-Subject.prototype.saveModifications = function(){
+Subject.prototype.saveModifications = function(cb){
 	http().putJson('/forum/category/' + this.category._id + '/subject/' + this._id, this).done(function(e){
 		notify.info('Modifications enregistrées');
+		if(typeof cb === 'function'){
+			cb();
+		}
 	});
 };
 
-Subject.prototype.save = function(){
+Subject.prototype.save = function(cb){
 	if(this._id){
-		this.saveModifications();
+		this.saveModifications(cb);
 	}
 	else{
-		this.createSubject();
+		this.createSubject(cb);
 	}
 };
 
@@ -125,12 +132,13 @@ function Category(){
 			}.bind(this))
 		},
 		removeSelection: function(){
-			var counter = this.selection().size();
+			var counter = this.selection().length;
 			this.selection().forEach(function(item){
 				http().delete('/forum/category/' + category._id + '/subject/' + item._id).done(function(){
 					counter = counter - 1;
 					if (counter === 0) {
 						Collection.prototype.removeSelection.call(this);
+						category.subjects.sync();
 					}
 				});
 			});
@@ -162,7 +170,7 @@ Category.prototype.open = function(cb){
 	this.subjects.sync();
 };
 
-Category.prototype.addSubject = function(subject){
+Category.prototype.addSubject = function(subject, cb){
 	subject.category = this;
 	subject.owner = {
 		userId: model.me.userId,
@@ -170,7 +178,9 @@ Category.prototype.addSubject = function(subject){
 	}
 	this.subjects.push(subject);
 	subject.save(function(){
-		this.subjects.sync();
+		if(typeof cb === 'function'){
+			cb();
+		}
 	}.bind(this));
 };
 

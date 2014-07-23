@@ -89,10 +89,20 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 			@Override
 			public void handle(Either<String, JsonObject> event) {
 				if (event.isRight()) {
-					// Respond with created message Id
-					JsonObject created = new JsonObject();
-					created.putString("_id", newId.toStringMongod());
-					handler.handle(new Either.Right<String, JsonObject>(created));
+					try {
+						if (event.right().getValue().getNumber("number").intValue() == 1) {
+							// Respond with created message Id
+							JsonObject created = new JsonObject();
+							created.putString("_id", newId.toStringMongod());
+							handler.handle(new Either.Right<String, JsonObject>(created));
+						}
+						else {
+							handler.handle(new Either.Left<String, JsonObject>("Subject not found"));
+						}
+					}
+					catch (Exception e) {
+						handler.handle(new Either.Left<String, JsonObject>("Malformed response : " + e.getClass().getName() + " : " + e.getMessage()));
+					}
 				}
 				else {
 					handler.handle(event);

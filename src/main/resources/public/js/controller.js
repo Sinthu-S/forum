@@ -51,8 +51,10 @@ function ForumController($scope, template, model, date){
 	};
 
 	$scope.addSubject = function(){
-		$scope.category.addSubject($scope.subject);
-		$scope.subject.addMessage($scope.editedMessage);
+		$scope.category.addSubject($scope.subject, function(){
+			$scope.subject.addMessage($scope.editedMessage);
+			$scope.editedMessage = new Message();	
+		});
 		template.open('main', 'read-subject');
 	};
 
