@@ -81,7 +81,7 @@ Subject.prototype.addMessage = function(message){
 Subject.prototype.createSubject = function(cb){
 	var subject = this;
 	http().postJson('/forum/category/' + this.category._id + '/subjects', this).done(function(e){
-		subject._id = e._id;
+		subject.updateData(e);
 		if(typeof cb === 'function'){
 			cb();
 		}
