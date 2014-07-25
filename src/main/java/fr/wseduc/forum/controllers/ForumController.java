@@ -94,7 +94,7 @@ public class ForumController extends BaseController {
 	@ApiDoc("Share thread by id.")
 	@SecuredAction(value = "category.manager", type = ActionType.RESOURCE)
 	public void shareCategory(final HttpServerRequest request) {
-		categoryHelper.shareJson(request);
+		categoryHelper.share(request);
 	}
 	
 	@Put("/share/json/:id")
