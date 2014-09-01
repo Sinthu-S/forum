@@ -18,11 +18,15 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="subject in subjects.all" ng-class="{ checked: subject.selected }">
-				<td><input type="checkbox" ng-model="subject.selected" /></td>
+				<td>
+					<behaviour name="manage" resource="category">
+						<input type="checkbox" ng-model="subject.selected" />
+					</behaviour>
+				</td>
 				<td ng-click="openSubject(subject)"><i class="prive" ng-if="subject.locked"></i> <a>[[subject.title]]</a></td>
 				<td ng-click="openSubject(subject)">[[subject.nbMessages]]</td>
 				<td ng-click="openSubject(subject)">
-					<i18n>forum.by</i18n>[[subject.lastMessage.owner.displayName]]<i18n>forum.on.the</i18n>[[formatDate(subject.lastMessage.created)]]
+					<i18n>forum.by</i18n>[[subject.lastMessage.owner.displayName]]<i18n>forum.on.the</i18n>[[formatDate(subject.lastMessage.created.$date)]]
 				</td>
 			</tr>
 		</tbody>
