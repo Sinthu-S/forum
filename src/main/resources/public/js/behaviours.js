@@ -33,7 +33,9 @@ Behaviours.register('forum', {
 		}
 
 		for(var behaviour in forumBehaviours.resources){
-			if(model.me.hasRight(rightsContainer, forumBehaviours.resources[behaviour]) || model.me.userId === resource.owner.userId){
+			if(model.me.hasRight(rightsContainer, forumBehaviours.resources[behaviour]) 
+					|| model.me.userId === resource.owner.userId 
+					|| model.me.userId === rightsContainer.owner.userId){
 				if(resource.myRights[behaviour] !== undefined){
 					resource.myRights[behaviour] = resource.myRights[behaviour] && forumBehaviours.resources[behaviour];
 				}
