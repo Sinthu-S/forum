@@ -1,6 +1,5 @@
 function ForumController($scope, template, model, date){
 	template.open('main', 'categories');
-	template.open('admin-main', 'categories-admin');
 
 	$scope.template = template;
 
@@ -13,16 +12,22 @@ function ForumController($scope, template, model, date){
 
 	$scope.switchAllSubjects = function(){
 		if($scope.display.selectSubjects){
-			$scope.category.subjects.selectAll();
+			if($scope.category.myRights.manage){
+				$scope.category.subjects.selectAll();
+			}
 		}
 		else{
 			$scope.category.subjects.deselectAll();
 		}
 	};
-
+	
 	$scope.switchAllCategories = function(){
 		if($scope.display.selectCategories){
-			$scope.categories.selectAll();
+			$scope.categories.forEach(function(item){
+				if(item.myRights.manage){
+					item.selected = true;
+				}
+			});
 		}
 		else{
 			$scope.categories.deselectAll();
@@ -62,6 +67,7 @@ function ForumController($scope, template, model, date){
 
 	$scope.closeSubject = function(){
 		$scope.subject = undefined;
+		$scope.subjects.sync();
 		template.open('main', 'subjects');
 	};
 
@@ -91,24 +97,24 @@ function ForumController($scope, template, model, date){
 
 	$scope.editCategory = function(){
 		$scope.category = $scope.categories.selection()[0];
-		template.open('admin-main', 'edit-category-admin');
+		template.open('main', 'edit-category');
 	};
 
 	$scope.saveCategoryEdit = function(){
 		$scope.category.save();
 		$scope.category = undefined;
 		$scope.categories.sync();
-		template.open('admin-main', 'categories-admin');
+		template.open('main', 'categories');
 	};
 
 	$scope.cancelCategoryEdit = function(){
 		$scope.category = undefined;
-		template.open('admin-main', 'categories-admin');
+		template.open('main', 'categories');
 	};
 
 	$scope.newCategory = function(){
 		$scope.category = new Category();
-		template.open('admin-main', 'edit-category-admin');
+		template.open('main', 'edit-category');
 	};
 
 	$scope.viewAuthor = function(message){
@@ -116,10 +122,10 @@ function ForumController($scope, template, model, date){
 	}
 
 	$scope.formatDate = function(date){
-		return moment(date).format('DD MMMM YYYY hh[h]mm');
+		return moment(date, "YYYY-MM-DDTHH:mm:ss.SSSZ").format('DD MMMM YYYY HH[h]mm');
 	}
 
 	$scope.formatDateShort = function(date){
-		return moment(date).format('DD/MM/YYYY hh[h]mm');
+		return moment(date, "YYYY-MM-DDTHH:mm:ss.SSSZ").format('DD/MM/YYYY HH[h]mm');
 	}
 }
