@@ -1,11 +1,30 @@
 <h1><i18n>forum.title</i18n></h1>
 
-<nav class="vertical twelve cell">
-	<ul>
-		<li ng-repeat="category in categories.all">
-			<a ng-click="openCategory(category)">
+<behaviour name="manage" resource="category">
+	<div class="row contextual-buttons">
+		<div class="action-buttons">
+			<button ng-click="newCategory()"><i18n>forum.category.new</i18n></button>
+		</div>
+	</div>
+</behaviour>
+
+<table class="twelve">
+	<thead>
+		<tr>
+			<th><input type="checkbox" ng-model="display.selectCategories" ng-change="switchAllCategories()" /></th>
+			<th><i18n>forum.category</i18n></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="category in categories.all" ng-class="{ checked: category.selected }">
+			<td>
+				<behaviour name="manage" resource="category">
+					<input type="checkbox" ng-model="category.selected" />
+				</behaviour>
+			</td>
+			<td ng-click="openCategory(category)">
 				<img ng-src="[[category.icon]]?thumbnail=48x48" />
-				<strong>[[category.name]]</strong>
+				<span><strong>[[category.name]]</strong></span>
 				<span class="right-magnet" style="line-height: 50px" ng-if="category.nbNewMessages > 1">
 					[[category.nbNewMessages]]
 					<i18n>forum.message.new.plural</i18n>
@@ -17,7 +36,30 @@
 				<span class="right-magnet" style="line-height: 50px" ng-if="category.nbNewMessages === 0">
 					<i18n>forum.message.new.none</i18n>
 				</span>
-			</a>
-		</li>
-	</ul>
-</nav>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<!-- Lightbox : Thread share -->
+<div ng-if="display.showPanel">
+	<lightbox show="display.showPanel" on-close="display.showPanel = false;">
+		<share-panel app-prefix="'forum'" resources="categories.selection()"></share-panel>
+	</lightbox>
+</div>
+
+<section class="toggle-buttons" ng-class="{ hide: categories.selection().length === 0 }">
+	<div class="toggle block-container">
+		<div class="row">
+			<behaviour name="manage" resource="categories.selection()" class="cell">
+				<button ng-click="editCategory()" ng-if="categories.selection().length === 1"><i18n>edit</i18n></button>
+			</behaviour>
+			<behaviour name="manage" resource="categories.selection()" class="cell">
+				<button ng-click="categories.removeSelection()"><i18n>remove</i18n></button>
+			</behaviour>
+			<behaviour name="share" resource="categories.selection()" class="cell">
+				<button ng-click="display.showPanel = true;"><i18n>share</i18n></button>
+			</behaviour>
+		</div>
+	</div>
+</section>
