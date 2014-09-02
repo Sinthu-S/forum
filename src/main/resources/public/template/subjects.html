@@ -40,12 +40,14 @@
 			<div class="row">
 				<button ng-click="subjects.removeSelection()"><i18n>remove</i18n></button>
 				<button
-						ng-if="subjects.where({ locked: undefined, selected: true}).length > 0 && subjects.where({ locked: true, selected: true}).length === 0"
+						ng-if="(subjects.where({ locked: undefined, selected: true}).length > 0 || subjects.where({ locked: false, selected: true}).length > 0)
+								&& subjects.where({ locked: true, selected: true}).length === 0"
 						ng-click="subjects.lockSelection()"
 				>
 					<i18n>lock</i18n>
 				</button>
-				<button ng-if="subjects.where({ locked: true, selected: true}).length > 0 && subjects.where({ locked: undefined, selected: true}).length === 0"
+				<button ng-if="subjects.where({ locked: true, selected: true}).length > 0 
+								&& (subjects.where({ locked: undefined, selected: true}).length === 0 || subjects.where({ locked: false, selected: true}).length === 0)"
 						ng-click="subjects.unlockSelection()"
 				>
 					<i18n>unlock</i18n>

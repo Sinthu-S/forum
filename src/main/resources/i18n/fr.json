@@ -9,6 +9,9 @@
 	"forum.subject.new": "Nouvelle discussion",
 	"forum.subject": "Sujet",
 	"forum.subject.placeholder": "Sujet de la discussion",
+	"forum.subject.locked": "Sujet(s) bloqué(s)",
+	"forum.subject.unlocked": "Sujet(s) débloqué(s)",
+	"forum.subject.modification.saved": "Modifications enregistrées",
 	"forum.replies": "Réponses",
 	"forum.message.last": "Dernier message",
 	"forum.by": "Par ",
@@ -19,6 +22,8 @@
 	"forum.message.new.plural": "nouveaux messages",
 	"forum.message.new.single": "nouveau message",
 	"forum.message.new.none": "Aucun nouveau message",
+	"forum.message.deleted": "Message supprimé",
+	"forum.message.sent": "Message envoyé",
 
 	"category.read": "Lecteur",
 	"category.contrib": "Contributeur",

@@ -3,7 +3,7 @@ function Message(){
 }
 
 Message.prototype.createMessage = function(cb){
-	notify.info('Message envoyé');
+	notify.info('forum.message.sent');
 	http().postJson('/forum/category/' + this.subject.category._id + '/subject/' + this.subject._id + '/messages', this).done(function(){
 		if(typeof cb === 'function'){
 			cb();
@@ -30,7 +30,7 @@ Message.prototype.save = function(cb){
 
 Message.prototype.remove = function(){
 	http().delete('/forum/category/' + this.subject.category._id + '/subject/' + this.subject._id + '/message/' + this._id).done(function(){
-		notify.info('Message supprimé');
+		notify.info('forum.message.deleted');
 	});
 };
 
@@ -90,7 +90,7 @@ Subject.prototype.createSubject = function(cb){
 
 Subject.prototype.saveModifications = function(cb){
 	http().putJson('/forum/category/' + this.category._id + '/subject/' + this._id, this).done(function(e){
-		notify.info('Modifications enregistrées');
+		notify.info('forum.subject.modification.saved');
 		if(typeof cb === 'function'){
 			cb();
 		}
@@ -144,18 +144,30 @@ function Category(){
 			});
 		},
 		lockSelection: function(){
+			var counter = this.selection().length;
 			this.selection().forEach(function(item){
 				item.locked = true;
+				http().putJson('/forum/category/' + category._id + '/subject/' + item._id, item).done(function(){
+					counter = counter - 1;
+					if (counter === 0) {
+						category.subjects.sync();
+					}
+				});
 			});
-			// TODO BACK : Lock Subjects
-			// http().putJson('/');
+			notify.info('forum.subject.locked');
 		},
 		unlockSelection: function(){
+			var counter = this.selection().length;
 			this.selection().forEach(function(item){
-				item.locked = undefined;
+				item.locked = false;
+				http().putJson('/forum/category/' + category._id + '/subject/' + item._id, item).done(function(){
+					counter = counter - 1;
+					if (counter === 0) {
+						category.subjects.sync();
+					}
+				});
 			});
-			// TODO BACK : Unlock Subjects
-			//http().putJson('/');
+			notify.info('forum.subject.unlocked');
 		},
 		behaviours: 'forum'
 	});
@@ -192,7 +204,7 @@ Category.prototype.createCategory = function(){
 
 Category.prototype.saveModifications = function(){
 	http().putJson('/forum/category/' + this._id, this).done(function(e){
-		notify.info('Modifications enregistrées');
+		notify.info('forum.subject.modification.saved');
 	});
 };
 
@@ -220,6 +232,13 @@ model.build = function(){
 			http().get('/forum/categories').done(function(categories){
 				this.load(categories);
 			}.bind(this));
+		},
+		removeSelection: function(){
+			this.selection().forEach(function(item){
+				// TODO : uncomment the following line when the service is implemented 
+				// http().delete('/forum/category/' + item._id);
+			});
+			model.categories.sync();
 		},
 		behaviours: 'forum'
 	})
