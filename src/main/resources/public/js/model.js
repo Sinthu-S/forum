@@ -234,11 +234,15 @@ model.build = function(){
 			}.bind(this));
 		},
 		removeSelection: function(){
+			var counter = this.selection().length;
 			this.selection().forEach(function(item){
-				// TODO : uncomment the following line when the service is implemented 
-				// http().delete('/forum/category/' + item._id);
+				http().delete('/forum/category/' + item._id).done(function(){
+					counter = counter - 1;
+					if (counter === 0) {
+						model.categories.sync();
+					}
+				});
 			});
-			model.categories.sync();
 		},
 		behaviours: 'forum'
 	})

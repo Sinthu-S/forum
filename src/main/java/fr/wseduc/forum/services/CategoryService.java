@@ -10,6 +10,10 @@ import fr.wseduc.webutils.Either;
 public interface CategoryService {
 
 	public void list(UserInfos user, Handler<Either<String, JsonArray>> handler);
-	
+
 	public void retrieve(String id, UserInfos user, Handler<Either<String, JsonObject>> handler);
+
+	public void delete(String id, UserInfos user, Handler<Either<String, JsonObject>> handler);
+
+	public void deleteSubjects(String id, UserInfos user, Handler<Either<String, JsonObject>> handler);
 }
