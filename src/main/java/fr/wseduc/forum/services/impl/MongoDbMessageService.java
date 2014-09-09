@@ -35,11 +35,11 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 		// Prepare Query
 		QueryBuilder query = QueryBuilder.start("_id").is(subjectId)
 				.put("category").is(categoryId);
-		
+
 		// Projection
 		JsonObject projection = new JsonObject();
 		projection.putNumber("messages", 1);
-		
+
 		mongo.findOne(subjects_collection, MongoQueryBuilder.build(query), projection, validResultHandler(new Handler<Either<String, JsonObject>>(){
 			@Override
 			public void handle(Either<String, JsonObject> event) {
@@ -75,7 +75,7 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 				.putString("userId", user.getUserId())
 				.putString("displayName", user.getUsername()))
 			.putObject("created", now).putObject("modified", now);
-		
+
 		// Prepare Query
 		QueryBuilder query = QueryBuilder.start("_id").is(subjectId);
 		query.put("category").is(categoryId);
@@ -83,7 +83,7 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 		modifier.push("messages", body);
 		modifier.inc("nbMessages", 1);
 		modifier.set("modified", MongoDb.now());
-		
+
 		// Execute query
 		mongo.update(subjects_collection, MongoQueryBuilder.build(query), modifier.build(), validActionResultHandler(new Handler<Either<String, JsonObject>>(){
 			@Override
@@ -117,7 +117,7 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 		QueryBuilder query = QueryBuilder.start("_id").is(subjectId)
 				.put("category").is(categoryId)
 				.put("messages").elemMatch(new BasicDBObject("_id", messageId));
-		
+
 		// Projection
 		JsonObject idMatch = new JsonObject();
 		idMatch.putString("_id", messageId);
@@ -125,7 +125,7 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 		elemMatch.putObject("$elemMatch", idMatch);
 		JsonObject projection = new JsonObject();
 		projection.putObject("messages", elemMatch);
-		
+
 		mongo.findOne(subjects_collection, MongoQueryBuilder.build(query), projection, validResultHandler(new Handler<Either<String, JsonObject>>(){
 			@Override
 			public void handle(Either<String, JsonObject> event) {
@@ -159,20 +159,20 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 		QueryBuilder query = QueryBuilder.start("_id").is(subjectId)
 				.put("category").is(categoryId)
 				.put("messages").elemMatch(new BasicDBObject("_id", messageId));
-		
+
 		MongoUpdateBuilder modifier = new MongoUpdateBuilder();
 		// Prepare Message object update
 		body.removeField("_id");
 		body.removeField("owner");
-		
+
 		for (String attr: body.getFieldNames()) {
 			modifier.set("messages.$." + attr, body.getValue(attr));
 		}
 		modifier.set("messages.$.modified", MongoDb.now());
-		
+
 		// Prepare Subject update
 		modifier.set("modified", MongoDb.now());
-		
+
 		// Execute query
 		mongo.update(subjects_collection, MongoQueryBuilder.build(query), modifier.build(), validActionResultHandler(handler));
 	}
@@ -183,25 +183,25 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 		QueryBuilder query = QueryBuilder.start("_id").is(subjectId)
 				.put("category").is(categoryId)
 				.put("messages").elemMatch(new BasicDBObject("_id", messageId));
-		
+
 		MongoUpdateBuilder modifier = new MongoUpdateBuilder();
 		// Prepare Message delete
 		JsonObject messageMatcher = new JsonObject();
 		modifier.pull("messages", messageMatcher.putString("_id", messageId));
 		modifier.inc("nbMessages", -1);
 		modifier.set("modified", MongoDb.now());
-		
+
 		// Execute query
 		mongo.update(subjects_collection, MongoQueryBuilder.build(query), modifier.build(), validActionResultHandler(handler));
 	}
-	
+
 
 	@Override
 	public void checkIsSharedOrMine(final String categoryId, final String subjectId, final String messageId, final UserInfos user, final String sharedMethod, final Handler<Boolean> handler) {
 		// Prepare Category Query
 		final QueryBuilder methodSharedQuery = QueryBuilder.start();
 		prepareIsSharedMethodQuery(methodSharedQuery, user, categoryId, sharedMethod);
-		
+
 		// Check Category Sharing with method
 		executeCountQuery(categories_collection, MongoQueryBuilder.build(methodSharedQuery), 1, new Handler<Boolean>() {
 			@Override
@@ -213,7 +213,7 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 					// Prepare Category Query
 					final QueryBuilder anySharedQuery = QueryBuilder.start();
 					prepareIsSharedAnyQuery(anySharedQuery, user, categoryId);
-					
+
 					// Check Category Sharing with any method
 					executeCountQuery(categories_collection, MongoQueryBuilder.build(anySharedQuery), 1, new Handler<Boolean>() {
 						@Override
@@ -222,12 +222,12 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 								// Prepare Subject and Message query
 								QueryBuilder query = QueryBuilder.start("_id").is(subjectId)
 										.put("category").is(categoryId);
-								
+
 								DBObject messageMatch = new BasicDBObject();
 								messageMatch.put("_id", messageId);
 								messageMatch.put("owner.userId", user.getUserId());
 								query.put("messages").elemMatch(messageMatch);
-								
+
 								// Check Message is mine
 								executeCountQuery(subjects_collection, MongoQueryBuilder.build(query), 1, handler);
 							}
@@ -240,11 +240,11 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 			}
 		});
 	}
-	
+
 	protected void prepareIsSharedMethodQuery(final QueryBuilder query, final UserInfos user, final String threadId, final String sharedMethod) {
 		// ThreadId
 		query.put("_id").is(threadId);
-		
+
 		// Permissions
 		List<DBObject> groups = new ArrayList<>();
 		groups.add(QueryBuilder.start("userId").is(user.getUserId())
@@ -261,11 +261,11 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 						new QueryBuilder().or(groups.toArray(new DBObject[groups.size()])).get()).get()
 		);
 	}
-	
+
 	protected void prepareIsSharedAnyQuery(final QueryBuilder query, final UserInfos user, final String threadId) {
 		// ThreadId
 		query.put("_id").is(threadId);
-		
+
 		// Permissions
 		List<DBObject> groups = new ArrayList<>();
 		groups.add(QueryBuilder.start("userId").is(user.getUserId()).get());
@@ -280,7 +280,7 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 						new QueryBuilder().or(groups.toArray(new DBObject[groups.size()])).get()).get()
 		);
 	}
-	
+
 	protected void executeCountQuery(final String collection, final JsonObject query, final int expectedCountResult, final Handler<Boolean> handler) {
 		mongo.count(collection, query, new Handler<Message<JsonObject>>() {
 			@Override
@@ -291,6 +291,41 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 						"ok".equals(res.getString("status")) &&
 						expectedCountResult == res.getInteger("count")
 				);
+			}
+		});
+	}
+
+	@Override
+	public void getContributors(String categoryId, String subjectId, UserInfos user, final Handler<Either<String, JsonArray>> handler) {
+		this.list(categoryId, subjectId, user, new Handler<Either<String, JsonArray>>() {
+			@Override
+			public void handle(Either<String, JsonArray> event) {
+				JsonArray contibutorsIds = new JsonArray();
+				if (event.isRight()) {
+					try {
+						// get all messages
+						JsonArray messages = event.right().getValue();
+						// at least one message posted before this one just created
+						if (messages.size() > 1) {
+							JsonObject message = null;
+							// Extract owners
+							for(int i=0; i<messages.size();i++){
+								message = messages.get(i);
+								contibutorsIds.add(message.getObject("owner"));
+							}
+							handler.handle(new Either.Right<String, JsonArray>(contibutorsIds));
+						}
+						else {
+							handler.handle(new Either.Right<String, JsonArray>(new JsonArray()));
+						}
+					}
+					catch (Exception e) {
+						handler.handle(new Either.Left<String, JsonArray>("Malformed response : " + e.getClass().getName() + " : " + e.getMessage()));
+					}
+				}
+				else {
+					handler.handle(new Either.Left<String, JsonArray>(event.left().getValue()));
+				}
 			}
 		});
 	}

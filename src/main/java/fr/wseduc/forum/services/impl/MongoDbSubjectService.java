@@ -28,24 +28,24 @@ public class MongoDbSubjectService extends AbstractService implements SubjectSer
 		// Query
 		QueryBuilder query = QueryBuilder.start("category").is(categoryId);
 		JsonObject sort = new JsonObject().putNumber("modified", -1);
-		
+
 		// Projection
 		JsonObject projection = new JsonObject();
 		JsonObject slice = new JsonObject();
 		slice.putNumber("$slice", -1);
 		projection.putObject("messages", slice);
-		
+
 		mongo.find(subjects_collection, MongoQueryBuilder.build(query), sort, projection, validResultsHandler(handler));
 	}
 
 	@Override
 	public void create(String categoryId, JsonObject body, UserInfos user, Handler<Either<String, JsonObject>> handler) {
-		
+
 		// Clean data
 		body.removeField("_id");
 		body.removeField("category");
 		body.removeField("messages");
-		
+
 		// Prepare data
 		JsonObject now = MongoDb.now();
 		body.putObject("owner", new JsonObject()
@@ -53,9 +53,9 @@ public class MongoDbSubjectService extends AbstractService implements SubjectSer
 				.putString("displayName", user.getUsername())
 		).putObject("created", now).putObject("modified", now)
 		.putString("category", categoryId);
-		
+
 		mongo.save(subjects_collection, body, validActionResultHandler(handler));
-		
+
 	}
 
 	@Override
@@ -63,13 +63,13 @@ public class MongoDbSubjectService extends AbstractService implements SubjectSer
 		// Query
 		QueryBuilder query = QueryBuilder.start("_id").is(subjectId);
 		query.put("category").is(categoryId);
-		
+
 		// Projection
 		JsonObject projection = new JsonObject();
 		JsonObject slice = new JsonObject();
 		slice.putNumber("$slice", -1);
 		projection.putObject("messages", slice);
-		
+
 		mongo.findOne(subjects_collection,  MongoQueryBuilder.build(query), projection, validResultHandler(handler));
 	}
 
@@ -78,12 +78,12 @@ public class MongoDbSubjectService extends AbstractService implements SubjectSer
 		// Query
 		QueryBuilder query = QueryBuilder.start("_id").is(subjectId);
 		query.put("category").is(categoryId);
-		
+
 		// Clean data
 		body.removeField("_id");
 		body.removeField("category");
 		body.removeField("messages");
-		
+
 		// Modifier
 		MongoUpdateBuilder modifier = new MongoUpdateBuilder();
 		for (String attr: body.getFieldNames()) {
@@ -98,5 +98,15 @@ public class MongoDbSubjectService extends AbstractService implements SubjectSer
 		QueryBuilder query = QueryBuilder.start("_id").is(subjectId);
 		query.put("category").is(categoryId);
 		mongo.delete(subjects_collection, MongoQueryBuilder.build(query), validActionResultHandler(handler));
+	}
+
+	@Override
+	public void getSubjectTitle(String categoryId, String subjectId, UserInfos user, Handler<Either<String, JsonObject>> handler) {
+		QueryBuilder query = QueryBuilder.start("_id").is(subjectId);
+		query.put("category").is(categoryId);
+		// Projection
+		JsonObject projection = new JsonObject();
+		projection.putNumber("title", 1);
+		mongo.findOne(subjects_collection, MongoQueryBuilder.build(query), projection, validActionResultHandler(handler));
 	}
 }

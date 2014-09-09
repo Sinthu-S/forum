@@ -110,7 +110,8 @@ public class CategoryHelper extends MongoDbControllerHelper {
 	}
 
 	public void shareSubmit(final HttpServerRequest request) {
-		shareJsonSubmit(request, null, false);
+		// TODO adapt the request parameters to the share notification handler (add category name)
+		shareJsonSubmit(request, "notify-category-shared.html", false);
 	}
 
 	public void shareRemove(final HttpServerRequest request) {
