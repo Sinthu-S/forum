@@ -14,7 +14,7 @@
 		<div ng-repeat="category in categories.all" class="element" ng-class="{ selected: category.selected }">
 			<div class="img container" ng-click="openCategory(category)">
 				<div>
-					<img class="twelve" skin-src="/img/illustrations/forum-default.png" ng-if="(category.icon === undefined" />
+					<img class="twelve" skin-src="/img/illustrations/forum-default.png" ng-if="(category.icon === undefined)" />
 					<img class="twelve" ng-src="[[category.icon]]?thumbnail=120x120" ng-if="category.icon !== undefined" />
 				</div>
 
