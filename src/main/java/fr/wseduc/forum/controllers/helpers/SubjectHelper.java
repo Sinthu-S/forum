@@ -6,6 +6,7 @@ import static org.entcore.common.http.response.DefaultResponseHandler.notEmptyRe
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.entcore.common.notification.TimelineHelper;
 import org.entcore.common.user.UserInfos;
@@ -198,6 +199,7 @@ public class SubjectHelper extends ExtractorHelper {
 						JsonObject jo = null;
 						String groupId = null;
 						String id = null;
+						final AtomicInteger remaining = new AtomicInteger(shared.size());
 						// Extract shared with
 						for(int i=0; i<shared.size(); i++){
 							jo = shared.get(i);
@@ -205,10 +207,10 @@ public class SubjectHelper extends ExtractorHelper {
 								id = ((JsonObject) shared.get(i)).getString("userId");
 								if(!id.equals(user.getUserId()) && !ids.contains(id)){
 									ids.add(id);
+									remaining.getAndDecrement();
 								}
 							}
 							else{
-								//TODO the call is not synchronous => the call to findUsersInProfilsGroups must be corrected
 								if(jo.containsField("groupId")){
 									groupId = jo.getString("groupId");
 									if (groupId != null) {
@@ -225,34 +227,44 @@ public class SubjectHelper extends ExtractorHelper {
 														}
 													}
 												}
+												if (remaining.decrementAndGet() < 1) {
+													sendNotify(request, ids, user, subject, subjectId, eventType);
+												}
 											}
 										});
 									}
 								}
 							}
 						}
-						String template = null;
-						if (eventType == NEW_SUBJECT_EVENT_TYPE) {
-							template = "notify-subject-created.html";
-						}
-						else {
-							if(eventType == UPDATE_SUBJECT_EVENT_TYPE){
-								template = "notify-subject-updated.html";
-							}
-						}
-						JsonObject params = new JsonObject()
-							.putString("profilUri", container.config().getString("host") +
-									"/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
-							.putString("username", user.getUsername())
-							.putString("subject", subject.getString("title"))
-							.putString("subjectUri", container.config().getString("host") + pathPrefix +
-									"#/view/" + categoryId + "/" + subjectId);
-						if (subjectId != null && !subjectId.trim().isEmpty()) {
-							notification.notifyTimeline(request, user, FORUM_NAME, eventType, ids, categoryId, template, params);
+						if (remaining.get() < 1) {
+							sendNotify(request, ids, user, subject, subjectId, eventType);
 						}
 					}
 				}
 			}
 		});
+	}
+
+	private void sendNotify(final HttpServerRequest request, final List<String> ids, final UserInfos user, final JsonObject subject, final String subjectId, final String eventType){
+		final String categoryId = extractParameter(request, CATEGORY_ID_PARAMETER);
+		String template = null;
+		if (eventType == NEW_SUBJECT_EVENT_TYPE) {
+			template = "notify-subject-created.html";
+		}
+		else {
+			if(eventType == UPDATE_SUBJECT_EVENT_TYPE){
+				template = "notify-subject-updated.html";
+			}
+		}
+		JsonObject params = new JsonObject()
+			.putString("profilUri", container.config().getString("host") +
+					"/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
+			.putString("username", user.getUsername())
+			.putString("subject", subject.getString("title"))
+			.putString("subjectUri", container.config().getString("host") + pathPrefix +
+					"#/view/" + categoryId + "/" + subjectId);
+		if (subjectId != null && !subjectId.isEmpty()) {
+			notification.notifyTimeline(request, user, FORUM_NAME, eventType, ids, categoryId, template, params);
+		}
 	}
 }

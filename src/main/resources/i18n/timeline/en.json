@@ -1,0 +1,7 @@
+{
+	"timeline.forum.message.created" : "a posté un nouveau message dans la discussion : ",
+	"timeline.forum.message.updated" : "a modifié un message dans la discussion : ",
+	"timeline.forum.subject.created" : "a créé une nouvelle discussion : ",
+	"timeline.forum.subject.updated" : "a modifié la discussion : ",
+	"timeline.forum.category.shared" : "a partagé avec vous la catégorie : "
+}

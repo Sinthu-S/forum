@@ -41,11 +41,5 @@
 	"group.class.Teacher" : "Tous les enseignants de la classe {0}.",
 	"group.class.Personnel" : "Tous les personnels de la classe {0}.",
 	"group.class.Student" : "Tous les élèves de la classe {0}.",
-	"group.class.Relative" : "Tous les parents de la classe {0}.",
-
-	"timeline.forum.message.created" : "a posté un nouveau message dans la discussion : ",
-	"timeline.forum.message.updated" : "a modifié un message dans la discussion : ",
-	"timeline.forum.subject.created" : "a créé une nouvelle discussion : ",
-	"timeline.forum.subject.updated" : "a modifié la discussion : ",
-	"timeline.forum.category.shared" : "a partagé avec vous la catégorie : "
+	"group.class.Relative" : "Tous les parents de la classe {0}."
 }

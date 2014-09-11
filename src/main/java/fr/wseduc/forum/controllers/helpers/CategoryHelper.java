@@ -3,6 +3,7 @@ package fr.wseduc.forum.controllers.helpers;
 import static org.entcore.common.http.response.DefaultResponseHandler.arrayResponseHandler;
 import static org.entcore.common.http.response.DefaultResponseHandler.defaultResponseHandler;
 import static org.entcore.common.http.response.DefaultResponseHandler.notEmptyResponseHandler;
+import static org.entcore.common.user.UserUtils.getUserInfos;
 
 import java.util.List;
 import java.util.Map;
@@ -110,8 +111,27 @@ public class CategoryHelper extends MongoDbControllerHelper {
 	}
 
 	public void shareSubmit(final HttpServerRequest request) {
-		// TODO adapt the request parameters to the share notification handler (add category name)
-		shareJsonSubmit(request, "notify-category-shared.html", false);
+		getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				if (user != null) {
+					final String categoryId = request.params().get("id");
+					if(categoryId == null || categoryId.trim().isEmpty()) {
+			            badRequest(request);
+			            return;
+			        }
+					JsonObject params = new JsonObject()
+					.putString("profilUri", container.config().getString("host") +
+							"/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
+					.putString("username", user.getUsername())
+					.putString("resourceUri", container.config().getString("host") + pathPrefix +
+							"#/view/" + categoryId);
+					shareJsonSubmit(request, "notify-category-shared.html", false, params, "name");
+				} else {
+					unauthorized(request);
+				}
+			}
+		});
 	}
 
 	public void shareRemove(final HttpServerRequest request) {
