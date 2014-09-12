@@ -34,6 +34,7 @@ public class CategoryHelper extends MongoDbControllerHelper {
 	private ShareService shareService;
 
 	private static final String CATEGORY_ID_PARAMETER = "id";
+	private static final String EVENT_TYPE = "FORUM";
 
 	public CategoryHelper(final String managedCollection, final CategoryService categoryService) {
 		this(managedCollection, categoryService, null);
@@ -120,6 +121,7 @@ public class CategoryHelper extends MongoDbControllerHelper {
 			            badRequest(request);
 			            return;
 			        }
+					setTimelineEventType(EVENT_TYPE);
 					JsonObject params = new JsonObject()
 					.putString("profilUri", container.config().getString("host") +
 							"/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
