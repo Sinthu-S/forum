@@ -2,6 +2,7 @@ package fr.wseduc.forum.controllers;
 
 import java.util.Map;
 
+import org.entcore.common.http.filter.ResourceFilter;
 import org.vertx.java.core.Vertx;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.RouteMatcher;
@@ -20,7 +21,6 @@ import fr.wseduc.rs.Get;
 import fr.wseduc.rs.Post;
 import fr.wseduc.rs.Put;
 import fr.wseduc.security.ActionType;
-import fr.wseduc.security.ResourceFilter;
 import fr.wseduc.security.SecuredAction;
 import fr.wseduc.webutils.http.BaseController;
 
