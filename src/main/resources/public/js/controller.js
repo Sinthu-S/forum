@@ -98,13 +98,21 @@ function ForumController($scope, template, model, date, route){
 	};
 
 	$scope.addSubject = function(){
-		$scope.category.addSubject($scope.subject, function(){
-			$scope.subject.addMessage($scope.editedMessage);
-			$scope.messages = $scope.subject.messages;
-			$scope.editedMessage = new Message();
-			$scope.editedMessage.content = "";
-		});
-		template.open('main', 'read-subject');
+		if($scope.subject.title !== undefined){
+			var title = $scope.subject.title.replace(/ /g, '');
+			title = title.replace(/&nbsp;/g, '');
+			var content = $scope.editedMessage.content.replace(/ /g, '');
+			content = content.replace(/&nbsp;/g, '');
+			if(title !== "" && content !== "<divclass=\"ng-scope\"></div>"){
+				$scope.category.addSubject($scope.subject, function(){
+					$scope.subject.addMessage($scope.editedMessage);
+					$scope.messages = $scope.subject.messages;
+					$scope.editedMessage = new Message();
+					$scope.editedMessage.content = "";
+				});
+				template.open('main', 'read-subject');
+			}
+		}
 	};
 
 	$scope.closeSubject = function(){
@@ -114,9 +122,13 @@ function ForumController($scope, template, model, date, route){
 	};
 
 	$scope.addMessage = function(){
-		$scope.subject.addMessage($scope.editedMessage);
-		$scope.editedMessage = new Message();
-		$scope.editedMessage.content = "";
+		var content = $scope.editedMessage.content.replace(/ /g, '');
+		content = content.replace(/&nbsp;/g, '');
+		if(content !== "<divclass=\"ng-scope\"></div>"){
+			$scope.subject.addMessage($scope.editedMessage);
+			$scope.editedMessage = new Message();
+			$scope.editedMessage.content = "";
+		}
 	};
 
 	$scope.editMessage = function(message){
