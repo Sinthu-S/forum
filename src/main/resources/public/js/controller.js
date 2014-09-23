@@ -91,6 +91,10 @@ function ForumController($scope, template, model, date, route){
 		});
 		$scope.messages =  subject.messages;
 	};
+	
+	$scope.openMainPage = function(){
+		template.open('main', 'categories');
+	}
 
 	$scope.newSubject = function(){
 		$scope.subject = new Subject();
