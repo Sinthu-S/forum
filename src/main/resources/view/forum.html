@@ -11,8 +11,12 @@
 <body ng-controller="ForumController">
 <portal>
 
-	<div class="row">
+	<div ng-if="notFound === false" class="row">
 		<container template="main"></container>
+	</div>
+	
+	<div ng-if="notFound" class="row">
+		<container template="error"></container>
 	</div>
 
 </portal>

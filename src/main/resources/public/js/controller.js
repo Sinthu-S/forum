@@ -19,34 +19,54 @@ function ForumController($scope, template, model, date, route){
 
 	$scope.display = {};
 	$scope.editedMessage = new Message();
-	
+	$scope.notFound = false;
 	// Definition of actions
 	route({
 		goToCategory: function(params){
 			model.categories.one('sync', function(){
+				$scope.category = undefined;
 				$scope.category = model.categories.find(function(category){
 					return category._id === params.categoryId;
 				});
-				$scope.openCategory($scope.category);
+				if($scope.category === undefined){
+					$scope.notFound = true;
+					template.open('error', '404');
+				}
+				else{
+					$scope.notFound = false;
+					$scope.openCategory($scope.category);
+				}
 			});
 			model.categories.sync();
 		},
 		goToSubject: function(params){
 			model.categories.one('sync', function(){
+				$scope.category = undefined;
 				$scope.category = model.categories.find(function(category){
 					return category._id === params.categoryId;
 				});
-				
-				$scope.category.subjects.one('sync', function(){
-					$scope.subjects = $scope.category.subjects;
-					console.log("$scope.category.subjects : " + $scope.category.subjects.all.length);
-					$scope.subject = $scope.subjects.find(function(subject){
-						return subject._id === params.subjectId;
+				if($scope.category === undefined){
+					$scope.notFound = true;
+					template.open('error', '404');
+				}
+				else{
+					$scope.category.subjects.one('sync', function(){
+						$scope.subjects = $scope.category.subjects;
+						$scope.subject = undefined;
+						$scope.subject = $scope.subjects.find(function(subject){
+							return subject._id === params.subjectId;
+						});
+						if($scope.subject === undefined){
+							$scope.notFound = true;
+							template.open('error', '404');
+						}
+						else{
+							$scope.notFound = false;
+							$scope.openSubject($scope.subject);
+						}
 					});
-					console.log("subject : " + $scope.subject);
-					$scope.openSubject($scope.subject);
-				});
-				$scope.category.subjects.sync();
+					$scope.category.subjects.sync();
+				}
 			});
 			model.categories.sync();
 	    }

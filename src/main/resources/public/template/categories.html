@@ -1,12 +1,10 @@
 <h1><i18n ng-click="openMainPage()">forum.title</i18n></h1>
 
-<behaviour name="manage" resource="category">
-	<div class="row contextual-buttons">
-		<div class="action-buttons">
-			<button ng-click="newCategory()"><i18n>forum.category.new</i18n></button>
-		</div>
+<div workflow="forum.admin" class="row contextual-buttons">
+	<div class="action-buttons">
+		<button ng-click="newCategory()"><i18n>forum.category.new</i18n></button>
 	</div>
-</behaviour>
+</div>
 
 <article class="icons-view row">
 	<header>&nbsp;</header>
