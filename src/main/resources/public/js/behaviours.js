@@ -14,7 +14,7 @@ var forumBehaviours = {
 		}
 	},
 	workflow: {
-		admin: 'fr.wseduc.forum.controllers.ForumController|adminView'
+		admin: 'fr.wseduc.forum.controllers.ForumController|createCategory'
 	}
 };
 

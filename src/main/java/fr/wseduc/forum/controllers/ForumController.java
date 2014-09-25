@@ -52,21 +52,14 @@ public class ForumController extends BaseController {
 		renderView(request);
 	}
 
-	@Get("/admin")
-	@SecuredAction("forum.view.admin")
-	public void adminView(HttpServerRequest request) {
-		renderView(request);
-	}
-
-
 	@Get("/categories")
-	@SecuredAction("forum.view")
+	@SecuredAction("forum.list")
 	public void listCategories(HttpServerRequest request) {
 		categoryHelper.list(request);
 	}
 
 	@Post("/categories")
-	@SecuredAction("forum.view.admin")
+	@SecuredAction("forum.create")
 	public void createCategory(HttpServerRequest request) {
 		categoryHelper.create(request);
 	}
