@@ -1,6 +1,11 @@
+<head>
+	<link rel="stylesheet" type="text/css" href="/forum/public/css/custom.css">
+</head>
+
 <h1><i18n ng-click="openMainPage()">forum.title</i18n>&nbsp;:&nbsp;[[category.name]]&nbsp;:&nbsp;[[subject.title]]</h1>
 
 <a ng-click="closeSubject()" class="row"><i18n>forum.back.to.subjects</i18n></a>
+<a id="top" ng-click="scrollTo('bottom')" class="right-magnet">&darr; Voir le dernier commentaire</a>
 <hr />
 
 
@@ -55,3 +60,5 @@
 		</article>
 	</div>
 </behaviour>
+
+<a id="bottom" ng-click="scrollTo('top')" class="right-magnet">&uarr; Haut de la page</a>

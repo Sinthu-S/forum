@@ -211,4 +211,8 @@ function ForumController($scope, template, model, date, route){
 	$scope.formatDateShort = function(date){
 		return moment(date, "YYYY-MM-DDTHH:mm:ss.SSSZ").format('DD/MM/YYYY HH[h]mm');
 	}
+	
+	$scope.scrollTo = function(item){
+		window.scrollTo(0, $("#" + item)[0].offsetTop -100);
+	}
 }
