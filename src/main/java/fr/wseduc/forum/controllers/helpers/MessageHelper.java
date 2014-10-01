@@ -226,9 +226,16 @@ public class MessageHelper extends ExtractorHelper {
 										}
 									}
 									String overview = message.getString("content");
+									if(overview.contains("</p>")){
+										overview = overview.split("</p>")[0];
+										overview = overview.replaceAll("<br>", "");
+									}
+									else{
+										overview = "<p>".concat(overview);
+									}
 									if(overview.length() > OVERVIEW_LENGTH){
 										overview = overview.substring(0, OVERVIEW_LENGTH);
-										overview = overview.concat(" ...");
+										overview = overview.concat(" ... </p>");
 									}
 									JsonObject params = new JsonObject()
 										.putString("profilUri", container.config().getString("host") +

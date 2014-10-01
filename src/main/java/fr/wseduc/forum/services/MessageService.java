@@ -19,7 +19,6 @@ public interface MessageService {
 
 	public void delete(String categoryId, String subjectId, String messageId, UserInfos user, Handler<Either<String, JsonObject>> handler);
 
-
 	public void checkIsSharedOrMine(String categoryId, String subjectId, String messageId, UserInfos user, String sharedMethod, Handler<Boolean> handler);
 
 	public void getContributors(String categoryId, String subjectId, UserInfos user, Handler<Either<String, JsonArray>> handler);
