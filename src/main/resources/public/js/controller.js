@@ -5,12 +5,14 @@ routes.define(function($routeProvider){
       })
       .when('/view/:categoryId/:subjectId', {
         action: 'goToSubject'
+      })
+	  .otherwise({
+        action: 'mainPage'
       });
 });
 
 function ForumController($scope, template, model, date, route){
-	template.open('main', 'categories');
-
+	$scope.notFound = false;
 	$scope.template = template;
 
 	$scope.me = model.me;
@@ -19,7 +21,7 @@ function ForumController($scope, template, model, date, route){
 
 	$scope.display = {};
 	$scope.editedMessage = new Message();
-	$scope.notFound = false;
+	
 	// Definition of actions
 	route({
 		goToCategory: function(params){
@@ -69,7 +71,10 @@ function ForumController($scope, template, model, date, route){
 				}
 			});
 			model.categories.sync();
-	    }
+		},
+		mainPage: function(){
+			template.open('main', 'categories');
+		}
 	});
 
 	$scope.switchAllSubjects = function(){
