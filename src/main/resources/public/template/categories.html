@@ -2,11 +2,9 @@
 
 <div class="patchwork">
 	<div class="twelve cell">
-		<behaviour name="manage" resource="category" class="cell">
-			<div workflow="forum.admin">
-				<button ng-click="newCategory()"><i18n>forum.category.new</i18n></button>
-			</div>
-		</behaviour>
+		<div workflow="forum.admin">
+			<button ng-click="newCategory()"><i18n>forum.category.new</i18n></button>
+		</div>
 		<i class="open-right right-magnet big-hidden" ng-click="template.close('main')"></i>
 	</div>
 	<hr />
@@ -31,9 +29,12 @@
 				</span>
 			</strong>
 			<div class="small-hidden bottom-locked">
-				<button ng-click="editCategory(cat, $event)">Modifier</button>
-				<button ng-click="removeCategory(cat, $event)">Supprimer</button>
-				<button ng-click="shareCategory(cat, $event)">Partager</button>
+				<behaviour name="manage" resource="cat">
+					<button ng-click="editCategory(cat, $event)">Modifier</button>
+					<button ng-click="removeCategory(cat, $event)">Supprimer</button>
+					<button ng-click="shareCategory(cat, $event)">Partager</button>
+				</behaviour>
+
 			</div>
 		</article>
 	</div>
