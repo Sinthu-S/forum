@@ -118,6 +118,7 @@ function ForumController($scope, template, model, date, route){
 	};
 	
 	$scope.openMainPage = function(){
+		delete $scope.category;
 		template.open('main', 'categories');
 	}
 
@@ -184,10 +185,20 @@ function ForumController($scope, template, model, date, route){
 	};
 
 	$scope.saveCategoryEdit = function(){
-		$scope.category.save();
-		$scope.category = undefined;
-		$scope.categories.sync();
-		template.open('main', 'categories');
+		if ($scope.category._id) { // when editing a category
+			$scope.category.save();
+			delete $scope.category;
+			$scope.categories.sync(function(){
+				template.open('main', 'categories');
+				$scope.$apply();
+			});
+		}
+		else { // when creating a category
+			$scope.category.save(function(){
+				template.open('main', 'share-category');
+			});
+			$scope.categories.sync();
+		}
 	};
 
 	$scope.cancelCategoryEdit = function(){

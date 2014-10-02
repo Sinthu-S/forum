@@ -196,9 +196,13 @@ Category.prototype.addSubject = function(subject, cb){
 	}.bind(this));
 };
 
-Category.prototype.createCategory = function(){
-	http().postJson('/forum/categories', this).done(function(e){
+Category.prototype.createCategory = function(callback){
+	http().postJson('/forum/categories', this).done(function(response){
+		this._id = response._id;
 		model.categories.sync();
+		if(typeof callback === 'function'){
+			callback();
+		}
 	}.bind(this));
 };
 
@@ -208,12 +212,12 @@ Category.prototype.saveModifications = function(){
 	});
 };
 
-Category.prototype.save = function(){
+Category.prototype.save = function(callback){
 	if(this._id){
 		this.saveModifications();
 	}
 	else{
-		this.createCategory();
+		this.createCategory(callback);
 	}
 };
 
@@ -228,9 +232,12 @@ model.build = function(){
 	this.makeModels([Category, Subject, Message]);
 
 	this.collection(Category, {
-		sync: function(){
+		sync: function(callback){
 			http().get('/forum/categories').done(function(categories){
 				this.load(categories);
+				if(typeof callback === 'function'){
+					callback();
+				}
 			}.bind(this));
 		},
 		removeSelection: function(){

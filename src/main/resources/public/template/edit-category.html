@@ -1,6 +1,8 @@
 <h1><i18n ng-click="openMainPage()">forum.title</i18n></h1>
 
-<h2><i18n>edit</i18n></h2>
+<h2 ng-if="category._id"><i18n>edit</i18n></h2>
+<h2 ng-if="!category._id"><i18n>forum.create.a.category</i18n></h2>
+
 <article class="twelve cell">
 	<div class="two cell">
 		<image-select ng-model="category.icon" default="/img/illustrations/forum-default.png" thumbnails="[{ width: 290, height: 290 }]" class="absolute"></image-select>
@@ -17,7 +19,12 @@
 			</div>
 			<div class="row bottom-locked">
 				<div class="twelve cell horizontal-spacing-twice">
-					<button class="right-magnet" ng-click="saveCategoryEdit()"><i18n>save</i18n></button>
+					<button ng-if="category._id" class="right-magnet" ng-click="saveCategoryEdit()">
+						<i18n>save</i18n>
+					</button>
+					<button ng-if="!category._id" class="right-magnet" ng-click="saveCategoryEdit()">
+						<i18n>save</i18n>
+					</button>
 					<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelCategoryEdit()" />
 				</div>
 			</div>

@@ -25,6 +25,11 @@
 	"forum.message.deleted": "Message supprimé",
 	"forum.message.sent": "Message envoyé",
 
+	"forum.create.a.category": "Créer une catégorie",
+	"forum.the.category": "La catégorie",
+	"forum.has.been.created" : "a été créée.",
+	"forum.you.can.share.this.category" : "Vous pouvez donner accès à cette catégorie aux autres utilisateurs.",
+
 	"category.read": "Lecteur",
 	"category.contrib": "Contributeur",
 	"category.publish": "Modérateur",
