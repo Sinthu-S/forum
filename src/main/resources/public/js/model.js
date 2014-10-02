@@ -28,9 +28,12 @@ Message.prototype.save = function(cb){
 	}
 };
 
-Message.prototype.remove = function(){
+Message.prototype.remove = function(cb){
 	http().delete('/forum/category/' + this.subject.category._id + '/subject/' + this.subject._id + '/message/' + this._id).done(function(){
 		notify.info('forum.message.deleted');
+		if(typeof cb === 'function'){
+			cb();
+		}
 	});
 };
 
@@ -131,7 +134,7 @@ function Category(){
 				this.load(subjects);
 			}.bind(this))
 		},
-		removeSelection: function(){
+		removeSelection: function(callback){
 			var counter = this.selection().length;
 			this.selection().forEach(function(item){
 				http().delete('/forum/category/' + category._id + '/subject/' + item._id).done(function(){
@@ -139,6 +142,9 @@ function Category(){
 					if (counter === 0) {
 						Collection.prototype.removeSelection.call(this);
 						category.subjects.sync();
+						if(typeof callback === 'function'){
+							callback();
+						}
 					}
 				});
 			});
@@ -240,13 +246,16 @@ model.build = function(){
 				}
 			}.bind(this));
 		},
-		removeSelection: function(){
+		removeSelection: function(callback){
 			var counter = this.selection().length;
 			this.selection().forEach(function(item){
 				http().delete('/forum/category/' + item._id).done(function(){
 					counter = counter - 1;
 					if (counter === 0) {
 						model.categories.sync();
+						if(typeof callback === 'function'){
+							callback();
+						}
 					}
 				});
 			});

@@ -159,6 +159,20 @@ function ForumController($scope, template, model, date, route){
 		template.open('main', 'subjects');
 	};
 
+	$scope.confirmRemoveSelectedSubjects = function() {
+		$scope.display.confirmDeleteSubjects = true;
+	};
+
+	$scope.removeSelectedSubjects = function() {
+		$scope.subjects.removeSelection(function(){
+			$scope.display.confirmDeleteSubjects = undefined;
+		});
+	};
+
+	$scope.cancelRemoveSubjects = function() {
+		$scope.display.confirmDeleteSubjects = undefined;
+	};
+
 	$scope.addMessage = function(){
 		if ($scope.isTextEmpty($scope.editedMessage.content)) {
 			$scope.editedMessage.error = 'forum.message.empty';
@@ -176,11 +190,6 @@ function ForumController($scope, template, model, date, route){
 		$scope.editedMessage = message;
 	};
 
-	$scope.removeMessage = function(message){
-		$scope.subject.messages.remove(message);
-		message.remove();
-	};
-
 	$scope.saveEditMessage = function(){
 		if ($scope.isTextEmpty($scope.editedMessage.content)) {
 			$scope.editedMessage.error = 'forum.message.empty';
@@ -196,7 +205,24 @@ function ForumController($scope, template, model, date, route){
 		$scope.editedMessage = new Message();
 	};
 
-	$scope.editCategory = function(category, event){
+	$scope.confirmRemoveMessage = function(message){
+		$scope.removedMessage = message;
+		$scope.display.confirmDelete = true;
+	};
+
+	$scope.removeMessage = function(){
+		$scope.subject.messages.remove($scope.removedMessage);
+		$scope.removedMessage.remove(function(){
+			$scope.cancelRemoveMessage();
+		});
+	};
+
+	$scope.cancelRemoveMessage = function(){
+		$scope.removedMessage = undefined;
+		$scope.display.confirmDelete = undefined;
+	};
+
+	$scope.editCategory = function(){
 		if(!category){
 			$scope.category = $scope.categories.selection()[0];
 		}
@@ -242,6 +268,20 @@ function ForumController($scope, template, model, date, route){
 	$scope.newCategory = function(){
 		$scope.category = new Category();
 		template.open('main', 'edit-category');
+	};
+
+	$scope.confirmRemoveSelectedCategories = function() {
+		$scope.display.confirmDeleteCategories = true;
+	};
+
+	$scope.removeSelectedCategories = function() {
+		$scope.categories.removeSelection(function(){
+			$scope.display.confirmDeleteCategories = undefined;
+		});
+	};
+
+	$scope.cancelRemoveCategories = function() {
+		$scope.display.confirmDeleteCategories = undefined;
 	};
 
 	$scope.viewAuthor = function(message){

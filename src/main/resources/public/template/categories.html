@@ -47,6 +47,21 @@
 	</lightbox>
 </div>
 
+<div ng-if="display.confirmDeleteCategories">
+	<lightbox show="display.confirmDeleteCategories" on-close="cancelRemoveCategories()">
+		<div class="row" ng-if="categories.selection().length === 1">
+			<i18n>forum.confirm.delete.category</i18n>
+		</div>
+		<div class="row" ng-if="categories.selection().length > 1">
+			<i18n>forum.confirm.delete.categories</i18n>
+		</div>
+		<div class="row">
+			<button class="right-magnet" ng-click="removeSelectedCategories()"><i18n>remove</i18n></button>
+			<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelRemoveCategories()" />
+		</div>
+	</lightbox>
+</div>
+
 <section class="toggle-buttons" ng-class="{ hide: categories.selection().length === 0 }">
 	<div class="toggle">
 		<div class="row">
@@ -54,7 +69,7 @@
 				<button ng-click="editCategory()" ng-if="categories.selection().length === 1"><i18n>edit</i18n></button>
 			</behaviour>
 			<behaviour name="manage" resource="categories.selection()" class="cell">
-				<button ng-click="categories.removeSelection()"><i18n>remove</i18n></button>
+				<button ng-click="confirmRemoveSelectedCategories()"><i18n>remove</i18n></button>
 			</behaviour>
 			<behaviour name="share" resource="categories.selection()" class="cell">
 				<button ng-click="display.showPanel = true;"><i18n>share</i18n></button>

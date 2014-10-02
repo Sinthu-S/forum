@@ -33,7 +33,7 @@
 	<section class="toggle-buttons" ng-class="{ hide: subjects.selection().length === 0 }">
 		<div class="toggle">
 			<div class="row">
-				<button ng-click="subjects.removeSelection()"><i18n>remove</i18n></button>
+				<button ng-click="confirmRemoveSelectedSubjects()"><i18n>remove</i18n></button>
 				<button
 						ng-if="(subjects.where({ locked: undefined, selected: true}).length > 0 || subjects.where({ locked: false, selected: true}).length > 0)
 								&& subjects.where({ locked: true, selected: true}).length === 0"
@@ -51,3 +51,18 @@
 		</div>
 	</section>
 </behaviour>
+
+<div ng-if="display.confirmDeleteSubjects">
+	<lightbox show="display.confirmDeleteSubjects" on-close="cancelRemoveSubjects()">
+		<div class="row" ng-if="subjects.selection().length === 1">
+			<i18n>forum.confirm.delete.subject</i18n>
+		</div>
+		<div class="row" ng-if="subjects.selection().length > 1">
+			<i18n>forum.confirm.delete.subjects</i18n>
+		</div>
+		<div class="row">
+			<button class="right-magnet" ng-click="removeSelectedSubjects()"><i18n>remove</i18n></button>
+			<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelRemoveSubjects()" />
+		</div>
+	</lightbox>
+</div>

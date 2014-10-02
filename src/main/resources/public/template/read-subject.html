@@ -27,7 +27,7 @@
 				</div>
 				<behaviour name="publish" resource="subject" class="contextual-buttons right-magnet small-text">
 					&nbsp;<i18n>forum.or</i18n>&nbsp;
-					<a ng-click="removeMessage(message)">
+					<a ng-click="confirmRemoveMessage(message)">
 						<i18n>forum.remove</i18n>
 					</a>
 				</behaviour>
@@ -58,3 +58,14 @@
 
 <a id="bottom" ng-click="scrollTo('top')" class="right-magnet">&uarr; Haut de la page</a>
 
+<div ng-if="display.confirmDelete">
+	<lightbox show="display.confirmDelete" on-close="cancelRemoveMessage()">
+		<div class="row">
+			<i18n>forum.confirm.delete.message</i18n>
+		</div>
+		<div class="row">
+			<button class="right-magnet" ng-click="removeMessage()"><i18n>remove</i18n></button>
+			<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelRemoveMessage()" />
+		</div>
+	</lightbox>
+</div>
