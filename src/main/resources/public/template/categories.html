@@ -1,61 +1,53 @@
 <h1><i18n ng-click="openMainPage()">forum.title</i18n></h1>
 
-<div workflow="forum.admin" class="row contextual-buttons">
-	<div class="action-buttons">
-		<button ng-click="newCategory()"><i18n>forum.category.new</i18n></button>
+<div class="patchwork">
+	<div class="twelve cell">
+		<behaviour name="manage" resource="category" class="cell">
+			<div workflow="forum.admin" class="row contextual-buttons">
+				<button ng-click="newCategory()"><i18n>forum.category.new</i18n></button>
+			</div>
+		</behaviour>
+		<i class="open-right right-magnet big-hidden" ng-click="template.close('main')"></i>
+	</div>
+	<hr />
+	<div class="row" ng-repeat="cat in categories.all" ng-click="openCategory(cat)" ng-class="{ selected: cat === category }">
+		<div class="cell">
+			<img skin-src="/img/illustrations/forum-default.png" ng-if="(cat.icon === undefined)" class="cell" />
+			<img ng-src="[[cat.icon]]?thumbnail=120x120" ng-if="cat.icon !== undefined" class="cell" />
+		</div>
+		<article class="six cell">
+			<h1>[[cat.name]]</h1>
+			<strong class="small-text">
+				<span class="right-magnet" style="line-height: 50px" ng-if="category.nbNewMessages > 1">
+					[[category.nbNewMessages]]
+					<i18n>forum.message.new.plural</i18n>
+				</span>
+				<span class="right-magnet" style="line-height: 50px" ng-if="category.nbNewMessages === 1">
+					[[category.nbNewMessages]]
+					<i18n>forum.message.new.single</i18n>
+				</span>
+				<span class="right-magnet" style="line-height: 50px" ng-if="category.nbNewMessages === 0">
+					<i18n>forum.message.new.none</i18n>
+				</span>
+			</strong>
+			<div class="small-hidden bottom-locked">
+				<button ng-click="editCategory(cat, $event)">Modifier</button>
+				<button ng-click="removeCategory(cat, $event)">Supprimer</button>
+				<button ng-click="shareCategory(cat, $event)">Partager</button>
+			</div>
+		</article>
 	</div>
 </div>
-
-<article class="icons-view row">
-	<header>&nbsp;</header>
-	<div class="icons-view">
-		<div ng-repeat="category in categories.all" class="element" ng-class="{ selected: category.selected }">
-			<div class="img container" ng-click="openCategory(category)">
-				<div>
-					<img class="twelve" skin-src="/img/illustrations/forum-default.png" ng-if="(category.icon === undefined)" />
-					<img class="twelve" ng-src="[[category.icon]]?thumbnail=120x120" ng-if="category.icon !== undefined" />
-				</div>
-
-			</div>
-			<behaviour name="manage" resource="category">
-				<input type="checkbox" ng-model="category.selected" />
-			</behaviour>
-			<legend>
-				<a ng-click="openCategory(category)" class="medium-text">
-					[[category.name]]
-				</a>
-				<a>
-					<strong class="small-text">
-						<span class="right-magnet" style="line-height: 50px" ng-if="category.nbNewMessages > 1">
-							[[category.nbNewMessages]]
-							<i18n>forum.message.new.plural</i18n>
-						</span>
-						<span class="right-magnet" style="line-height: 50px" ng-if="category.nbNewMessages === 1">
-							[[category.nbNewMessages]]
-							<i18n>forum.message.new.single</i18n>
-						</span>
-						<span class="right-magnet" style="line-height: 50px" ng-if="category.nbNewMessages === 0">
-							<i18n>forum.message.new.none</i18n>
-						</span>
-					</strong>
-				</a>
-			</legend>
-
-		</div>
-		<div class="clear"></div>
-	</div>
-</article>
-
 
 <!-- Lightbox : Thread share -->
 <div ng-if="display.showPanel">
 	<lightbox show="display.showPanel" on-close="display.showPanel = false;">
-		<share-panel app-prefix="'forum'" resources="categories.selection()"></share-panel>
+		<share-panel app-prefix="'forum'" resources="category"></share-panel>
 	</lightbox>
 </div>
 
 <section class="toggle-buttons" ng-class="{ hide: categories.selection().length === 0 }">
-	<div class="toggle block-container">
+	<div class="toggle">
 		<div class="row">
 			<behaviour name="manage" resource="categories.selection()" class="cell">
 				<button ng-click="editCategory()" ng-if="categories.selection().length === 1"><i18n>edit</i18n></button>

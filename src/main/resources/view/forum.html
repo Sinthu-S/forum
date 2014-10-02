@@ -10,9 +10,9 @@
 </head>
 <body ng-controller="ForumController">
 <portal>
-
-	<div ng-if="notFound === false" class="row">
-		<container template="main"></container>
+	<div class="row" ng-if="notFound === false">
+		<container template="main" class="flexible nine right-magnet cell"></container>
+		<container template="categories" class="flexible three cell"></container>
 	</div>
 	
 	<div ng-if="notFound" class="row">

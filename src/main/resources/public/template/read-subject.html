@@ -2,27 +2,27 @@
 	<link rel="stylesheet" type="text/css" href="/forum/public/css/custom.css">
 </head>
 
-<h1><i18n ng-click="openMainPage()">forum.title</i18n>&nbsp;:&nbsp;[[category.name]]&nbsp;:&nbsp;[[subject.title]]</h1>
+<h2>[[subject.title]]</h2>
 
-<a ng-click="closeSubject()" class="row"><i18n>forum.back.to.subjects</i18n></a>
 <a id="top" ng-click="scrollTo('bottom')" class="right-magnet">&darr; Voir le dernier commentaire</a>
 <hr />
 
+<behaviour name="contrib" resource="subject">
+	<button ng-click="template.open('main', 'reply')" ng-if="!subject.locked">Répondre</button>
+</behaviour>
 
 <div ng-repeat="message in messages.all">
 	<div class="row vertical-spacing"></div>
 	<div class="illustrated-article">
-		<div class="illustration" ng-click="viewAuthor(message)">
+		<div class="small illustration" ng-click="viewAuthor(message)">
 			<div class="image">
 				<img ng-src="/userbook/avatar/[[message.owner.userId]]" />
 			</div>
-			<legend style="height: inherit;">
-				<strong><a href="/userbook/annuaire/[[message.owner.userId]]">[[message.owner.displayName]]</a></strong>
-				<br />
-				<span class="small-text">[[formatDateShort(message.created.$date)]]</span>
-			</legend>
 		</div>
 		<article class="illustrated-text" ng-if="message !== editedMessage">
+			<div class="six cell">
+				<strong><a href="/userbook/annuaire/[[message.owner.userId]]">[[message.owner.displayName]]</a></strong>, le <span class="small-text">[[formatDateShort(message.created.$date)]]</span>
+			</div>
 			<behaviour name="publish" resource="subject" class="contextual-buttons right-magnet small-text">
 				&nbsp;<i18n>forum.or</i18n>&nbsp;
 				<a ng-click="removeMessage(message)">
@@ -52,17 +52,8 @@
 <hr />
 
 <behaviour name="contrib" resource="subject">
-	<div class="row" ng-if="!subject.locked && !editedMessage._id">
-		<h2><i18n>reply</i18n></h2>
-		<article class="twelve cell">
-			<html-editor ng-model="editedMessage.content" watch-collections="['messages.all']" required></html-editor>
-
-			<div class="ten cell warning" ng-if="editedMessage.error !== undefined" translate content="[[editedMessage.error]]">
-			</div>
-
-			<button class="right-magnet" ng-click="addMessage()"><i18n>reply</i18n></button>
-		</article>
-	</div>
+	<button ng-click="template.open('main', 'reply')" ng-if="!subject.locked">Répondre</button>
 </behaviour>
 
 <a id="bottom" ng-click="scrollTo('top')" class="right-magnet">&uarr; Haut de la page</a>
+

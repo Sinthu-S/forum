@@ -1,21 +1,13 @@
-<h1><i18n ng-click="openMainPage()">forum.title</i18n>&nbsp;:&nbsp;[[category.name]]</h1>
+<h2>[[category.name]]</h2>
 
-<a ng-click="template.open('main', 'categories')"><i18n>forum.back.to.categories</i18n></a>
 <div class="twelve cell">
 	<behaviour name="publish" resource="category" class="contextual-buttons row">
-		<div class="action-buttons">
+		<div>
 			<button ng-click="newSubject()"><i18n>forum.subject.new</i18n></button>
 		</div>
 	</behaviour>
+	<div class="row vertical-spacing"></div>
 	<table class="twelve">
-		<thead>
-			<tr>
-				<th><input type="checkbox" ng-model="display.selectSubjects" ng-change="switchAllSubjects()" /></th>
-				<th><i18n>forum.subject</i18n></th>
-				<th><i18n>forum.replies</i18n></th>
-				<th><i18n>forum.message.last</i18n></th>
-			</tr>
-		</thead>
 		<tbody>
 			<tr ng-repeat="subject in subjects.all" ng-class="{ checked: subject.selected }">
 				<td>
@@ -24,7 +16,7 @@
 					</behaviour>
 				</td>
 				<td ng-click="openSubject(subject)"><i class="prive" ng-if="subject.locked"></i> <a>[[subject.title]]</a></td>
-				<td ng-click="openSubject(subject)">[[subject.nbMessages]]</td>
+				<td ng-click="openSubject(subject)">[[subject.nbMessages]] réponse(s)</td>
 				<td ng-click="openSubject(subject)">
 					<i18n>forum.by</i18n>[[subject.lastMessage.owner.displayName]]<i18n>forum.on.the</i18n>[[formatDate(subject.lastMessage.created.$date)]]
 				</td>
@@ -32,11 +24,14 @@
 		</tbody>
 
 	</table>
+	<div ng-if="subjects.all.length === 0">
+		Aucun sujet de discussion n'a été ouvert dans cette catégorie !
+	</div>
 </div>
 
 <behaviour name="publish" resource="category" class="cell">
 	<section class="toggle-buttons" ng-class="{ hide: subjects.selection().length === 0 }">
-		<div class="toggle block-container">
+		<div class="toggle">
 			<div class="row">
 				<button ng-click="subjects.removeSelection()"><i18n>remove</i18n></button>
 				<button

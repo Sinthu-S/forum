@@ -13,6 +13,7 @@ routes.define(function($routeProvider){
 
 function ForumController($scope, template, model, date, route){
 	$scope.notFound = false;
+	template.open('categories', 'categories');
 	$scope.template = template;
 
 	$scope.me = model.me;
@@ -166,6 +167,7 @@ function ForumController($scope, template, model, date, route){
 		$scope.subject.addMessage($scope.editedMessage);
 		$scope.editedMessage = new Message();
 		$scope.editedMessage.content = "";
+		template.open('main', 'read-subject');
 	};
 
 	$scope.editMessage = function(message){
@@ -192,9 +194,24 @@ function ForumController($scope, template, model, date, route){
 		$scope.editedMessage = new Message();
 	};
 
-	$scope.editCategory = function(){
-		$scope.category = $scope.categories.selection()[0];
+	$scope.editCategory = function(category, event){
+		if(!category){
+			$scope.category = $scope.categories.selection()[0];
+		}
+		event.stopPropagation();
 		template.open('main', 'edit-category');
+	};
+
+	$scope.removeCategory = function(category, event){
+		category.selected = true;
+		model.categories.removeSelection();
+		event.stopPropagation();
+	};
+
+	$scope.shareCategory = function(category, event){
+		$scope.category = category;
+		$scope.display.showPanel = true;
+		event.stopPropagation();
 	};
 
 	$scope.saveCategoryEdit = function(){
@@ -212,6 +229,7 @@ function ForumController($scope, template, model, date, route){
 			});
 			$scope.categories.sync();
 		}
+		template.close('main');
 	};
 
 	$scope.cancelCategoryEdit = function(){
