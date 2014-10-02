@@ -1,12 +1,9 @@
-<h1><i18n ng-click="openMainPage()">forum.title</i18n></h1>
-
+<h2>[[category.name]]</h2>
+<div class="vertical-spacing"></div>
 <div class="row">
 	<p>
 		<i18n>forum.the.category</i18n> [[category.name]] <i18n>forum.has.been.created</i18n> 
 		<i18n>forum.you.can.share.this.category</i18n>
 	</p>
 	<share-panel app-prefix="'forum'" resources="category"></share-panel>
-	<a ng-click="openMainPage()">
-		<i18n>forum.back.to.categories</i18n>
-	</a>
 </div>

@@ -13,7 +13,7 @@ routes.define(function($routeProvider){
 
 function ForumController($scope, template, model, date, route){
 	$scope.notFound = false;
-	template.open('categories', 'categories');
+
 	$scope.template = template;
 
 	$scope.me = model.me;
@@ -74,7 +74,7 @@ function ForumController($scope, template, model, date, route){
 			model.categories.sync();
 		},
 		mainPage: function(){
-			template.open('main', 'categories');
+			template.open('categories', 'categories');
 		}
 	});
 

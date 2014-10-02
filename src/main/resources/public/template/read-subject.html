@@ -2,10 +2,11 @@
 	<link rel="stylesheet" type="text/css" href="/forum/public/css/custom.css">
 </head>
 
-<h2>[[subject.title]]</h2>
+<div class="row">
+	<h2 class="cell">[[subject.title]]</h2>
 
-<a id="top" ng-click="scrollTo('bottom')" class="right-magnet">&darr; Voir le dernier commentaire</a>
-<hr />
+	<a id="top" ng-click="scrollTo('bottom')" class="right-magnet">&darr; Voir le dernier commentaire</a>
+</div>
 
 <behaviour name="contrib" resource="subject">
 	<button ng-click="template.open('main', 'reply')" ng-if="!subject.locked">Répondre</button>
@@ -20,23 +21,23 @@
 			</div>
 		</div>
 		<article class="illustrated-text" ng-if="message !== editedMessage">
-			<div class="six cell">
-				<strong><a href="/userbook/annuaire/[[message.owner.userId]]">[[message.owner.displayName]]</a></strong>, le <span class="small-text">[[formatDateShort(message.created.$date)]]</span>
+			<div class="row">
+				<div class="six cell">
+					<strong><a href="/userbook/annuaire/[[message.owner.userId]]">[[message.owner.displayName]]</a></strong>, le <span class="small-text">[[formatDateShort(message.created.$date)]]</span>
+				</div>
+				<behaviour name="publish" resource="subject" class="contextual-buttons right-magnet small-text">
+					&nbsp;<i18n>forum.or</i18n>&nbsp;
+					<a ng-click="removeMessage(message)">
+						<i18n>forum.remove</i18n>
+					</a>
+				</behaviour>
+				<behaviour name="publish" resource="message" class="contextual-buttons right-magnet small-text">
+					<a ng-click="editMessage(message)">
+						<i18n>forum.edit</i18n>
+					</a>
+				</behaviour>
 			</div>
-			<behaviour name="publish" resource="subject" class="contextual-buttons right-magnet small-text">
-				&nbsp;<i18n>forum.or</i18n>&nbsp;
-				<a ng-click="removeMessage(message)">
-					<i18n>forum.remove</i18n>
-				</a>
-			</behaviour>
-			<behaviour name="publish" resource="message" class="contextual-buttons right-magnet small-text">
-				<a ng-click="editMessage(message)">
-					<i18n>forum.edit</i18n>
-				</a>
-			</behaviour>
 			<p bind-html="message.content"></p>
-
-			<div class="row"></div>
 		</article>
 		<article class="illustrated-text" ng-if="message === editedMessage">
 			<html-editor ng-model="editedMessage.content" required></html-editor>
@@ -52,7 +53,7 @@
 <hr />
 
 <behaviour name="contrib" resource="subject">
-	<button ng-click="template.open('main', 'reply')" ng-if="!subject.locked">Répondre</button>
+	<button ng-click="template.open('main', 'reply')" ng-if="!subject.locked" class="cell">Répondre</button>
 </behaviour>
 
 <a id="bottom" ng-click="scrollTo('top')" class="right-magnet">&uarr; Haut de la page</a>
