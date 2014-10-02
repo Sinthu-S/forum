@@ -5,7 +5,12 @@
 	<article class="twelve cell">
 		<label class="two cell"><i18n>forum.subject</i18n></label>
 		<input type="text" i18n-placeholder="forum.subject.placeholder" class="ten cell" ng-model="subject.title" required />
+
+		<label class="twelve cell"><i18n>forum.subject.message</i18n></label>
 		<html-editor ng-model="editedMessage.content" required></html-editor>
+
+		<div class="ten cell warning" ng-if="subject.error !== undefined" translate content="[[subject.error]]">
+		</div>
 
 		<button class="right-magnet" ng-click="addSubject()"><i18n>submit</i18n></button>
 		<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="closeSubject()" />

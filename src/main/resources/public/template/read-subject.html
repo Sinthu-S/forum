@@ -40,10 +40,10 @@
 		</article>
 		<article class="illustrated-text" ng-if="message === editedMessage">
 			<html-editor ng-model="editedMessage.content" required></html-editor>
-			<div class="row">
-				<button class="right-magnet" ng-click="saveEditMessage()"><i18n>edit</i18n></button>
-				<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelEditMessage()" />
+			<div class="ten cell warning" ng-if="editedMessage.error !== undefined" translate content="[[editedMessage.error]]">
 			</div>
+			<button class="right-magnet" ng-click="saveEditMessage()"><i18n>edit</i18n></button>
+			<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelEditMessage()" />
 		</article>
 	</div>
 
@@ -56,6 +56,10 @@
 		<h2><i18n>reply</i18n></h2>
 		<article class="twelve cell">
 			<html-editor ng-model="editedMessage.content" watch-collections="['messages.all']" required></html-editor>
+
+			<div class="ten cell warning" ng-if="editedMessage.error !== undefined" translate content="[[editedMessage.error]]">
+			</div>
+
 			<button class="right-magnet" ng-click="addMessage()"><i18n>reply</i18n></button>
 		</article>
 	</div>

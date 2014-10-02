@@ -128,37 +128,44 @@ function ForumController($scope, template, model, date, route){
 	};
 
 	$scope.addSubject = function(){
-		if($scope.subject.title !== undefined){
-			var title = $scope.subject.title.replace(/ /g, '');
-			title = title.replace(/&nbsp;/g, '');
-			var content = $scope.editedMessage.content.replace(/ /g, '');
-			content = content.replace(/&nbsp;/g, '');
-			if(title !== "" && content !== "<divclass=\"ng-scope\"></div>"){
-				$scope.category.addSubject($scope.subject, function(){
-					$scope.subject.addMessage($scope.editedMessage);
-					$scope.messages = $scope.subject.messages;
-					$scope.editedMessage = new Message();
-					$scope.editedMessage.content = "";
-				});
-				template.open('main', 'read-subject');
-			}
+		if ($scope.isTitleEmpty($scope.subject.title)) {
+			$scope.subject.title = undefined;
+			$scope.subject.error = 'forum.subject.missing.title';
+			return;	
 		}
+
+		if ($scope.isTextEmpty($scope.editedMessage.content)) {
+			$scope.subject.error = 'forum.message.empty';
+			return;
+		}
+
+		$scope.subject.error = undefined;
+		$scope.category.addSubject($scope.subject, function(){
+			$scope.subject.addMessage($scope.editedMessage);
+			$scope.messages = $scope.subject.messages;
+			$scope.editedMessage = new Message();
+			$scope.editedMessage.content = "";
+		});
+		template.open('main', 'read-subject');
 	};
 
 	$scope.closeSubject = function(){
+		$scope.subject.error = undefined;
 		$scope.subject = undefined;
 		$scope.subjects.sync();
 		template.open('main', 'subjects');
 	};
 
 	$scope.addMessage = function(){
-		var content = $scope.editedMessage.content.replace(/ /g, '');
-		content = content.replace(/&nbsp;/g, '');
-		if(content !== "<divclass=\"ng-scope\"></div>"){
-			$scope.subject.addMessage($scope.editedMessage);
-			$scope.editedMessage = new Message();
-			$scope.editedMessage.content = "";
+		if ($scope.isTextEmpty($scope.editedMessage.content)) {
+			$scope.editedMessage.error = 'forum.message.empty';
+			return;
 		}
+
+		$scope.editedMessage.error = undefined;
+		$scope.subject.addMessage($scope.editedMessage);
+		$scope.editedMessage = new Message();
+		$scope.editedMessage.content = "";
 	};
 
 	$scope.editMessage = function(message){
@@ -171,6 +178,12 @@ function ForumController($scope, template, model, date, route){
 	};
 
 	$scope.saveEditMessage = function(){
+		if ($scope.isTextEmpty($scope.editedMessage.content)) {
+			$scope.editedMessage.error = 'forum.message.empty';
+			return;
+		}
+
+		$scope.editedMessage.error = undefined;
 		$scope.editedMessage.save();
 		$scope.editedMessage = new Message();
 	};
@@ -225,5 +238,19 @@ function ForumController($scope, template, model, date, route){
 	
 	$scope.scrollTo = function(item){
 		window.scrollTo(0, $("#" + item)[0].offsetTop -100);
+	}
+
+	$scope.isTitleEmpty = function(str) {
+		if (str !== undefined && str.replace(/ |&nbsp;/g, '') !== "") {
+			return false;
+		}
+		return true;
+	}
+
+	$scope.isTextEmpty = function(str) {
+		if (str !== undefined && str.replace(/<div class="ng-scope">|<\/div>|<br>|<p>|<\/p>|&nbsp;| /g, '') !== "") {
+			return false;
+		}
+		return true;
 	}
 }
