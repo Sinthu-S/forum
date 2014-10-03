@@ -236,7 +236,7 @@ function ForumController($scope, template, model, date, route){
 
 	$scope.cancelCategoryEdit = function(){
 		$scope.category = undefined;
-		template.open('main', 'categories');
+		template.close('main');
 	};
 
 	$scope.newCategory = function(){
