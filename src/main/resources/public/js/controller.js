@@ -222,18 +222,10 @@ function ForumController($scope, template, model, date, route){
 		$scope.display.confirmDelete = undefined;
 	};
 
-	$scope.editCategory = function(){
-		if(!category){
-			$scope.category = $scope.categories.selection()[0];
-		}
+	$scope.editCategory = function(category, event){
+		$scope.category = category;
 		event.stopPropagation();
 		template.open('main', 'edit-category');
-	};
-
-	$scope.removeCategory = function(category, event){
-		category.selected = true;
-		model.categories.removeSelection();
-		event.stopPropagation();
 	};
 
 	$scope.shareCategory = function(category, event){
@@ -244,11 +236,11 @@ function ForumController($scope, template, model, date, route){
 
 	$scope.saveCategoryEdit = function(){
 		if ($scope.category._id) { // when editing a category
-			$scope.category.save();
-			delete $scope.category;
-			$scope.categories.sync(function(){
-				template.open('main', 'categories');
-				$scope.$apply();
+			$scope.category.save(function(){
+				$scope.categories.sync(function(){
+					$scope.cancelCategoryEdit();
+					$scope.$apply();
+				});
 			});
 		}
 		else { // when creating a category
@@ -270,17 +262,21 @@ function ForumController($scope, template, model, date, route){
 		template.open('main', 'edit-category');
 	};
 
-	$scope.confirmRemoveSelectedCategories = function() {
+	$scope.confirmRemoveCategory = function(category, event){
+		$scope.categories.deselectAll();
+		category.selected = true;
 		$scope.display.confirmDeleteCategories = true;
+		event.stopPropagation();
 	};
 
 	$scope.removeSelectedCategories = function() {
 		$scope.categories.removeSelection(function(){
-			$scope.display.confirmDeleteCategories = undefined;
+			$scope.cancelRemoveCategory();
 		});
 	};
 
-	$scope.cancelRemoveCategories = function() {
+	$scope.cancelRemoveCategory = function() {
+		$scope.categories.deselectAll();
 		$scope.display.confirmDeleteCategories = undefined;
 	};
 

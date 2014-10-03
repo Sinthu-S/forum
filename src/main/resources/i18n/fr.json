@@ -33,7 +33,7 @@
 	"forum.confirm.delete.message" : "Voulez-vous vraiment supprimer ce message ?",
 	"forum.confirm.delete.subject" : "Voulez-vous vraiment supprimer la discussions sélectionnée et tous les messages qu'elle contient ?",
 	"forum.confirm.delete.subjects" : "Voulez-vous vraiment supprimer les discussions sélectionnées et tous les messages qu'elles contiennent ?",
-	"forum.confirm.delete.category" : "Voulez-vous vraiment supprimer la catégorie sélectionnée et toutes les discussions qu'elle contient ?",
+	"forum.confirm.delete.category" : "Voulez-vous vraiment supprimer cette catégorie et toutes les discussions qu'elle contient ?",
 	"forum.confirm.delete.categories" : "Voulez-vous vraiment supprimer les catégories sélectionnées et toutes les discussions qu'elle contiennent ?",
 
 	"forum.create.a.category": "Créer une catégorie",

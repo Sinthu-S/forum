@@ -212,9 +212,12 @@ Category.prototype.createCategory = function(callback){
 	}.bind(this));
 };
 
-Category.prototype.saveModifications = function(){
+Category.prototype.saveModifications = function(callback){
 	http().putJson('/forum/category/' + this._id, this).done(function(e){
 		notify.info('forum.subject.modification.saved');
+		if(typeof callback === 'function'){
+			callback();
+		}
 	});
 };
 

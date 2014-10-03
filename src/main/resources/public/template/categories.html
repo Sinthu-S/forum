@@ -30,11 +30,10 @@
 			</strong>
 			<div class="small-hidden bottom-locked">
 				<behaviour name="manage" resource="cat">
-					<button ng-click="editCategory(cat, $event)">Modifier</button>
-					<button ng-click="removeCategory(cat, $event)">Supprimer</button>
-					<button ng-click="shareCategory(cat, $event)">Partager</button>
+					<button ng-click="editCategory(cat, $event)"><i18n>edit</i18n></button>
+					<button ng-click="confirmRemoveCategory(cat, $event)"><i18n>remove</i18n></button>
+					<button ng-click="shareCategory(cat, $event)"><i18n>share</i18n></button>
 				</behaviour>
-
 			</div>
 		</article>
 	</div>
@@ -48,7 +47,7 @@
 </div>
 
 <div ng-if="display.confirmDeleteCategories">
-	<lightbox show="display.confirmDeleteCategories" on-close="cancelRemoveCategories()">
+	<lightbox show="display.confirmDeleteCategories" on-close="cancelRemoveCategory()">
 		<div class="row" ng-if="categories.selection().length === 1">
 			<i18n>forum.confirm.delete.category</i18n>
 		</div>
@@ -57,7 +56,7 @@
 		</div>
 		<div class="row">
 			<button class="right-magnet" ng-click="removeSelectedCategories()"><i18n>remove</i18n></button>
-			<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelRemoveCategories()" />
+			<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelRemoveCategory()" />
 		</div>
 	</lightbox>
 </div>
