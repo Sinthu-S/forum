@@ -2,6 +2,8 @@
 	<h2><i18n>reply</i18n></h2>
 	<article class="twelve cell">
 		<html-editor ng-model="editedMessage.content" watch-collections="['messages.all']" required></html-editor>
+		<div class="ten cell warning" ng-if="editedMessage.error !== undefined" translate content="[[editedMessage.error]]">
+		</div>
 		<button class="right-magnet" ng-click="addMessage()"><i18n>reply</i18n></button>
 	</article>
 </div>
