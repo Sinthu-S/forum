@@ -120,7 +120,7 @@ function ForumController($scope, template, model, date, route){
 	
 	$scope.openMainPage = function(){
 		delete $scope.category;
-		template.open('main', 'categories');
+		template.close('main');
 	}
 
 	$scope.newSubject = function(){
