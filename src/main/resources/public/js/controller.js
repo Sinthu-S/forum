@@ -26,6 +26,7 @@ function ForumController($scope, template, model, date, route){
 	// Definition of actions
 	route({
 		goToCategory: function(params){
+			template.open('categories', 'categories');
 			model.categories.one('sync', function(){
 				$scope.category = undefined;
 				$scope.category = model.categories.find(function(category){
@@ -43,6 +44,7 @@ function ForumController($scope, template, model, date, route){
 			model.categories.sync();
 		},
 		goToSubject: function(params){
+			template.open('categories', 'categories');
 			model.categories.one('sync', function(){
 				$scope.category = undefined;
 				$scope.category = model.categories.find(function(category){
