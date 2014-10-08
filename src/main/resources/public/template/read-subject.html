@@ -5,11 +5,11 @@
 <div class="row">
 	<h2 class="cell">[[subject.title]]</h2>
 
-	<a id="top" ng-click="scrollTo('bottom')" class="right-magnet">&darr; Voir le dernier commentaire</a>
+	<a id="top" ng-click="scrollTo('bottom')" class="right-magnet">&darr; <i18n>forum.go.to.last.message</i18n></a>
 </div>
 
 <behaviour name="contrib" resource="subject">
-	<button ng-click="template.open('main', 'reply')" ng-if="!subject.locked">Répondre</button>
+	<button ng-click="template.open('main', 'reply')" ng-if="!subject.locked"><i18n>forum.reply</i18n></button>
 </behaviour>
 
 <div ng-repeat="message in messages.all">
@@ -53,10 +53,10 @@
 <hr />
 
 <behaviour name="contrib" resource="subject">
-	<button ng-click="template.open('main', 'reply')" ng-if="!subject.locked" class="cell">Répondre</button>
+	<button ng-click="template.open('main', 'reply')" ng-if="!subject.locked" class="cell"><i18n>forum.reply</i18n></button>
 </behaviour>
 
-<a id="bottom" ng-click="scrollTo('top')" class="right-magnet">&uarr; Haut de la page</a>
+<a id="bottom" ng-click="scrollTo('top')" class="right-magnet">&uarr; <i18n>forum.go.to.top</i18n></a>
 
 <div ng-if="display.confirmDelete">
 	<lightbox show="display.confirmDelete" on-close="cancelRemoveMessage()">

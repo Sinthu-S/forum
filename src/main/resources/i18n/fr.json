@@ -17,6 +17,10 @@
 	"forum.subject.missing.title" : "Veuillez entrer un titre pour le sujet de discussion",
 	"forum.message.empty" : "Le message ne peut être vide",
 
+	"forum.go.to.last.message" : "Voir le dernier message",
+	"forum.reply" : "Répondre",
+	"forum.go.to.top" : "Haut de la page",
+
 	"forum.replies": "Réponses",
 	"forum.message.last": "Dernier message",
 	"forum.by": "Par ",

@@ -28,12 +28,9 @@ Message.prototype.save = function(cb){
 	}
 };
 
-Message.prototype.remove = function(cb){
+Message.prototype.remove = function(){
 	http().delete('/forum/category/' + this.subject.category._id + '/subject/' + this.subject._id + '/message/' + this._id).done(function(){
 		notify.info('forum.message.deleted');
-		if(typeof cb === 'function'){
-			cb();
-		}
 	});
 };
 

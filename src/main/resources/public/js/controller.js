@@ -212,14 +212,13 @@ function ForumController($scope, template, model, date, route){
 
 	$scope.removeMessage = function(){
 		$scope.subject.messages.remove($scope.removedMessage);
-		$scope.removedMessage.remove(function(){
-			$scope.cancelRemoveMessage();
-		});
+		delete $scope.display.confirmDelete;
+		$scope.removedMessage.remove();
 	};
 
 	$scope.cancelRemoveMessage = function(){
-		$scope.removedMessage = undefined;
-		$scope.display.confirmDelete = undefined;
+		delete $scope.removedMessage;
+		delete $scope.display.confirmDelete;
 	};
 
 	$scope.editCategory = function(category, event){
