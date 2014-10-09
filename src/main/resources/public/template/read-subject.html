@@ -23,7 +23,7 @@
 		<article class="illustrated-text" ng-if="message !== editedMessage">
 			<div class="row">
 				<div class="six cell">
-					<strong><a href="/userbook/annuaire/[[message.owner.userId]]">[[message.owner.displayName]]</a></strong>, le <span class="small-text">[[formatDateShort(message.created.$date)]]</span>
+					<strong><a ng-click="viewAuthor(message)">[[message.owner.displayName]]</a></strong>, le <span class="small-text">[[formatDateShort(message.created.$date)]]</span>
 				</div>
 				<behaviour name="publish" resource="subject" class="contextual-buttons right-magnet small-text">
 					&nbsp;<i18n>forum.or</i18n>&nbsp;
