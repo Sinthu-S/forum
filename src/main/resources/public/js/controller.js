@@ -308,4 +308,11 @@ function ForumController($scope, template, model, date, route){
 		}
 		return true;
 	}
+	
+	$scope.ownerCanEditMessage = function(subject, message) {
+		return (!subject.myRights.publish && 
+				!subject.category.myRights.publish &&
+				model.me.userId === message.owner.userId && 
+				!subject.locked);
+	};
 }

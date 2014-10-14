@@ -31,11 +31,19 @@
 						<i18n>forum.remove</i18n>
 					</a>
 				</behaviour>
-				<behaviour name="publish" resource="message" class="contextual-buttons right-magnet small-text">
-					<a ng-click="editMessage(message)">
-						<i18n>forum.edit</i18n>
-					</a>
-				</behaviour>
+				<div class="contextual-buttons right-magnet small-text">
+					<!-- Moderators can edit all messages. Owner can edit his message only if the subject is not locked -->
+					<behaviour name="publish" resource="subject" >
+						<a ng-click="editMessage(message)">
+							<i18n>forum.edit</i18n>
+						</a>
+					</behaviour>
+					<span ng-if="ownerCanEditMessage(subject, message) === true">
+						<a ng-click="editMessage(message)">
+							<i18n>forum.edit</i18n>
+						</a>
+					</span>
+				</div>
 			</div>
 			<p bind-html="message.content"></p>
 		</article>
