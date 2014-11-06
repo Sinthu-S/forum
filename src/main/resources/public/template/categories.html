@@ -1,6 +1,6 @@
 <h1><i class="forum"></i><i18n ng-click="openMainPage()">forum.title</i18n></h1>
 
-<div class="patchwork">
+<div class="items">
 	<div class="twelve cell">
 		<div workflow="forum.admin" class="cell">
 			<button ng-click="newCategory()"><i18n>forum.category.new</i18n></button>
@@ -28,7 +28,7 @@
 					<i18n>forum.message.new.none</i18n>
 				</span>
 			</strong>
-			<div class="small-hidden bottom-locked">
+			<div class="buttons small-hidden">
 				<behaviour name="manage" resource="cat">
 					<button ng-click="editCategory(cat, $event)"><i18n>edit</i18n></button>
 					<button ng-click="confirmRemoveCategory(cat, $event)"><i18n>remove</i18n></button>

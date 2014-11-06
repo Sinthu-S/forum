@@ -2,15 +2,17 @@
 	<link rel="stylesheet" type="text/css" href="/forum/public/css/custom.css">
 </head>
 
+<behaviour name="contrib" resource="subject">
+	<button ng-click="template.open('main', 'reply')" ng-if="!subject.locked"><i18n>forum.reply</i18n></button>
+</behaviour>
+
 <div class="row">
 	<h2 class="cell">[[subject.title]]</h2>
 
 	<a id="top" ng-click="scrollTo('bottom')" class="right-magnet">&darr; <i18n>forum.go.to.last.message</i18n></a>
 </div>
 
-<behaviour name="contrib" resource="subject">
-	<button ng-click="template.open('main', 'reply')" ng-if="!subject.locked"><i18n>forum.reply</i18n></button>
-</behaviour>
+
 
 <div ng-repeat="message in messages.all">
 	<div class="row vertical-spacing"></div>

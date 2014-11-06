@@ -1,13 +1,22 @@
-<h2>[[category.name]]</h2>
 
 <div class="twelve cell">
 	<behaviour name="publish" resource="category" class="contextual-buttons row">
-		<div>
+		<div class="right-magnet cell">
 			<button ng-click="newSubject()"><i18n>forum.subject.new</i18n></button>
 		</div>
 	</behaviour>
 	<div class="row vertical-spacing"></div>
-	<table class="twelve">
+	<h2>[[category.name]]</h2>
+
+	<table class="twelve list-view">
+		<thead>
+			<tr>
+				<th></th>
+				<th>Titre</th>
+				<th>Réponses</th>
+				<th>De</th>
+			</tr>
+		</thead>
 		<tbody>
 			<tr ng-repeat="subject in subjects.all" ng-class="{ checked: subject.selected }">
 				<td>
