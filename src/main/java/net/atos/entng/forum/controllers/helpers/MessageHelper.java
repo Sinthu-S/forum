@@ -1,4 +1,4 @@
-package fr.wseduc.forum.controllers.helpers;
+package net.atos.entng.forum.controllers.helpers;
 
 import static org.entcore.common.http.response.DefaultResponseHandler.arrayResponseHandler;
 import static org.entcore.common.http.response.DefaultResponseHandler.notEmptyResponseHandler;
@@ -6,11 +6,12 @@ import static org.entcore.common.http.response.DefaultResponseHandler.notEmptyRe
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
+
+import net.atos.entng.forum.services.MessageService;
+import net.atos.entng.forum.services.SubjectService;
 
 import org.entcore.common.notification.TimelineHelper;
 import org.entcore.common.user.UserInfos;
-import org.entcore.common.user.UserUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;
 import org.vertx.java.core.http.HttpServerRequest;
@@ -19,27 +20,28 @@ import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Container;
 
-import fr.wseduc.forum.services.CategoryService;
-import fr.wseduc.forum.services.SubjectService;
 import fr.wseduc.webutils.Either;
 import fr.wseduc.webutils.security.SecuredAction;
 
-public class SubjectHelper extends ExtractorHelper {
-
-	private final SubjectService subjectService;
-	private final CategoryService categoryService;
+public class MessageHelper extends ExtractorHelper {
 
 	private static final String CATEGORY_ID_PARAMETER = "id";
 	private static final String SUBJECT_ID_PARAMETER = "subjectid";
+	private static final String MESSAGE_ID_PARAMETER = "messageid";
 	private static final String FORUM_NAME = "FORUM";
-	private static final String NEW_SUBJECT_EVENT_TYPE = FORUM_NAME + "_NEW_SUBJECT";
-	private static final String UPDATE_SUBJECT_EVENT_TYPE = FORUM_NAME + "_UPDATE_SUBJECT";
+	private static final String NEW_MESSAGE_EVENT_TYPE = FORUM_NAME + "_NEW_MESSAGE";
+	private static final String UPDATE_MESSAGE_EVENT_TYPE = FORUM_NAME + "_UPDATE_MESSAGE";
+	private static final int OVERVIEW_LENGTH = 50;
+
+
+	private final MessageService messageService;
+	private final SubjectService subjectService;
 
 	protected TimelineHelper notification;
 
-	public SubjectHelper(final SubjectService subjectService, final CategoryService categoryService) {
+	public MessageHelper(final MessageService messageService, final SubjectService subjectService) {
+		this.messageService = messageService;
 		this.subjectService = subjectService;
-		this.categoryService = categoryService;
 	}
 
 	@Override
@@ -50,7 +52,8 @@ public class SubjectHelper extends ExtractorHelper {
 
 	public void list(final HttpServerRequest request) {
 		final String categoryId = extractParameter(request, CATEGORY_ID_PARAMETER);
-		if (categoryId == null) {
+		final String subjectId = extractParameter(request, SUBJECT_ID_PARAMETER);
+		if (categoryId == null || subjectId == null) {
 			return;
 		}
 
@@ -58,7 +61,7 @@ public class SubjectHelper extends ExtractorHelper {
 			@Override
 			public void handle(final UserInfos user) {
 				try {
-					subjectService.list(categoryId, user, arrayResponseHandler(request));
+					messageService.list(categoryId, subjectId, user, arrayResponseHandler(request));
 				}
 				catch (Exception e) {
 					renderErrorException(request, e);
@@ -70,7 +73,8 @@ public class SubjectHelper extends ExtractorHelper {
 	public void retrieve(final HttpServerRequest request) {
 		final String categoryId = extractParameter(request, CATEGORY_ID_PARAMETER);
 		final String subjectId = extractParameter(request, SUBJECT_ID_PARAMETER);
-		if (categoryId == null || subjectId == null) {
+		final String messageId = extractParameter(request, MESSAGE_ID_PARAMETER);
+		if (categoryId == null || subjectId == null || messageId == null) {
 			return;
 		}
 
@@ -78,7 +82,7 @@ public class SubjectHelper extends ExtractorHelper {
 			@Override
 			public void handle(final UserInfos user) {
 				try {
-					subjectService.retrieve(categoryId, subjectId, user, notEmptyResponseHandler(request));
+					messageService.retrieve(categoryId, subjectId, messageId, user, notEmptyResponseHandler(request));
 				}
 				catch (Exception e) {
 					renderErrorException(request, e);
@@ -89,7 +93,8 @@ public class SubjectHelper extends ExtractorHelper {
 
 	public void create(final HttpServerRequest request) {
 		final String categoryId = extractParameter(request, CATEGORY_ID_PARAMETER);
-		if (categoryId == null) {
+		final String subjectId = extractParameter(request, SUBJECT_ID_PARAMETER);
+		if (categoryId == null || subjectId == null) {
 			return;
 		}
 
@@ -105,7 +110,7 @@ public class SubjectHelper extends ExtractorHelper {
 								public void handle(Either<String, JsonObject> event) {
 									if (event.isRight()) {
 										if (event.right().getValue() != null && event.right().getValue().size() > 0) {
-											notifyTimeline(request, user, body, event.right().getValue().getString("_id"), NEW_SUBJECT_EVENT_TYPE);
+											notifyTimeline(request, user, body, NEW_MESSAGE_EVENT_TYPE);
 											renderJson(request, event.right().getValue(), 200);
 										}
 									} else {
@@ -114,7 +119,7 @@ public class SubjectHelper extends ExtractorHelper {
 									}
 								}
 							};
-							subjectService.create(categoryId, body, user, handler);
+							messageService.create(categoryId, subjectId, body, user, handler);
 						}
 						catch (Exception e) {
 							renderErrorException(request, e);
@@ -129,7 +134,8 @@ public class SubjectHelper extends ExtractorHelper {
 	public void update(final HttpServerRequest request) {
 		final String categoryId = extractParameter(request, CATEGORY_ID_PARAMETER);
 		final String subjectId = extractParameter(request, SUBJECT_ID_PARAMETER);
-		if (categoryId == null || subjectId == null) {
+		final String messageId = extractParameter(request, MESSAGE_ID_PARAMETER);
+		if (categoryId == null || subjectId == null || messageId == null) {
 			return;
 		}
 
@@ -145,7 +151,7 @@ public class SubjectHelper extends ExtractorHelper {
 								public void handle(Either<String, JsonObject> event) {
 									if (event.isRight()) {
 										if (event.right().getValue() != null && event.right().getValue().size() > 0) {
-											notifyTimeline(request, user, body, subjectId, UPDATE_SUBJECT_EVENT_TYPE);
+											notifyTimeline(request, user, body, UPDATE_MESSAGE_EVENT_TYPE);
 											renderJson(request, event.right().getValue(), 200);
 										}
 									} else {
@@ -154,7 +160,7 @@ public class SubjectHelper extends ExtractorHelper {
 									}
 								}
 							};
-							subjectService.update(categoryId, subjectId, body, user, handler);
+							messageService.update(categoryId, subjectId, messageId, body, user, handler);
 						}
 						catch (Exception e) {
 							renderErrorException(request, e);
@@ -169,7 +175,8 @@ public class SubjectHelper extends ExtractorHelper {
 	public void delete(final HttpServerRequest request) {
 		final String categoryId = extractParameter(request, CATEGORY_ID_PARAMETER);
 		final String subjectId = extractParameter(request, SUBJECT_ID_PARAMETER);
-		if (categoryId == null || subjectId == null) {
+		final String messageId = extractParameter(request, MESSAGE_ID_PARAMETER);
+		if (categoryId == null || subjectId == null || messageId == null) {
 			return;
 		}
 
@@ -177,7 +184,7 @@ public class SubjectHelper extends ExtractorHelper {
 			@Override
 			public void handle(final UserInfos user) {
 				try {
-					subjectService.delete(categoryId, subjectId, user, notEmptyResponseHandler(request));
+					messageService.delete(categoryId, subjectId, messageId, user, notEmptyResponseHandler(request));
 				}
 				catch (Exception e) {
 					renderErrorException(request, e);
@@ -186,85 +193,68 @@ public class SubjectHelper extends ExtractorHelper {
 		});
 	}
 
-	private void notifyTimeline(final HttpServerRequest request, final UserInfos user, final JsonObject subject, final String subjectId, final String eventType){
+	private void notifyTimeline(final HttpServerRequest request, final UserInfos user, final JsonObject message, final String eventType){
 		final String categoryId = extractParameter(request, CATEGORY_ID_PARAMETER);
-		categoryService.getSharedWithIds(categoryId, user, new Handler<Either<String, JsonArray>>() {
+		final String subjectId = extractParameter(request, SUBJECT_ID_PARAMETER);
+		subjectService.getSubjectTitle(categoryId, subjectId, user, new Handler<Either<String, JsonObject>>() {
 			@Override
-			public void handle(Either<String, JsonArray> event) {
-				final List<String> ids = new ArrayList<String>();
+			public void handle(Either<String, JsonObject> event) {
 				if (event.isRight()) {
-					// get all ids
-					JsonArray shared = event.right().getValue();
-					if (shared.size() > 0) {
-						JsonObject jo = null;
-						String groupId = null;
-						String id = null;
-						final AtomicInteger remaining = new AtomicInteger(shared.size());
-						// Extract shared with
-						for(int i=0; i<shared.size(); i++){
-							jo = shared.get(i);
-							if(jo.containsField("userId")){
-								id = ((JsonObject) shared.get(i)).getString("userId");
-								if(!id.equals(user.getUserId()) && !ids.contains(id)){
-									ids.add(id);
-									remaining.getAndDecrement();
-								}
-							}
-							else{
-								if(jo.containsField("groupId")){
-									groupId = jo.getString("groupId");
-									if (groupId != null) {
-										UserUtils.findUsersInProfilsGroups(groupId, eb, user.getUserId(), false, new Handler<JsonArray>() {
-											@Override
-											public void handle(JsonArray event) {
-												if (event != null) {
-													String userId = null;
-													for (Object o : event) {
-														if (!(o instanceof JsonObject)) continue;
-														userId = ((JsonObject) o).getString("id");
-														if(!userId.equals(user.getUserId()) && !ids.contains(userId)){
-															ids.add(userId);
-														}
-													}
-												}
-												if (remaining.decrementAndGet() < 1) {
-													sendNotify(request, ids, user, subject, subjectId, eventType);
-												}
-											}
-										});
+					final JsonObject subject = event.right().getValue();
+					messageService.getContributors(categoryId, subjectId, user, new Handler<Either<String, JsonArray>>() {
+						@Override
+						public void handle(Either<String, JsonArray> event) {
+							final List<String> ids = new ArrayList<String>();
+							if (event.isRight()) {
+								// get all owners
+								JsonArray owners = event.right().getValue();
+								if (owners.size() > 0) {
+									String id = null;
+									// Extract owners
+									for(int i=0; i<owners.size(); i++){
+										id = ((JsonObject) owners.get(i)).getString("userId");
+										if(!id.equals(user.getUserId()) && !ids.contains(id)){
+											ids.add(id);
+										}
+									}
+									String template = null;
+									if (eventType == NEW_MESSAGE_EVENT_TYPE) {
+										template = "notify-message-created.html";
+									}
+									else {
+										if(eventType == UPDATE_MESSAGE_EVENT_TYPE){
+											template = "notify-message-updated.html";
+										}
+									}
+									String overview = message.getString("content");
+									if(overview.contains("</p>")){
+										overview = overview.split("</p>")[0];
+										overview = overview.replaceAll("<br>", "");
+									}
+									else{
+										overview = "<p>".concat(overview);
+									}
+									if(overview.length() > OVERVIEW_LENGTH){
+										overview = overview.substring(0, OVERVIEW_LENGTH);
+										overview = overview.concat(" ... </p>");
+									}
+									JsonObject params = new JsonObject()
+										.putString("profilUri", container.config().getString("host") +
+												"/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
+										.putString("username", user.getUsername())
+										.putString("subject", subject.getObject("result").getString("title"))
+										.putString("subjectUri", container.config().getString("host") + pathPrefix +
+												"#/view/" + categoryId + "/" + subjectId)
+										.putString("overview", overview);
+									if (subjectId != null && !subjectId.trim().isEmpty()) {
+										notification.notifyTimeline(request, user, FORUM_NAME, eventType, ids, subjectId, template, params);
 									}
 								}
 							}
 						}
-						if (remaining.get() < 1) {
-							sendNotify(request, ids, user, subject, subjectId, eventType);
-						}
-					}
+					});
 				}
 			}
 		});
-	}
-
-	private void sendNotify(final HttpServerRequest request, final List<String> ids, final UserInfos user, final JsonObject subject, final String subjectId, final String eventType){
-		final String categoryId = extractParameter(request, CATEGORY_ID_PARAMETER);
-		String template = null;
-		if (eventType == NEW_SUBJECT_EVENT_TYPE) {
-			template = "notify-subject-created.html";
-		}
-		else {
-			if(eventType == UPDATE_SUBJECT_EVENT_TYPE){
-				template = "notify-subject-updated.html";
-			}
-		}
-		JsonObject params = new JsonObject()
-			.putString("profilUri", container.config().getString("host") +
-					"/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
-			.putString("username", user.getUsername())
-			.putString("subject", subject.getString("title"))
-			.putString("subjectUri", container.config().getString("host") + pathPrefix +
-					"#/view/" + categoryId + "/" + subjectId);
-		if (subjectId != null && !subjectId.isEmpty()) {
-			notification.notifyTimeline(request, user, FORUM_NAME, eventType, ids, categoryId, template, params);
-		}
 	}
 }

@@ -1,10 +1,12 @@
-package fr.wseduc.forum.services.impl;
+package net.atos.entng.forum.services.impl;
 
 import static org.entcore.common.mongodb.MongoDbResult.validActionResultHandler;
 import static org.entcore.common.mongodb.MongoDbResult.validResultHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import net.atos.entng.forum.services.MessageService;
 
 import org.bson.types.ObjectId;
 import org.entcore.common.service.VisibilityFilter;
@@ -18,7 +20,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.QueryBuilder;
 
-import fr.wseduc.forum.services.MessageService;
 import fr.wseduc.mongodb.MongoDb;
 import fr.wseduc.mongodb.MongoQueryBuilder;
 import fr.wseduc.mongodb.MongoUpdateBuilder;

@@ -1,4 +1,4 @@
-package fr.wseduc.forum.filters;
+package net.atos.entng.forum.filters;
 
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;

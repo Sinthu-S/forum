@@ -1,4 +1,4 @@
-package fr.wseduc.forum.controllers.helpers;
+package net.atos.entng.forum.controllers.helpers;
 
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;

@@ -1,20 +1,20 @@
 var forumBehaviours = {
 	resources: {
 		contrib: {
-			right: 'fr-wseduc-forum-controllers-ForumController|createMessage'
+			right: 'net-atos-entng-forum-controllers-ForumController|createMessage'
 		},
 		publish: {
-			right: 'fr-wseduc-forum-controllers-ForumController|createSubject'
+			right: 'net-atos-entng-forum-controllers-ForumController|createSubject'
 		},
 		manage: {
-			right: 'fr-wseduc-forum-controllers-ForumController|updateCategory'
+			right: 'net-atos-entng-forum-controllers-ForumController|updateCategory'
 		},
 		share: {
-			right: 'fr-wseduc-forum-controllers-ForumController|shareCategory'
+			right: 'net-atos-entng-forum-controllers-ForumController|shareCategory'
 		}
 	},
 	workflow: {
-		admin: 'fr.wseduc.forum.controllers.ForumController|createCategory'
+		admin: 'net.atos.entng.forum.controllers.ForumController|createCategory'
 	}
 };
 
