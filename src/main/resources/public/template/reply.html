@@ -1,4 +1,4 @@
-<div class="row" ng-if="!subject.locked && !editedMessage._id">
+<div class="row toggle-buttons-spacer" ng-if="!subject.locked && !editedMessage._id">
 	<h2><i18n>reply</i18n></h2>
 	<article class="twelve cell">
 		<html-editor ng-model="editedMessage.content" watch-collections="['messages.all']" required></html-editor>
