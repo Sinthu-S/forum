@@ -1,16 +1,17 @@
-package fr.wseduc.forum;
+package net.atos.entng.forum;
+
+import net.atos.entng.forum.controllers.ForumController;
+import net.atos.entng.forum.services.CategoryService;
+import net.atos.entng.forum.services.MessageService;
+import net.atos.entng.forum.services.SubjectService;
+import net.atos.entng.forum.services.impl.MongoDbCategoryService;
+import net.atos.entng.forum.services.impl.MongoDbMessageService;
+import net.atos.entng.forum.services.impl.MongoDbSubjectService;
 
 import org.entcore.common.http.BaseServer;
 import org.entcore.common.http.filter.ShareAndOwner;
 import org.entcore.common.mongodb.MongoDbConf;
 
-import fr.wseduc.forum.controllers.ForumController;
-import fr.wseduc.forum.services.CategoryService;
-import fr.wseduc.forum.services.MessageService;
-import fr.wseduc.forum.services.SubjectService;
-import fr.wseduc.forum.services.impl.MongoDbCategoryService;
-import fr.wseduc.forum.services.impl.MongoDbMessageService;
-import fr.wseduc.forum.services.impl.MongoDbSubjectService;
 
 public class Forum extends BaseServer {
 

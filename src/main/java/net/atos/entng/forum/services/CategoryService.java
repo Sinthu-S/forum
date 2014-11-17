@@ -1,4 +1,4 @@
-package fr.wseduc.forum.services;
+package net.atos.entng.forum.services;
 
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;

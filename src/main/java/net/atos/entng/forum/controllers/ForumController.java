@@ -1,6 +1,14 @@
-package fr.wseduc.forum.controllers;
+package net.atos.entng.forum.controllers;
 
 import java.util.Map;
+
+import net.atos.entng.forum.controllers.helpers.CategoryHelper;
+import net.atos.entng.forum.controllers.helpers.MessageHelper;
+import net.atos.entng.forum.controllers.helpers.SubjectHelper;
+import net.atos.entng.forum.filters.impl.ForumMessageMine;
+import net.atos.entng.forum.services.CategoryService;
+import net.atos.entng.forum.services.MessageService;
+import net.atos.entng.forum.services.SubjectService;
 
 import org.entcore.common.http.filter.ResourceFilter;
 import org.vertx.java.core.Vertx;
@@ -8,13 +16,6 @@ import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.RouteMatcher;
 import org.vertx.java.platform.Container;
 
-import fr.wseduc.forum.controllers.helpers.CategoryHelper;
-import fr.wseduc.forum.controllers.helpers.MessageHelper;
-import fr.wseduc.forum.controllers.helpers.SubjectHelper;
-import fr.wseduc.forum.filters.impl.ForumMessageMine;
-import fr.wseduc.forum.services.CategoryService;
-import fr.wseduc.forum.services.MessageService;
-import fr.wseduc.forum.services.SubjectService;
 import fr.wseduc.rs.ApiDoc;
 import fr.wseduc.rs.Delete;
 import fr.wseduc.rs.Get;

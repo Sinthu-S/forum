@@ -1,8 +1,10 @@
-package fr.wseduc.forum.services.impl;
+package net.atos.entng.forum.services.impl;
 
 import static org.entcore.common.mongodb.MongoDbResult.validActionResultHandler;
 import static org.entcore.common.mongodb.MongoDbResult.validResultHandler;
 import static org.entcore.common.mongodb.MongoDbResult.validResultsHandler;
+
+import net.atos.entng.forum.services.SubjectService;
 
 import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;
@@ -11,7 +13,6 @@ import org.vertx.java.core.json.JsonObject;
 
 import com.mongodb.QueryBuilder;
 
-import fr.wseduc.forum.services.SubjectService;
 import fr.wseduc.mongodb.MongoDb;
 import fr.wseduc.mongodb.MongoQueryBuilder;
 import fr.wseduc.mongodb.MongoUpdateBuilder;

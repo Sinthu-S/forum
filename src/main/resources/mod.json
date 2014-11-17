@@ -1,5 +1,5 @@
 {
-	"main" : "fr.wseduc.forum.Forum",
+	"main" : "net.atos.entng.forum.Forum",
 	"port" : 8024,
 	"app-name" : "Forum",
 	"app-address" : "/forum",

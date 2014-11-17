@@ -1,4 +1,8 @@
-package fr.wseduc.forum.filters.impl;
+package net.atos.entng.forum.filters.impl;
+
+import net.atos.entng.forum.Forum;
+import net.atos.entng.forum.services.MessageService;
+import net.atos.entng.forum.services.impl.MongoDbMessageService;
 
 import org.entcore.common.http.filter.ResourcesProvider;
 import org.entcore.common.mongodb.MongoDbConf;
@@ -6,9 +10,6 @@ import org.entcore.common.user.UserInfos;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpServerRequest;
 
-import fr.wseduc.forum.Forum;
-import fr.wseduc.forum.services.MessageService;
-import fr.wseduc.forum.services.impl.MongoDbMessageService;
 import fr.wseduc.webutils.http.Binding;
 
 public class ForumMessageMine implements ResourcesProvider {

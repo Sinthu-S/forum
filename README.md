@@ -12,9 +12,9 @@ Dans le fichier 'ent-core.json.template' du projet ong :
 Déclarer l'application forum dans `"external-modules"` :
 <pre>
     {
-		"name": "fr.wseduc~forum~0.1-SNAPSHOT",
+		"name": "net.atos.entng~forum~0.1-SNAPSHOT",
 		"config": {
-		  "main" : "fr.wseduc.forum.Forum",
+		  "main" : "net.atos.entng.forum.Forum",
 		  "port" : 8024,
 		  "app-name" : "Forum",
 		  "app-address" : "/forum",
@@ -62,20 +62,20 @@ Exemple de document de la collection "forum.categories" :
 		"shared" : [
 			{
 				"groupId" : "175-1404727939595",
-				"fr-wseduc-forum-controllers-ForumController|getSubject" : true,
-				"fr-wseduc-forum-controllers-ForumController|getMessage" : true,
-				"fr-wseduc-forum-controllers-ForumController|getCategory" : true,
-				"fr-wseduc-forum-controllers-ForumController|listMessages" : true,
-				"fr-wseduc-forum-controllers-ForumController|listSubjects" : true,
-				"fr-wseduc-forum-controllers-ForumController|createMessage" : true
+				"net-atos-entng-forum-controllers-ForumController|getSubject" : true,
+				"net-atos-entng-forum-controllers-ForumController|getMessage" : true,
+				"net-atos-entng-forum-controllers-ForumController|getCategory" : true,
+				"net-atos-entng-forum-controllers-ForumController|listMessages" : true,
+				"net-atos-entng-forum-controllers-ForumController|listSubjects" : true,
+				"net-atos-entng-forum-controllers-ForumController|createMessage" : true
 			},
 			{
 				"userId" : "212e9b3c-91cc-47ca-a441-c6e32b1bf04b",
-				"fr-wseduc-forum-controllers-ForumController|getSubject" : true,
-				"fr-wseduc-forum-controllers-ForumController|getMessage" : true,
-				"fr-wseduc-forum-controllers-ForumController|getCategory" : true,
-				"fr-wseduc-forum-controllers-ForumController|listMessages" : true,
-				"fr-wseduc-forum-controllers-ForumController|listSubjects" : true
+				"net-atos-entng-forum-controllers-ForumController|getSubject" : true,
+				"net-atos-entng-forum-controllers-ForumController|getMessage" : true,
+				"net-atos-entng-forum-controllers-ForumController|getCategory" : true,
+				"net-atos-entng-forum-controllers-ForumController|listMessages" : true,
+				"net-atos-entng-forum-controllers-ForumController|listSubjects" : true
 			}
 		]
 	}

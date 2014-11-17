@@ -1,4 +1,4 @@
-package fr.wseduc.forum.controllers.helpers;
+package net.atos.entng.forum.controllers.helpers;
 
 import static org.entcore.common.http.response.DefaultResponseHandler.arrayResponseHandler;
 import static org.entcore.common.http.response.DefaultResponseHandler.defaultResponseHandler;
@@ -7,6 +7,8 @@ import static org.entcore.common.user.UserUtils.getUserInfos;
 
 import java.util.List;
 import java.util.Map;
+
+import net.atos.entng.forum.services.CategoryService;
 
 import org.entcore.common.mongodb.MongoDbControllerHelper;
 import org.entcore.common.share.ShareService;
@@ -20,7 +22,6 @@ import org.vertx.java.core.http.RouteMatcher;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Container;
 
-import fr.wseduc.forum.services.CategoryService;
 import fr.wseduc.webutils.Either;
 import fr.wseduc.webutils.http.Renders;
 import fr.wseduc.webutils.security.SecuredAction;

@@ -1,4 +1,4 @@
-package fr.wseduc.forum.services.impl;
+package net.atos.entng.forum.services.impl;
 
 import fr.wseduc.mongodb.MongoDb;
 
