@@ -15,6 +15,7 @@
 	"forum.subject.unlocked": "Sujet(s) débloqué(s)",
 	"forum.subject.modification.saved": "Modifications enregistrées",
 	"forum.subject.missing.title" : "Veuillez entrer un titre pour le sujet de discussion",
+	"forum.subject.edit": "Modifier la discussion",
 	"forum.message.empty" : "Le message ne peut être vide",
 
 	"forum.go.to.last.message" : "Voir le dernier message",

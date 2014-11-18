@@ -42,6 +42,7 @@
 	<section class="toggle-buttons" ng-class="{ hide: subjects.selection().length === 0 }">
 		<div class="toggle">
 			<div class="row">
+				<button ng-click="display.editSubject = true" ng-if="subjects.length() === 1"><i18n>edit</i18n></button>
 				<button ng-click="confirmRemoveSelectedSubjects()"><i18n>remove</i18n></button>
 				<button
 						ng-if="(subjects.where({ locked: undefined, selected: true}).length > 0 || subjects.where({ locked: false, selected: true}).length > 0)
@@ -60,6 +61,19 @@
 		</div>
 	</section>
 </behaviour>
+
+<lightbox show="display.editSubject" on-close="display.editSubject = false">
+	<h2><i18n>forum.subject.edit</i18n></h2>
+
+	<div class="row">
+		<input type="text" i18n-placeholder="forum.subject" ng-model="subjects.selection()[0].title" class="twelve cell" />
+	</div>
+	<div class="row">
+		<input type="button" class="cancel cell right-magnet" i18n-value="cancel" ng-click="openCategory(category); display.editSubject = false;" />
+		<input type="submit" i18n-value="save" class="cell right-magnet" ng-click="subjects.selection()[0].save(); display.editSubject = false;" />
+	</div>
+
+</lightbox>
 
 <div ng-if="display.confirmDeleteSubjects">
 	<lightbox show="display.confirmDeleteSubjects" on-close="cancelRemoveSubjects()">
