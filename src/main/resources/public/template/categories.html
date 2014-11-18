@@ -13,22 +13,27 @@
 			<img skin-src="/img/illustrations/forum-default.png" ng-if="(cat.icon === undefined)" class="cell" />
 			<img ng-src="[[cat.icon]]?thumbnail=120x120" ng-if="cat.icon !== undefined" class="cell" />
 		</div>
-		<article class="six cell">
+		<article>
 			<h1>[[cat.name]]</h1>
 			<strong class="small-text">
-				<span class="right-magnet" style="line-height: 50px" ng-if="category.nbNewMessages > 1">
-					[[category.nbNewMessages]]
+				<span class="right-magnet" style="line-height: 50px" ng-if="cat.nbNewMessages > 1">
+					[[cat.nbNewMessages]]
 					<i18n>forum.message.new.plural</i18n>
 				</span>
-				<span class="right-magnet" style="line-height: 50px" ng-if="category.nbNewMessages === 1">
-					[[category.nbNewMessages]]
+				<span class="right-magnet" style="line-height: 50px" ng-if="cat.nbNewMessages === 1">
+					[[cat.nbNewMessages]]
 					<i18n>forum.message.new.single</i18n>
 				</span>
-				<span class="right-magnet" style="line-height: 50px" ng-if="category.nbNewMessages === 0">
+				<span class="right-magnet" style="line-height: 50px" ng-if="cat.nbNewMessages === 0">
 					<i18n>forum.message.new.none</i18n>
 				</span>
 			</strong>
-			<div class="buttons small-hidden">
+			<div class="bottom-locked">
+				<behaviour name="manage" resource="cat">
+					<input type="checkbox" ng-model="cat.showButtons" ng-change="hideAlmostAllButtons(cat)"/>
+				</behaviour>
+			</div>
+			<div class="small-hidden buttons" ng-class="{ hidden: !cat.showButtons || cat !== category }">
 				<behaviour name="manage" resource="cat">
 					<button ng-click="editCategory(cat, $event)"><i18n>edit</i18n></button>
 					<button ng-click="confirmRemoveCategory(cat, $event)"><i18n>remove</i18n></button>

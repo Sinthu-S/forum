@@ -104,9 +104,22 @@ function ForumController($scope, template, model, date, route){
 		}
 	};
 
+	$scope.hideAlmostAllButtons = function(category){
+		$scope.categories.forEach(function(cat){
+			if(cat !== category){
+				cat.showButtons = false;
+			}
+		});
+	};
+
 	$scope.openCategory = function(category){
 		$scope.category = category;
 		$scope.subjects = category.subjects;
+		$scope.categories.forEach(function(cat){
+			if(cat !== category){
+				cat.showButtons = false;
+			}
+		});
 		category.open(function(){
 			template.open('main', 'subjects');
 		});
