@@ -198,6 +198,10 @@ function ForumController($scope, template, model, date, route){
 		$scope.editedMessage.content = "";
 		template.open('main', 'read-subject');
 	};
+	
+	$scope.cancelAddMessage = function(){
+		template.open('main', 'read-subject');
+	};
 
 	$scope.editMessage = function(message){
 		$scope.editedMessage = message;
