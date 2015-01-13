@@ -1,3 +1,10 @@
+# À propos de l'application Forum
+
+* licence : [AGPL v3](http://www.gnu.org/licenses/agpl.txt)
+* financeur : Région Picardie, Conseil général  91, Région Poitou Charente
+* description : Application de gestion de forums simples
+
+# Documentation technique
 ## Construction
 
 <pre>
