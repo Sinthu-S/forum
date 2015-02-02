@@ -29,6 +29,7 @@
 	"forum.category": "Catégorie",
 	"forum.category.new": "Nouvelle catégorie",
 	"forum.category.icon": "Icône",
+	"forum.category.edit.finish": "Terminer",
 	"forum.message.new.plural": "nouveaux messages",
 	"forum.message.new.single": "nouveau message",
 	"forum.message.new.none": "Aucun nouveau message",

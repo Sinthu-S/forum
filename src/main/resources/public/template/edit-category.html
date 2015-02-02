@@ -19,10 +19,7 @@
 			</div>
 			<div class="row bottom-locked">
 				<div class="twelve cell horizontal-spacing-twice">
-					<button ng-if="category._id" class="right-magnet" ng-click="saveCategoryEdit()">
-						<i18n>save</i18n>
-					</button>
-					<button ng-if="!category._id" class="right-magnet" ng-click="saveCategoryEdit()">
+					<button class="right-magnet" ng-click="saveCategoryEdit()">
 						<i18n>save</i18n>
 					</button>
 					<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelCategoryEdit()" />

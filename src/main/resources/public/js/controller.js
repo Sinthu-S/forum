@@ -249,6 +249,13 @@ function ForumController($scope, template, model, date, route){
 		$scope.display.showPanel = true;
 		event.stopPropagation();
 	};
+	
+	$scope.closeEditCategory = function(){
+		$scope.category = model.categories.find(function(category){
+			return category._id === $scope.category._id;
+		});
+		$scope.openCategory($scope.category);
+	};
 
 	$scope.saveCategoryEdit = function(){
 		if ($scope.category._id) { // when editing a category
