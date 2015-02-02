@@ -49,7 +49,7 @@
 			</div>
 			<p bind-html="message.content"></p>
 		</article>
-		<article class="illustrated-text" ng-if="message === editedMessage">
+		<article class="illustrated-text edit-message" ng-if="message === editedMessage">
 			<html-editor ng-model="editedMessage.content" required></html-editor>
 			<div class="ten cell warning" ng-if="editedMessage.error !== undefined" translate content="[[editedMessage.error]]">
 			</div>
