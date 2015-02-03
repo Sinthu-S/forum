@@ -33,7 +33,7 @@
 					<input type="checkbox" ng-model="cat.showButtons" ng-change="hideAlmostAllButtons(cat)"/>
 				</behaviour>
 			</div>
-			<div class="small-hidden buttons" ng-class="{ hidden: !cat.showButtons || cat !== category }">
+			<div class="buttons" ng-class="{ hidden: !cat.showButtons || cat !== category }">
 				<behaviour name="manage" resource="cat">
 					<button ng-click="editCategory(cat, $event)"><i18n>edit</i18n></button>
 					<button ng-click="confirmRemoveCategory(cat, $event)"><i18n>remove</i18n></button>
