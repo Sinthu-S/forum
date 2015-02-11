@@ -54,10 +54,9 @@ public class ForumRepositoryEvents implements RepositoryEvents {
 			@Override
 			public void handle(Either<String, JsonObject> event) {
 				if (event.isRight()) {
-					log.info("[ForumRepositoryEvents][deleteGroups] All shares with these groups " + groupIds.toString() + " are removed");
+					log.info("[ForumRepositoryEvents][deleteGroups] All groups shares are removed");
 				} else {
-					log.error("[ForumRepositoryEvents][deleteGroups] Error removing shares with these groups " + groupIds.toString()
-							+ ". Message : " + event.left().getValue());
+					log.error("[ForumRepositoryEvents][deleteGroups] Error removing groups shares. Message : " + event.left().getValue());
 				}
 			}
 		}));
@@ -101,11 +100,10 @@ public class ForumRepositoryEvents implements RepositoryEvents {
 			@Override
 			public void handle(Either<String, JsonObject> event) {
 				if (event.isRight()) {
-					log.info("[ForumRepositoryEvents][removeSharesCategories] All categories shares with these users " + usersIds.toString() + " are removed");
+					log.info("[ForumRepositoryEvents][removeSharesCategories] All categories shares with users are removed");
 					ForumRepositoryEvents.this.prepareCleanCategories(usersIds);
 				} else {
-					log.error("[ForumRepositoryEvents][removeSharesCategories] Error removing categories shares with these users " + usersIds.toString()
-							+ ". Message : " + event.left().getValue());
+					log.error("[ForumRepositoryEvents][removeSharesCategories] Error removing categories shares with users. Message : " + event.left().getValue());
 				}
 			}
 		}));
@@ -123,7 +121,7 @@ public class ForumRepositoryEvents implements RepositoryEvents {
 		// users who have already been deleted
 		DBObject ownerIsDeleted = new BasicDBObject("owner.deleted", true);
 		// no manager found
-		JsonObject matcher = MongoQueryBuilder.build(QueryBuilder.start(MANAGE_RIGHT_ACTION).notEquals(true).or(deletedUsers, ownerIsDeleted));
+		JsonObject matcher = MongoQueryBuilder.build(QueryBuilder.start("shared." + MANAGE_RIGHT_ACTION).notEquals(true).or(deletedUsers, ownerIsDeleted));
 		// return only categories identifiers
 		JsonObject projection = new JsonObject().putNumber("_id", 1);
 
@@ -143,8 +141,7 @@ public class ForumRepositoryEvents implements RepositoryEvents {
 					}
 					ForumRepositoryEvents.this.cleanCategories(usersIds, categoriesIds);
 				} else {
-					log.error("[ForumRepositoryEvents][prepareCleanCategories] Error retreving the categories created by these users " + usersIds.toString()
-							+ ". Message : " + event.left().getValue());
+					log.error("[ForumRepositoryEvents][prepareCleanCategories] Error retreving the categories created by users. Message : " + event.left().getValue());
 				}
 			}
 		}));
@@ -163,12 +160,11 @@ public class ForumRepositoryEvents implements RepositoryEvents {
 			@Override
 			public void handle(Either<String, JsonObject> event) {
 				if (event.isRight()) {
-					log.info("[ForumRepositoryEvents][cleanCategories] The categories created by these users " + categoriesIds.toString() + " are deleted");
+					log.info("[ForumRepositoryEvents][cleanCategories] The categories created by users are deleted");
 					ForumRepositoryEvents.this.cleanSubjects(categoriesIds);
 					ForumRepositoryEvents.this.tagUsersAsDeleted(usersIds);
 				} else {
-					log.error("[ForumRepositoryEvents][cleanCategories] Error deleting the categories created by these users " + categoriesIds.toString()
-							+ ". Message : " + event.left().getValue());
+					log.error("[ForumRepositoryEvents][cleanCategories] Error deleting the categories created by users. Message : " + event.left().getValue());
 				}
 			}
 		}));
@@ -185,10 +181,9 @@ public class ForumRepositoryEvents implements RepositoryEvents {
 			@Override
 			public void handle(Either<String, JsonObject> event) {
 				if (event.isRight()) {
-					log.info("[ForumRepositoryEvents][cleanSubjects] The subjects created by these users " + categoriesIds.toString() + " are deleted");
+					log.info("[ForumRepositoryEvents][cleanSubjects] The subjects created by users are deleted");
 				} else {
-					log.error("[ForumRepositoryEvents][cleanSubjects] Error deleting the subjects created by these users " + categoriesIds.toString()
-							+ ". Message : " + event.left().getValue());
+					log.error("[ForumRepositoryEvents][cleanSubjects] Error deleting the subjects created by users. Message : " + event.left().getValue());
 				}
 			}
 		}));
@@ -207,10 +202,9 @@ public class ForumRepositoryEvents implements RepositoryEvents {
 			@Override
 			public void handle(Either<String, JsonObject> event) {
 				if (event.isRight()) {
-					log.info("[ForumRepositoryEvents][deleteCategoriesUser] These users " + usersIds.toString() + " are tagged as deleted in their own categories");
+					log.info("[ForumRepositoryEvents][deleteCategoriesUser] users are tagged as deleted in their own categories");
 				} else {
-					log.error("[ForumRepositoryEvents][deleteCategoriesUser] Error tagging as deleted these users " + usersIds.toString()
-							+ ". Message : " + event.left().getValue());
+					log.error("[ForumRepositoryEvents][deleteCategoriesUser] Error tagging as deleted users. Message : " + event.left().getValue());
 				}
 			}
 		}));
