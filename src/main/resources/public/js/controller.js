@@ -308,11 +308,11 @@ function ForumController($scope, template, model, date, route){
 	}
 
 	$scope.formatDate = function(date){
-		return moment(date, "YYYY-MM-DDTHH:mm:ss.SSSZ").format('DD MMMM YYYY HH[h]mm');
+		return moment(date).format('DD MMMM YYYY HH[h]mm');
 	}
 
 	$scope.formatDateShort = function(date){
-		return moment(date, "YYYY-MM-DDTHH:mm:ss.SSSZ").format('DD/MM/YYYY HH[h]mm');
+		return moment(date).format('DD/MM/YYYY HH[h]mm');
 	}
 	
 	$scope.scrollTo = function(item){
