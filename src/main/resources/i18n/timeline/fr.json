@@ -1,10 +1,9 @@
 {
-	"timeline.forum.message.created" : "a écrit un message dans la discussion ",
-	"timeline.forum.message.updated" : "a modifié son message dans la discussion ",
-	"timeline.forum.subject.created" : "a créé la discussion ",
-	"timeline.forum.subject.updated" : "a modifié la discussion ",
-	"timeline.forum.category.shared" : "vous a donné accès à la catégorie ",
-	
-	"timeline.of.forum" : "du forum",
-	"timeline.in.forum" : "dans le forum"
+    "timeline.forum.category.shared": "vous a donné accès à la catégorie ",
+    "timeline.forum.message.created": "a écrit un message dans la discussion ",
+    "timeline.forum.message.updated": "a modifié son message dans la discussion ",
+    "timeline.forum.subject.created": "a créé la discussion ",
+    "timeline.forum.subject.updated": "a modifié la discussion ",
+    "timeline.in.forum": "dans le forum",
+    "timeline.of.forum": "du forum"
 }
