@@ -17,5 +17,8 @@ public interface CategoryService {
 
 	public void deleteSubjects(String id, UserInfos user, Handler<Either<String, JsonObject>> handler);
 
-	void getSharedWithIds(String categoryId, UserInfos user, Handler<Either<String, JsonArray>> handler);
+	/**
+	 * Get category's owner id and array "shared"
+	 */
+	void getOwnerAndShared(String categoryId, UserInfos user, Handler<Either<String, JsonObject>> handler);
 }

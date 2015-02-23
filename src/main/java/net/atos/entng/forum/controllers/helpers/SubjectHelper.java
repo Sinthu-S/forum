@@ -189,74 +189,103 @@ public class SubjectHelper extends ExtractorHelper {
 
 	private void notifyTimeline(final HttpServerRequest request, final UserInfos user, final JsonObject subject, final String subjectId, final String eventType){
 		final String categoryId = extractParameter(request, CATEGORY_ID_PARAMETER);
-		categoryService.getSharedWithIds(categoryId, user, new Handler<Either<String, JsonArray>>() {
+		categoryService.getOwnerAndShared(categoryId, user, new Handler<Either<String, JsonObject>>() {
 			@Override
-			public void handle(Either<String, JsonArray> event) {
-				final List<String> ids = new ArrayList<String>();
-				if (event.isRight()) {
-					// get all ids
-					JsonArray shared = event.right().getValue();
-					if (shared.size() > 0) {
-						JsonObject jo = null;
-						String groupId = null;
-						String id = null;
-						final AtomicInteger remaining = new AtomicInteger(shared.size());
-						// Extract shared with
-						for(int i=0; i<shared.size(); i++){
-							jo = shared.get(i);
-							if(jo.containsField("userId")){
-								id = ((JsonObject) shared.get(i)).getString("userId");
-								if(!id.equals(user.getUserId()) && !ids.contains(id)){
-									ids.add(id);
-									remaining.getAndDecrement();
-								}
+			public void handle(Either<String, JsonObject> event) {
+
+				if (event.isLeft()) {
+					StringBuilder message = new StringBuilder("Error when getting owner and shared of category ").append(categoryId);
+					message.append(". Unable to send ").append(eventType)
+						.append(" timeline notification :").append(event.left());
+
+					log.error(message);
+				}
+				else {
+					JsonObject result = event.right().getValue();
+					if(result == null ||
+							(result.getObject("owner", null) == null && result.getArray("shared", null) == null)) {
+						log.error("Unable to send " + eventType
+								+ " timeline notification. No owner nor shared found for category " + categoryId);
+						return;
+					}
+
+					String ownerId = result.getObject("owner").getString("userId", null);
+					if(ownerId == null || ownerId.isEmpty()) {
+						log.error("Unable to send " + eventType
+								+ " timeline notification. OwnerId not found for category "  +categoryId);
+						return;
+					}
+
+					final List<String> recipients = new ArrayList<String>();
+					// 1) Add category's owner to recipients
+					if(!ownerId.equals(user.getUserId())) {
+						recipients.add(ownerId);
+					}
+
+					// 2) Add users in array "shared" to recipients
+					JsonArray shared = result.getArray("shared");
+
+					JsonObject jo;
+					String uId, groupId;
+					final AtomicInteger remaining = new AtomicInteger(shared.size());
+
+					for(int i=0; i<shared.size(); i++){
+						jo = shared.get(i);
+						if(jo.containsField("userId")){
+							uId = ((JsonObject) shared.get(i)).getString("userId");
+							if(!uId.equals(user.getUserId()) && !recipients.contains(uId)){
+								recipients.add(uId);
 							}
-							else{
-								if(jo.containsField("groupId")){
-									groupId = jo.getString("groupId");
-									if (groupId != null) {
-										UserUtils.findUsersInProfilsGroups(groupId, eb, user.getUserId(), false, new Handler<JsonArray>() {
-											@Override
-											public void handle(JsonArray event) {
-												if (event != null) {
-													String userId = null;
-													for (Object o : event) {
-														if (!(o instanceof JsonObject)) continue;
-														userId = ((JsonObject) o).getString("id");
-														if(!userId.equals(user.getUserId()) && !ids.contains(userId)){
-															ids.add(userId);
-														}
-													}
-												}
-												if (remaining.decrementAndGet() < 1) {
-													sendNotify(request, ids, user, subject, subjectId, eventType);
+							remaining.getAndDecrement();
+						}
+						else if(jo.containsField("groupId")){
+							groupId = jo.getString("groupId");
+							if (groupId != null) {
+								// Get users' ids of the group (exclude current userId)
+								UserUtils.findUsersInProfilsGroups(groupId, eb, user.getUserId(), false, new Handler<JsonArray>() {
+									@Override
+									public void handle(JsonArray event) {
+										if (event != null) {
+											String userId = null;
+											for (Object o : event) {
+												if (!(o instanceof JsonObject)) continue;
+												userId = ((JsonObject) o).getString("id");
+												if(!userId.equals(user.getUserId()) && !recipients.contains(userId)){
+													recipients.add(userId);
 												}
 											}
-										});
+										}
+										if (remaining.decrementAndGet() < 1 && !recipients.isEmpty()) {
+											sendNotify(request, recipients, user, subject, subjectId, eventType);
+										}
 									}
-								}
+								});
 							}
 						}
-						if (remaining.get() < 1) {
-							sendNotify(request, ids, user, subject, subjectId, eventType);
-						}
+					}
+
+					if (remaining.get() < 1 && !recipients.isEmpty()) {
+						sendNotify(request, recipients, user, subject, subjectId, eventType);
 					}
 				}
+
 			}
 		});
 	}
 
-	private void sendNotify(final HttpServerRequest request, final List<String> ids, final UserInfos user, final JsonObject subject, final String subjectId, final String eventType){
+	private void sendNotify(final HttpServerRequest request, final List<String> recipients, final UserInfos user,
+			final JsonObject subject, final String subjectId, final String eventType){
+
 		final String categoryId = extractParameter(request, CATEGORY_ID_PARAMETER);
+
 		String template = null;
 		if (eventType == NEW_SUBJECT_EVENT_TYPE) {
 			template = "notify-subject-created.html";
 		}
-		else {
-			if(eventType == UPDATE_SUBJECT_EVENT_TYPE){
-				template = "notify-subject-updated.html";
-			}
+		else if(eventType == UPDATE_SUBJECT_EVENT_TYPE){
+			template = "notify-subject-updated.html";
 		}
+
 		JsonObject params = new JsonObject()
 			.putString("profilUri", container.config().getString("host") +
 					"/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
@@ -264,8 +293,9 @@ public class SubjectHelper extends ExtractorHelper {
 			.putString("subject", subject.getString("title"))
 			.putString("subjectUri", container.config().getString("host") + pathPrefix +
 					"#/view/" + categoryId + "/" + subjectId);
+
 		if (subjectId != null && !subjectId.isEmpty()) {
-			notification.notifyTimeline(request, user, FORUM_NAME, eventType, ids, categoryId, template, params);
+			notification.notifyTimeline(request, user, FORUM_NAME, eventType, recipients, categoryId, template, params);
 		}
 	}
 }

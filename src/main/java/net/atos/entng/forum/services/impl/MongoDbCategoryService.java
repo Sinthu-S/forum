@@ -67,31 +67,17 @@ public class MongoDbCategoryService extends AbstractService implements CategoryS
 		mongo.delete(subjects_collection, MongoQueryBuilder.build(query), validResultHandler(handler));
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public void getSharedWithIds(String categoryId, UserInfos user, final Handler<Either<String, JsonArray>> handler) {
-		this.retrieve(categoryId, user, new Handler<Either<String, JsonObject>>() {
-			@Override
-			public void handle(Either<String, JsonObject> event) {
-				JsonArray sharedWithIds = new JsonArray();
-				if (event.isRight()) {
-					try {
-						JsonObject category = event.right().getValue();
-						if (category.containsField("shared")) {
-							sharedWithIds = category.getArray("shared");
-							handler.handle(new Either.Right<String, JsonArray>(sharedWithIds));
-						}
-						else {
-							handler.handle(new Either.Right<String, JsonArray>(new JsonArray()));
-						}
-					}
-					catch (Exception e) {
-						handler.handle(new Either.Left<String, JsonArray>("Malformed response : " + e.getClass().getName() + " : " + e.getMessage()));
-					}
-				}
-				else {
-					handler.handle(new Either.Left<String, JsonArray>(event.left().getValue()));
-				}
-			}
-		});
+	public void getOwnerAndShared(String categoryId, UserInfos user, final Handler<Either<String, JsonObject>> handler) {
+		JsonObject matcher = new JsonObject().putString("_id", categoryId);
+		JsonObject projection = new JsonObject().putNumber("owner.userId", 1)
+				.putNumber("shared", 1)
+				.putNumber("_id", 0);
+
+		mongo.findOne(categories_collection, matcher, projection, validResultHandler(handler));
 	}
+
 }
