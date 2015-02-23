@@ -225,48 +225,51 @@ public class SubjectHelper extends ExtractorHelper {
 					// 2) Add users in array "shared" to recipients
 					JsonArray shared = result.getArray("shared");
 
-					JsonObject jo;
-					String uId, groupId;
-					final AtomicInteger remaining = new AtomicInteger(shared.size());
+					if(shared != null && shared.size() > 0) {
+						JsonObject jo;
+						String uId, groupId;
+						final AtomicInteger remaining = new AtomicInteger(shared.size());
 
-					for(int i=0; i<shared.size(); i++){
-						jo = shared.get(i);
-						if(jo.containsField("userId")){
-							uId = ((JsonObject) shared.get(i)).getString("userId");
-							if(!uId.equals(user.getUserId()) && !recipients.contains(uId)){
-								recipients.add(uId);
+						for(int i=0; i<shared.size(); i++){
+							jo = shared.get(i);
+							if(jo.containsField("userId")){
+								uId = ((JsonObject) shared.get(i)).getString("userId");
+								if(!uId.equals(user.getUserId()) && !recipients.contains(uId)){
+									recipients.add(uId);
+								}
+								remaining.getAndDecrement();
 							}
-							remaining.getAndDecrement();
-						}
-						else if(jo.containsField("groupId")){
-							groupId = jo.getString("groupId");
-							if (groupId != null) {
-								// Get users' ids of the group (exclude current userId)
-								UserUtils.findUsersInProfilsGroups(groupId, eb, user.getUserId(), false, new Handler<JsonArray>() {
-									@Override
-									public void handle(JsonArray event) {
-										if (event != null) {
-											String userId = null;
-											for (Object o : event) {
-												if (!(o instanceof JsonObject)) continue;
-												userId = ((JsonObject) o).getString("id");
-												if(!userId.equals(user.getUserId()) && !recipients.contains(userId)){
-													recipients.add(userId);
+							else if(jo.containsField("groupId")){
+								groupId = jo.getString("groupId");
+								if (groupId != null) {
+									// Get users' ids of the group (exclude current userId)
+									UserUtils.findUsersInProfilsGroups(groupId, eb, user.getUserId(), false, new Handler<JsonArray>() {
+										@Override
+										public void handle(JsonArray event) {
+											if (event != null) {
+												String userId = null;
+												for (Object o : event) {
+													if (!(o instanceof JsonObject)) continue;
+													userId = ((JsonObject) o).getString("id");
+													if(!userId.equals(user.getUserId()) && !recipients.contains(userId)){
+														recipients.add(userId);
+													}
 												}
 											}
+											if (remaining.decrementAndGet() < 1 && !recipients.isEmpty()) {
+												sendNotify(request, recipients, user, subject, subjectId, eventType);
+											}
 										}
-										if (remaining.decrementAndGet() < 1 && !recipients.isEmpty()) {
-											sendNotify(request, recipients, user, subject, subjectId, eventType);
-										}
-									}
-								});
+									});
+								}
 							}
+						}
+
+						if (remaining.get() < 1 && !recipients.isEmpty()) {
+							sendNotify(request, recipients, user, subject, subjectId, eventType);
 						}
 					}
 
-					if (remaining.get() < 1 && !recipients.isEmpty()) {
-						sendNotify(request, recipients, user, subject, subjectId, eventType);
-					}
 				}
 
 			}
