@@ -335,9 +335,12 @@ function ForumController($scope, template, model, date, route){
 	}
 	
 	$scope.ownerCanEditMessage = function(subject, message) {
+		// only the last message can be edited
 		return (!subject.myRights.publish && 
 				!subject.category.myRights.publish &&
+				!subject.locked &&
 				model.me.userId === message.owner.userId && 
-				!subject.locked);
+				subject.messages.all[subject.messages.all.length-1] === message
+				);
 	};
 }
