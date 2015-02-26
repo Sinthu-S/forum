@@ -295,6 +295,7 @@ function ForumController($scope, template, model, date, route){
 	$scope.removeSelectedCategories = function() {
 		$scope.categories.removeSelection(function(){
 			$scope.cancelRemoveCategory();
+			template.close('main');
 		});
 	};
 
