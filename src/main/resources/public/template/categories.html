@@ -14,7 +14,7 @@
 			<img ng-src="[[cat.icon]]?thumbnail=120x120" ng-if="cat.icon !== undefined" class="cell" />
 		</div>
 		<article>
-			<h1>[[cat.name]]</h1>
+			<h1 class="overflow-hidden-dotted">[[cat.name]]</h1>
 			<strong class="small-text">
 				<span class="right-magnet" style="line-height: 50px" ng-if="cat.nbNewMessages > 1">
 					[[cat.nbNewMessages]]
