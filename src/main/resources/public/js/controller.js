@@ -21,7 +21,7 @@ function ForumController($scope, template, model, date, route){
 	$scope.date = date;
 
 	$scope.display = {};
-	$scope.editedMessage = new Message();
+	$scope.editedMessage = new Behaviours.applicationsBehaviours.forum.namespace.Message();
 	
 	// Definition of actions
 	route({
@@ -139,7 +139,7 @@ function ForumController($scope, template, model, date, route){
 	}
 
 	$scope.newSubject = function(){
-		$scope.subject = new Subject();
+		$scope.subject = new Behaviours.applicationsBehaviours.forum.namespace.Subject();
 		template.open('main', 'new-subject');
 	};
 
@@ -159,7 +159,7 @@ function ForumController($scope, template, model, date, route){
 		$scope.category.addSubject($scope.subject, function(){
 			$scope.subject.addMessage($scope.editedMessage);
 			$scope.messages = $scope.subject.messages;
-			$scope.editedMessage = new Message();
+			$scope.editedMessage = new Behaviours.applicationsBehaviours.forum.namespace.Message();
 			$scope.editedMessage.content = "";
 		});
 		template.open('main', 'read-subject');
@@ -194,7 +194,7 @@ function ForumController($scope, template, model, date, route){
 
 		$scope.editedMessage.error = undefined;
 		$scope.subject.addMessage($scope.editedMessage);
-		$scope.editedMessage = new Message();
+		$scope.editedMessage = new Behaviours.applicationsBehaviours.forum.namespace.Message();
 		$scope.editedMessage.content = "";
 		template.open('main', 'read-subject');
 	};
@@ -215,11 +215,11 @@ function ForumController($scope, template, model, date, route){
 
 		$scope.editedMessage.error = undefined;
 		$scope.editedMessage.save();
-		$scope.editedMessage = new Message();
+		$scope.editedMessage = new Behaviours.applicationsBehaviours.forum.namespace.Message();
 	};
 
 	$scope.cancelEditMessage = function(){
-		$scope.editedMessage = new Message();
+		$scope.editedMessage = new Behaviours.applicationsBehaviours.forum.namespace.Message();
 	};
 
 	$scope.confirmRemoveMessage = function(message){
@@ -281,7 +281,7 @@ function ForumController($scope, template, model, date, route){
 	};
 
 	$scope.newCategory = function(){
-		$scope.category = new Category();
+		$scope.category = new Behaviours.applicationsBehaviours.forum.namespace.Category();
 		template.open('main', 'edit-category');
 	};
 
