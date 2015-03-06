@@ -4,7 +4,7 @@ var forumNamespace = {
 
 	Subject : function () {
 		var subject = this;
-		this.collection(Message, {
+		this.collection(forumNamespace.Message, {
 			sync: function(){
 				http().get('/forum/category/' + subject.category._id + '/subject/' + subject._id + '/messages').done(function(messages){
 					_.each(messages, function(message){
@@ -19,8 +19,8 @@ var forumNamespace = {
 
 	Category : function() {
 		var category = this;
-		this.collection(Subject, {
-			sync: function(){
+		this.collection(forumNamespace.Subject, {
+			sync: function(callback){
 				http().get('/forum/category/' + category._id + '/subjects').done(function(subjects){
 					_.each(subjects, function(subject){
 						subject.category = category;
@@ -32,6 +32,9 @@ var forumNamespace = {
 						}
 					});
 					this.load(subjects);
+					if(typeof callback === 'function'){
+						callback();
+					}
 				}.bind(this))
 			},
 			removeSelection: function(callback){
@@ -175,11 +178,9 @@ forumNamespace.Subject.prototype.toJSON = function(){
 };
 
 forumNamespace.Category.prototype.sync = function(cb){
-	http().get('/forum/category/' + category._id).done(function(category){
+	http().get('/forum/category/' + this._id).done(function(category){
 		this.updateData(category);
-		if (typeof cb === 'function') {
-			cb();
-		}
+		this.subjects.sync(cb);
 	}.bind(this))
 };
 
@@ -212,10 +213,10 @@ Behaviours.register('forum', {
 	behaviours: forumBehaviours,
 	resource: function(resource){
 		var rightsContainer = resource;
-		if(resource instanceof Subject && resource.category){
+		if(resource instanceof forumNamespace.Subject && resource.category){
 			rightsContainer = resource.category;
 		}
-		if(resource instanceof Message && resource.subject && resource.subject.category){
+		if(resource instanceof forumNamespace.Message && resource.subject && resource.subject.category){
 			rightsContainer = resource.subject.category;
 		}
 		if(!resource.myRights){
@@ -250,6 +251,12 @@ Behaviours.register('forum', {
 	resourceRights: function(){
 		return ['read', 'contrib', 'publish', 'manager']
 	},
+	loadResources: function(callback) {
+		http().get('/forum/categories').done(function(categories) {
+			this.resources = categories;
+			callback(this.resources);
+		}.bind(this));
+	},
 
     sniplets : {
         forum : {
@@ -257,22 +264,60 @@ Behaviours.register('forum', {
             description : 'Catégorie de forum dédiée',
             controller : {
             	initSource : function() {
-                    http().get('/forum/categories').done(function(data) {
-                        this.categories = data;
-                        this.$apply();
+                    Behaviours.applicationsBehaviours.forum.loadResources(function(resources){
+                        this.categories = resources;
+                        this.$apply('categories');
                     }.bind(this));
                 },
 
                 init : function() {
                 	var scope = this;
+                	scope.display = { category: true };
                 	var category = new forumNamespace.Category({ _id: this.source._id });
                     category.sync(function() {
-                        this.category = category;
-                        this.category.subjects.sync(function(){
-                        	scope.$apply();
-                        });                        
+                        scope.category = category;
+                        scope.subjects = category.subjects;
+                        /*DEBUG*/console.log(scope.subjects);
+                        scope.$apply('subjects');    
                     });
                 },
+
+                openSubject : function(subject) {
+                	var scope = this;
+                	scope.subject = subject;
+                	scope.display = { subject: true };
+                	subject.sync(function(){
+                		scope.messages = subject.messages;
+                		/*DEBUG*/console.log(scope.messages);
+                		scope.$apply('messages');
+                	});
+                },
+
+                backToSubjects : function() {
+                	scope.display = { category: true };
+                },
+
+                formatDate : function(date){
+					return moment(date).format('DD MMMM YYYY HH[h]mm');
+				},
+
+				formatDateShort : function(date){
+					return moment(date).format('DD/MM/YYYY HH[h]mm');
+				},
+
+				autoCreateCategory : function() {
+					// TODO
+				},
+
+				searchCategory : function(element) {
+					return lang.removeAccents((element.name || '').toLowerCase()).indexOf(lang.removeAccents((this.searchTest || '').toLowerCase())) !== -1;
+				},
+
+                getReferencedResources: function(source){
+					if(source._id){
+						return [source._id];
+					}
+				}
             }
         }
     }
