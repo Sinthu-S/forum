@@ -2,9 +2,9 @@
 	<link rel="stylesheet" type="text/css" href="/forum/public/css/custom.css">
 </head>
 
-<behaviour name="contrib" resource="subject">
+<resource-right name="contrib" resource="subject">
 	<button ng-click="template.open('main', 'reply')" ng-if="!subject.locked"><i18n>forum.reply</i18n></button>
-</behaviour>
+</resource-right>
 
 <div class="row">
 	<h2 class="cell">[[subject.title]]</h2>
@@ -25,19 +25,19 @@
 				<div class="six cell">
 					<strong><a ng-click="viewAuthor(message)">[[message.owner.displayName]]</a></strong>, le <span class="small-text">[[formatDateShort(message.created.$date)]]</span>
 				</div>
-				<behaviour name="publish" resource="subject" class="contextual-buttons right-magnet small-text">
+				<resource-right name="publish" resource="subject" class="contextual-buttons right-magnet small-text">
 					&nbsp;<i18n>forum.or</i18n>&nbsp;
 					<a ng-click="confirmRemoveMessage(message)">
 						<i18n>forum.remove</i18n>
 					</a>
-				</behaviour>
+				</resource-right>
 				<div class="contextual-buttons right-magnet small-text">
 					<!-- Moderators can edit all messages. Owner can edit his message only if the subject is not locked -->
-					<behaviour name="publish" resource="subject" >
+					<resource-right name="publish" resource="subject" >
 						<a ng-click="editMessage(message)">
 							<i18n>forum.edit</i18n>
 						</a>
-					</behaviour>
+					</resource-right>
 					<span ng-if="ownerCanEditMessage(subject, message) === true">
 						<a ng-click="editMessage(message)">
 							<i18n>forum.edit</i18n>
@@ -60,9 +60,9 @@
 
 <hr />
 
-<behaviour name="contrib" resource="subject">
+<resource-right name="contrib" resource="subject">
 	<button ng-click="template.open('main', 'reply')" ng-if="!subject.locked" class="cell"><i18n>forum.reply</i18n></button>
-</behaviour>
+</resource-right>
 
 <a id="bottom" ng-click="scrollTo('top')" class="right-magnet">&uarr; <i18n>forum.go.to.top</i18n></a>
 

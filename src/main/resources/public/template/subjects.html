@@ -1,10 +1,10 @@
 
 <div class="twelve cell toggle-buttons-spacer">
-	<behaviour name="publish" resource="category" class="contextual-buttons row">
+	<resource-right name="publish" resource="category" class="contextual-buttons row">
 		<div class="right-magnet cell">
 			<button ng-click="newSubject()"><i18n>forum.subject.new</i18n></button>
 		</div>
-	</behaviour>
+	</resource-right>
 	<div class="row vertical-spacing"></div>
 	<h2>[[category.name]]</h2>
 
@@ -12,20 +12,20 @@
 		<thead>
 			<tr>
 				<th></th>
-				<th>Titre</th>
-				<th>Réponses</th>
-				<th>De</th>
+				<th><i18n>forum.subjects.header.title</i18n></th>
+				<th><i18n>forum.subjects.header.messages</i18n></th>
+				<th><i18n>forum.subjects.header.author</i18n></th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="subject in subjects.all" ng-class="{ checked: subject.selected }">
 				<td>
-					<behaviour name="publish" resource="category">
+					<resource-right name="publish" resource="category">
 						<input type="checkbox" ng-model="subject.selected" />
-					</behaviour>
+					</resource-right>
 				</td>
 				<td ng-click="openSubject(subject)"><i class="prive" ng-if="subject.locked"></i> <a>[[subject.title]]</a></td>
-				<td ng-click="openSubject(subject)">[[subject.nbMessages]] réponse(s)</td>
+				<td ng-click="openSubject(subject)">[[subject.nbMessages]]<i18n>forum.subjects.column.messages</i18n></td>
 				<td ng-click="openSubject(subject)">
 					<i18n>forum.by</i18n>[[subject.lastMessage.owner.displayName]]<i18n>forum.on.the</i18n>[[formatDate(subject.lastMessage.created.$date)]]
 				</td>
@@ -34,11 +34,11 @@
 
 	</table>
 	<div ng-if="subjects.all.length === 0">
-		Aucun sujet de discussion n'a été ouvert dans cette catégorie !
+		<i18n>forum.subjects.empty</i18n>
 	</div>
 </div>
 
-<behaviour name="publish" resource="category" class="cell">
+<resource-right name="publish" resource="category" class="cell">
 	<section class="toggle-buttons" ng-class="{ hide: subjects.selection().length === 0 }">
 		<div class="toggle">
 			<div class="row">
@@ -60,7 +60,7 @@
 			</div>
 		</div>
 	</section>
-</behaviour>
+</resource-right>
 
 <lightbox show="display.editSubject" on-close="display.editSubject = false">
 	<h2><i18n>forum.subject.edit</i18n></h2>

@@ -29,16 +29,16 @@
 				</span>
 			</strong>
 			<div class="bottom-locked">
-				<behaviour name="manage" resource="cat">
+				<resource-right name="manage" resource="cat">
 					<input type="checkbox" ng-model="cat.showButtons" ng-change="hideAlmostAllButtons(cat)"/>
-				</behaviour>
+				</resource-right>
 			</div>
 			<div class="buttons" ng-class="{ hidden: !cat.showButtons || cat !== category }">
-				<behaviour name="manage" resource="cat">
+				<resource-right name="manage" resource="cat">
 					<button ng-click="editCategory(cat, $event)"><i18n>edit</i18n></button>
 					<button ng-click="confirmRemoveCategory(cat, $event)"><i18n>remove</i18n></button>
 					<button ng-click="shareCategory(cat, $event)"><i18n>share</i18n></button>
-				</behaviour>
+				</resource-right>
 			</div>
 		</article>
 	</div>
@@ -69,15 +69,15 @@
 <section class="toggle-buttons" ng-class="{ hide: categories.selection().length === 0 }">
 	<div class="toggle">
 		<div class="row">
-			<behaviour name="manage" resource="categories.selection()" class="cell">
+			<resource-right name="manage" resource="categories.selection()" class="cell">
 				<button ng-click="editCategory()" ng-if="categories.selection().length === 1"><i18n>edit</i18n></button>
-			</behaviour>
-			<behaviour name="manage" resource="categories.selection()" class="cell">
+			</resource-right>
+			<resource-right name="manage" resource="categories.selection()" class="cell">
 				<button ng-click="confirmRemoveSelectedCategories()"><i18n>remove</i18n></button>
-			</behaviour>
-			<behaviour name="share" resource="categories.selection()" class="cell">
+			</resource-right>
+			<resource-right name="share" resource="categories.selection()" class="cell">
 				<button ng-click="display.showPanel = true;"><i18n>share</i18n></button>
-			</behaviour>
+			</resource-right>
 		</div>
 	</div>
 </section>
