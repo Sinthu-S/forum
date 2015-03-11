@@ -239,12 +239,11 @@ public class MessageHelper extends ExtractorHelper {
 										overview = overview.concat(" ... </p>");
 									}
 									JsonObject params = new JsonObject()
-										.putString("profilUri", container.config().getString("host") +
+										.putString("profilUri",
 												"/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
 										.putString("username", user.getUsername())
 										.putString("subject", subject.getObject("result").getString("title"))
-										.putString("subjectUri", container.config().getString("host") + pathPrefix +
-												"#/view/" + categoryId + "/" + subjectId)
+										.putString("subjectUri", pathPrefix + "#/view/" + categoryId + "/" + subjectId)
 										.putString("overview", overview);
 									if (subjectId != null && !subjectId.trim().isEmpty()) {
 										notification.notifyTimeline(request, user, FORUM_NAME, eventType, ids, subjectId, template, params);

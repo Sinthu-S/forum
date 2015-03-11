@@ -290,12 +290,10 @@ public class SubjectHelper extends ExtractorHelper {
 		}
 
 		JsonObject params = new JsonObject()
-			.putString("profilUri", container.config().getString("host") +
-					"/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
+			.putString("profilUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
 			.putString("username", user.getUsername())
 			.putString("subject", subject.getString("title"))
-			.putString("subjectUri", container.config().getString("host") + pathPrefix +
-					"#/view/" + categoryId + "/" + subjectId);
+			.putString("subjectUri", pathPrefix + "#/view/" + categoryId + "/" + subjectId);
 
 		if (subjectId != null && !subjectId.isEmpty()) {
 			notification.notifyTimeline(request, user, FORUM_NAME, eventType, recipients, categoryId, template, params);

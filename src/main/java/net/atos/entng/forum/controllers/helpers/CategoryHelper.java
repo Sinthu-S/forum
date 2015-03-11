@@ -124,11 +124,9 @@ public class CategoryHelper extends MongoDbControllerHelper {
 			        }
 					setTimelineEventType(EVENT_TYPE);
 					JsonObject params = new JsonObject()
-					.putString("profilUri", container.config().getString("host") +
-							"/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
+					.putString("profilUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
 					.putString("username", user.getUsername())
-					.putString("resourceUri", container.config().getString("host") + pathPrefix +
-							"#/view/" + categoryId);
+					.putString("resourceUri", pathPrefix + "#/view/" + categoryId);
 					shareJsonSubmit(request, "notify-category-shared.html", false, params, "name");
 				} else {
 					unauthorized(request);
