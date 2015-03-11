@@ -282,10 +282,10 @@ public class SubjectHelper extends ExtractorHelper {
 		final String categoryId = extractParameter(request, CATEGORY_ID_PARAMETER);
 
 		String template = null;
-		if (eventType == NEW_SUBJECT_EVENT_TYPE) {
+		if (NEW_SUBJECT_EVENT_TYPE.equals(eventType)) {
 			template = "notify-subject-created.html";
 		}
-		else if(eventType == UPDATE_SUBJECT_EVENT_TYPE){
+		else if(UPDATE_SUBJECT_EVENT_TYPE.equals(eventType)){
 			template = "notify-subject-updated.html";
 		}
 
