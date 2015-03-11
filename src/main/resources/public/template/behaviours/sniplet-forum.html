@@ -1,4 +1,4 @@
-<div class="twelve cell" ng-if="display.category">
+<div class="twelve cell" ng-if="display.state ===  display.STATE_CATEGORY">
 	<table class="twelve list-view">
 		<thead>
 			<tr>
@@ -28,13 +28,13 @@
 	</div>
 </div>
 
-<div class="twelve cell" ng-if="display.subject">
+<div class="twelve cell" ng-if="display.state ===  display.STATE_SUBJECT">
 	<div class="row">
-		<button class="cell" ng-click="backToSubjects()">&lt;</button>
+		<button class="cell" ng-click="backToCategory()">&lt;</button>
 		<h2 class="cell">[[subject.title]]</h2>
 	</div>
 
-	<div ng-repeat="message in subject.messages.all" class="illustrated-article">
+	<div ng-repeat="message in messages.all" class="illustrated-article">
 		<div class="small illustration" ng-click="viewAuthor(message)">
 			<div class="image">
 				<img ng-src="/userbook/avatar/[[message.owner.userId]]" />

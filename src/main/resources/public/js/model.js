@@ -15,30 +15,6 @@ model.build = function(){
 		this.subjects.sync();
 	};
 
-	Behaviours.applicationsBehaviours.forum.namespace.Category.prototype.addSubject = function(subject, cb){
-		subject.category = this;
-		subject.owner = {
-			userId: model.me.userId,
-			displayName: model.me.username
-		}
-		this.subjects.push(subject);
-		subject.save(function(){
-			if(typeof cb === 'function'){
-				cb();
-			}
-		}.bind(this));
-	};
-
-	Behaviours.applicationsBehaviours.forum.namespace.Category.prototype.createCategory = function(callback){
-		http().postJson('/forum/categories', this).done(function(response){
-			this._id = response._id;
-			model.categories.sync();
-			if(typeof callback === 'function'){
-				callback();
-			}
-		}.bind(this));
-	};
-
 	Behaviours.applicationsBehaviours.forum.namespace.Category.prototype.saveModifications = function(callback){
 		http().putJson('/forum/category/' + this._id, this).done(function(e){
 			notify.info('forum.subject.modification.saved');
@@ -50,10 +26,15 @@ model.build = function(){
 
 	Behaviours.applicationsBehaviours.forum.namespace.Category.prototype.save = function(callback){
 		if(this._id){
-			this.saveModifications();
+			this.saveModifications(callback);
 		}
 		else{
-			this.createCategory(callback);
+			this.createCategory(function(){
+				model.categories.sync();
+				if (typeof callback === 'function') {
+					callback();
+				}
+			});
 		}
 	};
 

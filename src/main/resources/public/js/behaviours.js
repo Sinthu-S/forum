@@ -5,12 +5,15 @@ var forumNamespace = {
 	Subject : function () {
 		var subject = this;
 		this.collection(forumNamespace.Message, {
-			sync: function(){
+			sync: function(callback){
 				http().get('/forum/category/' + subject.category._id + '/subject/' + subject._id + '/messages').done(function(messages){
 					_.each(messages, function(message){
 						message.subject = subject;
 					});
 					this.load(messages);
+					if(typeof callback === 'function'){
+						callback();
+					}
 				}.bind(this));
 			},
 			behaviours: 'forum'
@@ -184,11 +187,34 @@ forumNamespace.Category.prototype.sync = function(cb){
 	}.bind(this))
 };
 
+forumNamespace.Category.prototype.createCategory = function(callback){
+	http().postJson('/forum/categories', this).done(function(response){
+		this._id = response._id;
+		if(typeof callback === 'function'){
+			callback();
+		}
+	}.bind(this));
+};
+
+forumNamespace.Category.prototype.addSubject = function(subject, cb){
+	subject.category = this;
+	subject.owner = {
+		userId: model.me.userId,
+		displayName: model.me.username
+	}
+	this.subjects.push(subject);
+	subject.save(function(){
+		if(typeof cb === 'function'){
+			cb();
+		}
+	}.bind(this));
+};
+
 model.makeModels(forumNamespace);
 
 
-var forumBehaviours = {
-	resources: {
+var forumRights = {
+	resource: {
 		contrib: {
 			right: 'net-atos-entng-forum-controllers-ForumController|createMessage'
 		},
@@ -210,8 +236,8 @@ var forumBehaviours = {
 
 Behaviours.register('forum', {
 	namespace: forumNamespace,
-	behaviours: forumBehaviours,
-	resource: function(resource){
+	rights: forumRights,
+	resourceRights: function(resource){
 		var rightsContainer = resource;
 		if(resource instanceof forumNamespace.Subject && resource.category){
 			rightsContainer = resource.category;
@@ -223,15 +249,15 @@ Behaviours.register('forum', {
 			resource.myRights = {};
 		}
 
-		for(var behaviour in forumBehaviours.resources){
-			if(model.me.hasRight(rightsContainer, forumBehaviours.resources[behaviour]) 
+		for(var behaviour in forumRights.resource){
+			if(model.me.hasRight(rightsContainer, forumRights.resource[behaviour]) 
 					|| model.me.userId === resource.owner.userId 
 					|| model.me.userId === rightsContainer.owner.userId){
 				if(resource.myRights[behaviour] !== undefined){
-					resource.myRights[behaviour] = resource.myRights[behaviour] && forumBehaviours.resources[behaviour];
+					resource.myRights[behaviour] = resource.myRights[behaviour] && forumRights.resource[behaviour];
 				}
 				else{
-					resource.myRights[behaviour] = forumBehaviours.resources[behaviour];
+					resource.myRights[behaviour] = forumRights.resource[behaviour];
 				}
 			}
 		}
@@ -239,7 +265,7 @@ Behaviours.register('forum', {
 	},
 	workflow: function(){
 		var workflow = { };
-		var forumWorkflow = forumBehaviours.workflow;
+		var forumWorkflow = forumRights.workflow;
 		for(var prop in forumWorkflow){
 			if(model.me.hasWorkflow(forumWorkflow[prop])){
 				workflow[prop] = true;
@@ -272,29 +298,52 @@ Behaviours.register('forum', {
 
                 init : function() {
                 	var scope = this;
-                	scope.display = { category: true };
+                	scope.DISPLAY_CATEGORY = 0;
+                	scope.display = {
+                		STATE_CATEGORY: 0,
+                		STATE_SUBJECT: 1,
+                		state: 0 // CATEGORY by default
+                	};
                 	var category = new forumNamespace.Category({ _id: this.source._id });
                     category.sync(function() {
                         scope.category = category;
                         scope.subjects = category.subjects;
-                        /*DEBUG*/console.log(scope.subjects);
-                        scope.$apply('subjects');    
+                        scope.$apply('subjects');  
                     });
                 },
 
                 openSubject : function(subject) {
                 	var scope = this;
                 	scope.subject = subject;
-                	scope.display = { subject: true };
-                	subject.sync(function(){
+                	scope.display.state = scope.display.STATE_SUBJECT;
+                	subject.messages.sync(function(){
                 		scope.messages = subject.messages;
-                		/*DEBUG*/console.log(scope.messages);
-                		scope.$apply('messages');
+						scope.$apply('messages');
                 	});
                 },
 
-                backToSubjects : function() {
-                	scope.display = { category: true };
+                backToCategory : function() {
+                	this.display.state = this.display.STATE_CATEGORY;
+                },
+
+                confirmRemoveMessage : function(message) {
+                	//TODO
+                },
+
+                editMessage : function(message) {
+                	//TODO
+                },
+
+                saveEditMessage : function() {
+                	//TODO
+                },
+
+                cancelEditMessage : function() {
+                	//TODO
+                },
+
+                ownerCanEditMessage : function(subject, message) {
+                	//TODO
                 },
 
                 formatDate : function(date){
@@ -305,8 +354,32 @@ Behaviours.register('forum', {
 					return moment(date).format('DD/MM/YYYY HH[h]mm');
 				},
 
-				autoCreateCategory : function() {
-					// TODO
+				viewAuthor : function(message){
+					window.location.href = '/userbook/annuaire#/' + message.owner.userId;
+				},
+
+				autoCreateSnipletCategory : function() {
+					this.createSnipletCategory(
+						lang.translate("forum.sniplet.auto.category.title").replace(/\{0\}/g, "TODO"), //Relative to the Page = snipletResource ?
+						lang.translate("forum.sniplet.auto.subject.title"),
+						lang.translate("forum.sniplet.auto.first.message").replace(/\{0\}/g, "TODO")
+					);
+				},
+
+				createSnipletCategory : function(name, firstSubject, firstMessage) {
+					var scope = this;
+					var category = new forumNamespace.Category();
+					category.name = name;
+					category.createCategory(function(){
+						var subject = new forumNamespace.Subject();
+						subject.title = firstSubject;
+						category.addSubject(subject, function(){
+							var message = new forumNamespace.Message();
+							message.content = firstMessage;
+							subject.addMessage(message);
+						});
+						scope.setSnipletSource(category);
+					});
 				},
 
 				searchCategory : function(element) {
