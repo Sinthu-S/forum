@@ -141,7 +141,7 @@ forumNamespace.Subject.prototype.addMessage = function(message){
 	}
 	this.messages.push(message);
 	message.save(function(){
-		this.messages.sync();
+		message.subject.messages.sync();
 	}.bind(this));
 };
 
@@ -171,6 +171,12 @@ forumNamespace.Subject.prototype.save = function(cb){
 	else{
 		this.createSubject(cb);
 	}
+};
+
+forumNamespace.Subject.prototype.remove = function(){
+	http().delete('/forum/category/' + this.category._id + '/subject/' + this._id).done(function(){
+		notify.info('forum.subject.deleted');
+	});
 };
 
 forumNamespace.Subject.prototype.toJSON = function(){
@@ -273,10 +279,10 @@ Behaviours.register('forum', {
 		}
 
 		return workflow;
-	},
+	},/*
 	resourceRights: function(){
 		return ['read', 'contrib', 'publish', 'manager']
-	},
+	},*/
 	loadResources: function(callback) {
 		http().get('/forum/categories').done(function(categories) {
 			this.resources = categories;
@@ -298,52 +304,156 @@ Behaviours.register('forum', {
 
                 init : function() {
                 	var scope = this;
-                	scope.DISPLAY_CATEGORY = 0;
                 	scope.display = {
                 		STATE_CATEGORY: 0,
                 		STATE_SUBJECT: 1,
+                		STATE_CREATE: 2,
                 		state: 0 // CATEGORY by default
                 	};
+                	scope.current = {};
                 	var category = new forumNamespace.Category({ _id: this.source._id });
                     category.sync(function() {
                         scope.category = category;
+                        Behaviours.findRights('forum', category);
                         scope.subjects = category.subjects;
-                        scope.$apply('subjects');  
+                        scope.$apply('subjects');
                     });
                 },
 
                 openSubject : function(subject) {
                 	var scope = this;
-                	scope.subject = subject;
+                	scope.current.subject = subject;
+                	scope.current.message = new forumNamespace.Message();
                 	scope.display.state = scope.display.STATE_SUBJECT;
                 	subject.messages.sync(function(){
-                		scope.messages = subject.messages;
-						scope.$apply('messages');
+                		scope.current.messages = subject.messages;
+						scope.$apply('current.messages');
                 	});
                 },
 
                 backToCategory : function() {
                 	this.display.state = this.display.STATE_CATEGORY;
+                	this.subjects.sync(function(){
+                		scope.$apply('subjects');
+                	});
                 },
 
-                confirmRemoveMessage : function(message) {
-                	//TODO
+                createSubject : function() {
+                	this.current.subject = new forumNamespace.Subject();
+                	this.current.message = new forumNamespace.Message();
+                	this.display.state = this.display.STATE_CREATE;
+                },
+
+                saveCreateSubject : function() {
+                	var scope = this;
+                	if (scope.isTitleEmpty(scope.current.subject.title)) {
+						scope.current.subject.title = undefined;
+						scope.current.subject.error = 'forum.subject.missing.title';
+						return;	
+					}
+
+					if (scope.isTextEmpty(scope.current.message.content)) {
+						scope.current.subject.error = 'forum.message.empty';
+						return;
+					}
+
+					scope.current.subject.category = scope.category;
+                	scope.current.subject.save(function(){
+                		var newMessage = scope.current.message;
+                		scope.current.subject.addMessage(newMessage);
+                		scope.current.message = new forumNamespace.Message();
+                		scope.display.state = scope.display.STATE_SUBJECT;
+                	});
+                },
+
+                cancelCreateSubject : function() {
+                	delete this.current.subject;
+                	delete this.current.message;
+                	this.display.state = this.display.STATE_CATEGORY;
+                },
+
+                editSubject : function() {
+                	this.display.editSubject = true;
+                	this.current.subject.newTitle = this.current.subject.title;
+                },
+
+                saveEditSubject : function() {
+                	var scope = this;
+                	this.current.subject.title = this.current.subject.newTitle;
+                	this.current.subject.save(function(){
+                		this.display.editSubject = false;
+                	});
+                },
+
+                confirmDeleteSubject : function() {
+                	this.display.deleteSubject = true;
+                },
+
+                deleteSubject : function() {
+                	var scope = this;
+                	this.current.subject.remove(function(){
+                		scope.display.deleteSubject = false;
+	                	scope.display.state = scope.display.STATE_CATEGORY;
+	                	delete scope.current.subject;
+	                	scope.subjects.sync(function(){
+	                		scope.$apply('subjects');
+	                	});
+                	});
+
+                },
+
+                lockSubject : function() {
+                	this.current.subject.locked = true;
+                	this.current.subject.save();
+                },
+
+                unlockSubject : function() {
+                	this.current.subject.locked = false;
+                	this.current.subject.save();
+                },
+
+                addMessage : function() {
+                	if (this.isTextEmpty(this.current.message.content)) {
+						this.current.message.error = 'forum.message.empty';
+						return;
+					}
+
+					delete this.current.message.error;
+					var newMessage = this.current.message;
+					this.current.subject.addMessage(newMessage);
+					this.current.message = new forumNamespace.Message();
                 },
 
                 editMessage : function(message) {
-                	//TODO
+                	this.display.editMessage = true;
+                	this.current.message = message;
                 },
 
                 saveEditMessage : function() {
-                	//TODO
+                	if (this.isTextEmpty(this.current.message.content)) {
+						this.current.message.error = 'forum.message.empty';
+						return;
+					}
+
+					this.current.message.save();
+					this.cancelEditMessage();
                 },
 
                 cancelEditMessage : function() {
-                	//TODO
+                	delete this.current.message.error;
+                	this.current.message = new forumNamespace.Message();
+                	this.display.editMessage = false;
                 },
 
-                ownerCanEditMessage : function(subject, message) {
-                	//TODO
+                confirmDeleteMessage : function(message) {
+                	this.display.deleteMessage = true;
+                	this.current.message = message;
+                },
+
+                deleteMessage : function() {
+                	this.current.message.remove();
+                	this.display.deleteMessage = false;
+                	delete this.current.message;
                 },
 
                 formatDate : function(date){
@@ -358,15 +468,40 @@ Behaviours.register('forum', {
 					window.location.href = '/userbook/annuaire#/' + message.owner.userId;
 				},
 
+				isTitleEmpty : function(str) {
+					if (str !== undefined && str.replace(/ |&nbsp;/g, '') !== "") {
+						return false;
+					}
+					return true;
+				},
+
+				isTextEmpty : function(str) {
+					if (str !== undefined && str.replace(/<div class="ng-scope">|<\/div>|<br>|<p>|<\/p>|&nbsp;| /g, '') !== "") {
+						return false;
+					}
+					return true;
+				},
+
+				ownerCanEditMessage : function(message) {
+					// only the last message can be edited
+					return (!message.subject.myRights.publish && 
+							!message.subject.category.myRights.publish &&
+							!message.subject.locked &&
+							model.me.userId === message.owner.userId && 
+							message.subject.messages.all[message.subject.messages.all.length-1] === message
+							);
+				},
+
 				autoCreateSnipletCategory : function() {
 					this.createSnipletCategory(
-						lang.translate("forum.sniplet.auto.category.title").replace(/\{0\}/g, "TODO"), //Relative to the Page = snipletResource ?
+						lang.translate("forum.sniplet.auto.category.title").replace(/\{0\}/g, this.snipletResource.title),
 						lang.translate("forum.sniplet.auto.subject.title"),
-						lang.translate("forum.sniplet.auto.first.message").replace(/\{0\}/g, "TODO")
+						lang.translate("forum.sniplet.auto.first.message").replace(/\{0\}/g, this.snipletResource.title)
 					);
 				},
 
 				createSnipletCategory : function(name, firstSubject, firstMessage) {
+					console.log("automatic forum category creation");
 					var scope = this;
 					var category = new forumNamespace.Category();
 					category.name = name;
@@ -379,6 +514,7 @@ Behaviours.register('forum', {
 							subject.addMessage(message);
 						});
 						scope.setSnipletSource(category);
+						scope.snipletResource.synchronizeRights();
 					});
 				},
 

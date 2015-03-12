@@ -2,7 +2,6 @@
 	<table class="twelve list-view">
 		<thead>
 			<tr>
-				<th></th>
 				<th><i18n>forum.subjects.header.title</i18n></th>
 				<th><i18n>forum.subjects.header.messages</i18n></th>
 				<th><i18n>forum.subjects.header.author</i18n></th>
@@ -10,11 +9,6 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="subject in subjects.all" ng-class="{ checked: subject.selected }">
-				<td>
-					<resource-right name="publish" resource="category">
-						<input type="checkbox" ng-model="subject.selected" />
-					</resource-right>
-				</td>
 				<td ng-click="openSubject(subject)"><i class="prive" ng-if="subject.locked"></i> <a>[[subject.title]]</a></td>
 				<td ng-click="openSubject(subject)">[[subject.nbMessages]]<i18n>forum.subjects.column.messages</i18n></td>
 				<td ng-click="openSubject(subject)">
@@ -26,29 +20,42 @@
 	<div ng-if="subjects.all.length === 0">
 		<i18n>forum.subjects.empty</i18n>
 	</div>
+	<div class="twelve cell">
+		<resource-right name="publish" resource="category" class="contextual-buttons row">
+			<button class="right-magnet" ng-click="createSubject()"><i18n>forum.subject.new</i18n></button>
+		</resource-right>
+	</div>
 </div>
 
-<div class="twelve cell" ng-if="display.state ===  display.STATE_SUBJECT">
-	<div class="row">
+<div class="twelve cell articles-sniplet" ng-if="display.state === display.STATE_SUBJECT">
+	<div class="twelve cell">
 		<button class="cell" ng-click="backToCategory()">&lt;</button>
-		<h2 class="cell">[[subject.title]]</h2>
+		<h2 class="cell">[[current.subject.title]]</h2>
+		<resource-right name="publish" resource="category">
+			<button class="right-magnet" ng-click="confirmDeleteSubject()"><i18n>remove</i18n></button>
+			<button class="right-magnet" ng-click="editSubject()"><i18n>edit</i18n></button>
+			<button class="right-magnet" ng-if="!current.subject.locked"ng-click="lockSubject()"><i18n>lock</i18n></button>
+			<button class="right-magnet" ng-if="current.subject.locked" ng-click="unlockSubject()"><i18n>unlock</i18n></button>
+		</resource-right>
 	</div>
 
-	<div ng-repeat="message in messages.all" class="illustrated-article">
+	<hr />
+
+	<div ng-repeat="message in current.messages.all" class="illustrated-article cell">
 		<div class="small illustration" ng-click="viewAuthor(message)">
 			<div class="image">
 				<img ng-src="/userbook/avatar/[[message.owner.userId]]" />
 			</div>
 		</div>
 
-		<article class="illustrated-text" ng-if="message !== editedMessage">
-			<div class="row">
+		<article class="illustrated-text" ng-if="!display.editMessage || message !== current.message">
+			<div class="twelve cell">
 				<div class="six cell">
 					<strong><a ng-click="viewAuthor(message)">[[message.owner.displayName]]</a></strong>, le <span class="small-text">[[formatDateShort(message.created.$date)]]</span>
 				</div>
 				<resource-right name="publish" resource="subject" class="contextual-buttons right-magnet small-text">
 					&nbsp;<i18n>forum.or</i18n>&nbsp;
-					<a ng-click="confirmRemoveMessage(message)">
+					<a ng-click="confirmDeleteMessage(message)">
 						<i18n>forum.remove</i18n>
 					</a>
 				</resource-right>
@@ -59,7 +66,7 @@
 							<i18n>forum.edit</i18n>
 						</a>
 					</resource-right>
-					<span ng-if="ownerCanEditMessage(subject, message) === true">
+					<span ng-if="ownerCanEditMessage(message) === true">
 						<a ng-click="editMessage(message)">
 							<i18n>forum.edit</i18n>
 						</a>
@@ -69,13 +76,80 @@
 			<p bind-html="message.content"></p>
 		</article>
 
-		<article class="illustrated-text edit-message" ng-if="message === editedMessage">
-			<html-editor ng-model="editedMessage.content" required></html-editor>
-			<div class="ten cell warning" ng-if="editedMessage.error !== undefined" translate content="[[editedMessage.error]]">
+		<article class="illustrated-text" ng-if="display.editMessage && message === current.message">
+			<html-editor ng-model="current.message.content" required></html-editor>
+			<div class="ten cell warning" ng-if="current.message.error !== undefined" translate content="[[current.message.error]]">
 			</div>
 			<button class="right-magnet" ng-click="saveEditMessage()"><i18n>edit</i18n></button>
 			<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelEditMessage()" />
 		</article>
 	</div>
 
+	<div class="row" ng-if="!current.subject.locked && !display.editMessage">
+		<h2><i18n>reply</i18n></h2>
+		<div class="twelve cell illustrated-article">
+			<html-editor ng-model="current.message.content" watch-collections="['current.subject.messages.all']" required></html-editor>
+			<div class="ten cell warning" ng-if="current.message.error !== undefined" translate content="[[current.message.error]]">
+			</div>
+			<div class="twelve cell">
+				<button class="right-magnet" ng-click="addMessage()"><i18n>reply</i18n></button>
+			</div>
+		</div>
+	</div>
 </div>
+
+<div class="twelve cell" ng-if="display.state === display.STATE_CREATE">
+	<div class="row articles-sniplet">
+		<div class="twelve-cell">
+			<button class="cell" ng-click="cancelCreateSubject()">&lt;</button>
+			<h2 class="cell"><i18n>forum.subject.new</i18n></h2>
+		</div>
+		<article class="twelve cell">
+			<label class="three cell"><i18n>forum.subject</i18n></label>
+			<input type="text" i18n-placeholder="forum.subject.placeholder" class="nine cell" ng-model="current.subject.title" required />
+
+			<label class="twelve cell"><i18n>forum.subject.message</i18n></label>
+			<div class="twelve-cell">
+				<html-editor ng-model="current.message.content" required></html-editor>
+			</div>
+
+			<div class="ten cell warning" ng-if="current.subject.error !== undefined" translate content="[[current.subject.error]]">
+			</div>
+
+			<button class="right-magnet" ng-click="saveCreateSubject()"><i18n>submit</i18n></button>
+			<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelCreateSubject()" />
+		</article>
+	</div>
+</div>
+
+
+<lightbox show="display.editSubject" on-close="display.editSubject = false">
+	<h2><i18n>forum.subject.edit</i18n></h2>
+
+	<div class="twelve cell">
+		<input type="text" i18n-placeholder="forum.subject" ng-model="current.subject.newTitle" class="twelve cell" />
+	</div>
+	<div class="twelve cell">
+		<input type="button" class="cancel cell right-magnet" i18n-value="cancel" ng-click="display.editSubject = false" />
+		<input type="submit" i18n-value="save" class="cell right-magnet" ng-click="saveEditSubject()" />
+	</div>
+
+</lightbox>
+
+<lightbox show="display.deleteSubject" on-close="display.deleteSubject = false">
+	<h2><i18n>forum.confirm.delete.subject</i18n></h2>
+
+	<div class="twelve cell">
+		<button class="right-magnet" ng-click="deleteSubject()"><i18n>remove</i18n></button>
+		<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="display.deleteSubject = false" />
+	</div>
+</lightbox>
+
+<lightbox show="display.deleteMessage" on-close="display.deleteMessage = false">
+	<h2><i18n>forum.confirm.delete.message</i18n></h2>
+
+	<div class="twelve cell">
+		<button class="right-magnet" ng-click="deleteMessage()"><i18n>remove</i18n></button>
+		<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="display.deleteMessage = false" />
+	</div>
+</lightbox>
