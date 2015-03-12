@@ -112,9 +112,12 @@ forumNamespace.Message.prototype.save = function(cb){
 	}
 };
 
-forumNamespace.Message.prototype.remove = function(){
+forumNamespace.Message.prototype.remove = function(cb){
 	http().delete('/forum/category/' + this.subject.category._id + '/subject/' + this.subject._id + '/message/' + this._id).done(function(){
 		notify.info('forum.message.deleted');
+		if(typeof cb === 'function'){
+			cb();
+		}
 	});
 };
 
@@ -173,9 +176,12 @@ forumNamespace.Subject.prototype.save = function(cb){
 	}
 };
 
-forumNamespace.Subject.prototype.remove = function(){
+forumNamespace.Subject.prototype.remove = function(callback){
 	http().delete('/forum/category/' + this.category._id + '/subject/' + this._id).done(function(){
 		notify.info('forum.subject.deleted');
+		if(typeof callback === 'function'){
+			callback();
+		}
 	});
 };
 
@@ -332,6 +338,7 @@ Behaviours.register('forum', {
                 },
 
                 backToCategory : function() {
+                	var scope = this;
                 	this.display.state = this.display.STATE_CATEGORY;
                 	this.subjects.sync(function(){
                 		scope.$apply('subjects');
@@ -358,10 +365,12 @@ Behaviours.register('forum', {
 					}
 
 					scope.current.subject.category = scope.category;
-                	scope.current.subject.save(function(){
+                	scope.category.addSubject(scope.current.subject, function(){
+                		Behaviours.findRights('forum', scope.current.subject);
                 		var newMessage = scope.current.message;
                 		scope.current.subject.addMessage(newMessage);
                 		scope.current.message = new forumNamespace.Message();
+                		scope.current.messages = scope.current.subject.messages;
                 		scope.display.state = scope.display.STATE_SUBJECT;
                 	});
                 },
@@ -425,8 +434,9 @@ Behaviours.register('forum', {
                 },
 
                 editMessage : function(message) {
-                	this.display.editMessage = true;
                 	this.current.message = message;
+                	this.current.message.oldContent = this.current.message.content;
+                	this.display.editMessage = true;
                 },
 
                 saveEditMessage : function() {
@@ -436,11 +446,14 @@ Behaviours.register('forum', {
 					}
 
 					this.current.message.save();
-					this.cancelEditMessage();
+					delete this.current.message.error;
+					this.current.message = new forumNamespace.Message();
+                	this.display.editMessage = false;
                 },
 
                 cancelEditMessage : function() {
                 	delete this.current.message.error;
+                	this.current.message.content = this.current.message.oldContent;
                 	this.current.message = new forumNamespace.Message();
                 	this.display.editMessage = false;
                 },
@@ -451,9 +464,13 @@ Behaviours.register('forum', {
                 },
 
                 deleteMessage : function() {
-                	this.current.message.remove();
-                	this.display.deleteMessage = false;
-                	delete this.current.message;
+                	var scope = this;
+                	scope.current.message.remove();
+                	scope.display.deleteMessage = false;
+                	scope.current.message = new forumNamespace.Message();
+                	scope.current.messages.sync(function(){
+                		scope.$apply('current.messages');
+                	});
                 },
 
                 formatDate : function(date){
