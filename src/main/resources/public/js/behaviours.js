@@ -222,6 +222,24 @@ forumNamespace.Category.prototype.addSubject = function(subject, cb){
 	}.bind(this));
 };
 
+forumNamespace.Category.prototype.createTemplatedCategory = function(templateData, cb){
+	console.log("automatic forum category creation");
+	var category = this;
+	category.name = templateData.categoryName;
+	category.createCategory(function(){
+		var subject = new forumNamespace.Subject();
+		subject.title = templateData.firstSubject;
+		category.addSubject(subject, function(){
+			var message = new forumNamespace.Message();
+			message.content = templateData.firstMessage;
+			subject.addMessage(message);
+		});
+		if(typeof cb === 'function'){
+			cb();
+		}
+	});
+};
+
 model.makeModels(forumNamespace);
 
 
@@ -510,26 +528,14 @@ Behaviours.register('forum', {
 				},
 
 				autoCreateSnipletCategory : function() {
-					this.createSnipletCategory(
-						lang.translate("forum.sniplet.auto.category.title").replace(/\{0\}/g, this.snipletResource.title),
-						lang.translate("forum.sniplet.auto.subject.title"),
-						lang.translate("forum.sniplet.auto.first.message").replace(/\{0\}/g, this.snipletResource.title)
-					);
-				},
-
-				createSnipletCategory : function(name, firstSubject, firstMessage) {
-					console.log("automatic forum category creation");
 					var scope = this;
+					var templateData = {
+						categoryName: lang.translate("forum.sniplet.auto.category.title").replace(/\{0\}/g, this.snipletResource.title),
+						firstSubject: lang.translate("forum.sniplet.auto.subject.title"),
+						firstMessage: lang.translate("forum.sniplet.auto.first.message").replace(/\{0\}/g, this.snipletResource.title)
+					};
 					var category = new forumNamespace.Category();
-					category.name = name;
-					category.createCategory(function(){
-						var subject = new forumNamespace.Subject();
-						subject.title = firstSubject;
-						category.addSubject(subject, function(){
-							var message = new forumNamespace.Message();
-							message.content = firstMessage;
-							subject.addMessage(message);
-						});
+					category.createTemplatedCategory(templateData, function(){
 						scope.setSnipletSource(category);
 						scope.snipletResource.synchronizeRights();
 					});
