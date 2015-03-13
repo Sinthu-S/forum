@@ -27,7 +27,7 @@ public class ForumRepositoryEvents implements RepositoryEvents {
 	private final MongoDb mongo = MongoDb.getInstance();
 
 	@Override
-	public void exportResources(String exportId, String userId, JsonArray groups, String exportPath, String locale) {
+	public void exportResources(String exportId, String userId, JsonArray groups, String exportPath, String locale, String host, final Handler<Boolean> handler) {
 		// TODO Implement exportResources
 		log.warn("[ForumRepositoryEvents] exportResources is not implemented");
 	}
