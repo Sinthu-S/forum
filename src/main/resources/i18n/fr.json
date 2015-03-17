@@ -35,6 +35,7 @@
     "forum.reply": "Répondre",
     "forum.subject": "Sujet de la discussion",
     "forum.subject.edit": "Modifier la discussion",
+    "forum.subject.deleted": "Discussion supprimée",
     "forum.subject.locked": "Sujet(s) bloqué(s)",
     "forum.subject.message": "Entrez un message pour commencer la discussion",
     "forum.subject.missing.title": "Veuillez entrer un titre pour le sujet de discussion",
