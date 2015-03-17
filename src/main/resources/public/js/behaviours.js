@@ -38,7 +38,7 @@ var forumNamespace = {
 					if(typeof callback === 'function'){
 						callback();
 					}
-				}.bind(this))
+				}.bind(this));
 			},
 			removeSelection: function(callback){
 				var counter = this.selection().length;
@@ -84,10 +84,12 @@ var forumNamespace = {
 			behaviours: 'forum'
 		});
 	}
-}
+};
 
-forumNamespace.Message.prototype.createMessage = function(cb){
-	notify.info('forum.message.sent');
+forumNamespace.Message.prototype.createMessage = function(cb, excludeNotification){
+	if(excludeNotification !== true) {
+		notify.info('forum.message.sent');
+	}
 	http().postJson('/forum/category/' + this.subject.category._id + '/subject/' + this.subject._id + '/messages', this).done(function(){
 		if(typeof cb === 'function'){
 			cb();
@@ -103,9 +105,9 @@ forumNamespace.Message.prototype.editMessage = function(cb){
 	});
 };
 
-forumNamespace.Message.prototype.save = function(cb){
+forumNamespace.Message.prototype.save = function(cb, excludeNotification){
 	if(!this._id){
-		this.createMessage(cb);
+		this.createMessage(cb, excludeNotification);
 	}
 	else{
 		this.editMessage(cb);
@@ -124,7 +126,7 @@ forumNamespace.Message.prototype.remove = function(cb){
 forumNamespace.Message.prototype.toJSON = function(){
 	return {
 		content: this.content
-	}
+	};
 };
 
 forumNamespace.Subject.prototype.open = function(cb){
@@ -136,16 +138,16 @@ forumNamespace.Subject.prototype.open = function(cb){
 	this.messages.sync();
 };
 
-forumNamespace.Subject.prototype.addMessage = function(message){
+forumNamespace.Subject.prototype.addMessage = function(message, excludeNotification){
 	message.subject = this;
 	message.owner = {
 		userId: model.me.userId,
 		displayName: model.me.username
-	}
+	};
 	this.messages.push(message);
 	message.save(function(){
 		message.subject.messages.sync();
-	}.bind(this));
+	}.bind(this), excludeNotification);
 };
 
 forumNamespace.Subject.prototype.createSubject = function(cb){
@@ -189,14 +191,14 @@ forumNamespace.Subject.prototype.toJSON = function(){
 	return {
 		title: this.title,
 		locked: this.locked
-	}
+	};
 };
 
 forumNamespace.Category.prototype.sync = function(cb){
 	http().get('/forum/category/' + this._id).done(function(category){
 		this.updateData(category);
 		this.subjects.sync(cb);
-	}.bind(this))
+	}.bind(this));
 };
 
 forumNamespace.Category.prototype.createCategory = function(callback){
@@ -213,7 +215,7 @@ forumNamespace.Category.prototype.addSubject = function(subject, cb){
 	subject.owner = {
 		userId: model.me.userId,
 		displayName: model.me.username
-	}
+	};
 	this.subjects.push(subject);
 	subject.save(function(){
 		if(typeof cb === 'function'){
@@ -232,7 +234,7 @@ forumNamespace.Category.prototype.createTemplatedCategory = function(templateDat
 		category.addSubject(subject, function(){
 			var message = new forumNamespace.Message();
 			message.content = templateData.firstMessage;
-			subject.addMessage(message);
+			subject.addMessage(message, true);
 		});
 		if(typeof cb === 'function'){
 			cb();
