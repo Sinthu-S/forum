@@ -85,17 +85,20 @@
 		</article>
 	</div>
 
-	<div class="row" ng-if="!current.subject.locked && !display.editMessage">
-		<h2><i18n>reply</i18n></h2>
-		<div class="twelve cell illustrated-article">
-			<html-editor ng-model="current.message.content" watch-collections="['current.subject.messages.all']" required></html-editor>
-			<div class="ten cell warning" ng-if="current.message.error !== undefined" translate content="[[current.message.error]]">
-			</div>
-			<div class="twelve cell">
-				<button class="right-magnet" ng-click="addMessage()"><i18n>reply</i18n></button>
+	<resource-right name="contrib" resource="category">
+		<div class="row" ng-if="!current.subject.locked && !display.editMessage">
+			<h2><i18n>reply</i18n></h2>
+			<div class="twelve cell illustrated-article">
+				<html-editor ng-model="current.message.content" watch-collections="['current.subject.messages.all']" required></html-editor>
+				<div class="ten cell warning" ng-if="current.message.error !== undefined" translate content="[[current.message.error]]">
+				</div>
+				<div class="twelve cell">
+					<button class="right-magnet" ng-click="addMessage()"><i18n>reply</i18n></button>
+				</div>
 			</div>
 		</div>
-	</div>
+	</resource-right>
+
 </div>
 
 <div class="twelve cell" ng-if="display.state === display.STATE_CREATE">
