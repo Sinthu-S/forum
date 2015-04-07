@@ -53,7 +53,7 @@
 				<div class="six cell">
 					<strong><a ng-click="viewAuthor(message)">[[message.owner.displayName]]</a></strong>, le <span class="small-text">[[formatDateShort(message.created.$date)]]</span>
 				</div>
-				<resource-right name="publish" resource="subject" class="contextual-buttons right-magnet small-text">
+				<resource-right name="publish" resource="current.subject" class="contextual-buttons right-magnet small-text">
 					&nbsp;<i18n>forum.or</i18n>&nbsp;
 					<a ng-click="confirmDeleteMessage(message)">
 						<i18n>forum.remove</i18n>
@@ -61,7 +61,7 @@
 				</resource-right>
 				<div class="contextual-buttons right-magnet small-text">
 					<!-- Moderators can edit all messages. Owner can edit his message only if the subject is not locked -->
-					<resource-right name="publish" resource="subject" >
+					<resource-right name="publish" resource="current.subject" >
 						<a ng-click="editMessage(message)">
 							<i18n>forum.edit</i18n>
 						</a>
