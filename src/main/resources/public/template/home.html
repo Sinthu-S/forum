@@ -1,0 +1,147 @@
+<h1>
+    <i class="forum"></i><i18n ng-click="openMainPage()">forum.title</i18n>
+    <button workflow="forum.admin" class="right-magnet" ng-click="newCategory()"><i18n>forum.category.new</i18n></button>
+</h1>
+
+<nav class="illustrated-links">
+    <ul>
+        <div ng-repeat="cat in categories.all">
+            <li ng-class="{ selected: cat.selected }">
+                <div class="tiny-illustration">
+                    <img skin-src="/img/illustrations/forum-default.png" ng-if="(cat.icon === undefined)" class="cell" />
+                    <img ng-src="[[cat.icon]]?thumbnail=120x120" ng-if="cat.icon !== undefined" class="cell" />
+                </div>
+                <div class="content">
+                    <resource-right name="manage" resource="cat">
+                        <input type="checkbox" class="cell" ng-hide="getSelectedSubjects().length > 0" ng-model="cat.selected" ng-change="hideAlmostAllButtons(cat)"/>
+                    </resource-right>
+                    <h1 class="eight cell">[[cat.name]]</h1>
+                    <a class="right-magnet" ng-if="cat.subjects.length() > 1 && cat.limitSubjects > 1"
+                       ng-click="cat.limitSubjects = 1" >
+                        <i18n>forum.hide.subjects</i18n>
+                    </a>
+                    <a class="right-magnet" ng-if="cat.subjects.length() > 1 && cat.limitSubjects < 2"
+                       ng-click="cat.limitSubjects = cat.subjects.length()" >
+                        <i18n>forum.show.subjects</i18n> ([[ cat.subjects.length() ]])
+                    </a>
+                    <strong class="small-text">
+                        <span class="right-magnet" style="line-height: 50px" ng-if="cat.nbNewMessages > 1">
+                            [[cat.nbNewMessages]]
+                            <i18n>forum.message.new.plural</i18n>
+                        </span>
+                        <span class="right-magnet" style="line-height: 50px" ng-if="cat.nbNewMessages === 1">
+                            [[cat.nbNewMessages]]
+                            <i18n>forum.message.new.single</i18n>
+                        </span>
+                        <span class="right-magnet" style="line-height: 50px" ng-if="cat.nbNewMessages === 0">
+                            <i18n>forum.message.new.none</i18n>
+                        </span>
+                    </strong>
+                </div>
+            </li>
+            <ul class="twelve secondary-list">
+                <li ng-repeat="subject in cat.subjects.all | limitTo: cat.limitSubjects" ng-class="{ selected: subject.selected }">
+                    <resource-right class="fixed-tiny" name="publish" resource="cat">
+						<input type="checkbox" ng-model="subject.selected"
+                               ng-hide="categories.selection().length > 0 || getSelectedSubjects().length > 0 && getSelectedSubjects()[0].category !== cat"/>
+					</resource-right>
+                    <h4 class="fixed-large small-text" ng-click="openSubject(subject)"><i class="prive" ng-if="subject.locked"></i>[[subject.title]]</h4>
+                    <em class="fixed-regular small-text">[[subject.nbMessages]] <i18n>forum.discussion.messages</i18n></em>
+                    <div class="fixed-regular centered-text small-text">
+                        [[subject.lastMessage.owner.displayName]]<br>
+                        <em>[[formatDateFromNow(subject.lastMessage.created.$date)]]</em>
+                    </div>
+                    <div class="fixed-small centered-text">
+                        <img ng-src="/userbook/avatar/[[subject.lastMessage.owner.userId]]">
+                    </div>
+                    <div class="bubble-container ellipsis" ng-click="openSubject(subject)">
+                        <div class="bubble-small">
+                            [[ extractText(subject.lastMessage) ]]
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </ul>
+</nav>
+
+<section class="toggle-buttons" ng-class="{ hide: categories.selection().length === 0 }">
+	<div class="toggle">
+		<div class="row">
+            <resource-right name="manage" resource="categories.selection()" class="cell">
+                <button ng-click="editCategory(categories.selection()[0], $event)" ng-if="categories.selection().length === 1"><i18n>edit</i18n></button>
+                <button ng-click="confirmRemoveCategory(categories.selection()[0], $event)"><i18n>remove</i18n></button>
+                <button ng-click="shareCategory(categories.selection()[0], $event)"><i18n>share</i18n></button>
+            </resource-right>
+            <resource-right name="publish" resource="categories.selection()" class="cell">
+        		<button ng-click="newSubject(categories.selection()[0])"><i18n>forum.subject.new</i18n></button>
+        	</resource-right>
+		</div>
+	</div>
+</section>
+
+<section class="toggle-buttons" ng-class="{ hide: getSelectedSubjects().length === 0 }">
+    <div class="toggle">
+        <div class="row">
+            <resource-right name="publish" resource="getSelectedSubjects()[0].category" class="cell">
+                <button ng-click="display.editSubject = true" ng-if="getSelectedSubjects().length === 1"><i18n>edit</i18n></button>
+                <button ng-click="confirmRemoveSelectedSubjects()"><i18n>remove</i18n></button>
+                <button
+                        ng-if="(getSelectedSubjects().where({ locked: undefined, selected: true}).length > 0 || getSelectedSubjects().where({ locked: false, selected: true}).length > 0)
+                                && getSelectedSubjects().where({ locked: true, selected: true}).length === 0"
+                        ng-click="getSelectedSubjects().lockSelection()">
+                    <i18n>lock</i18n>
+                </button>
+                <button ng-if="getSelectedSubjects().where({ locked: true, selected: true}).length > 0
+                                && (getSelectedSubjects().where({ locked: undefined, selected: true}).length === 0 || getSelectedSubjects().where({ locked: false, selected: true}).length === 0)"
+                        ng-click="getSelectedSubjects().unlockSelection()">
+                    <i18n>unlock</i18n>
+                </button>
+            </resource-right>
+        </div>
+    </div>
+</section>
+
+
+<div ng-if="display.confirmDeleteCategories">
+	<lightbox show="display.confirmDeleteCategories" on-close="cancelRemoveCategory()">
+		<div class="row" ng-if="categories.selection().length === 1">
+			<i18n>forum.confirm.delete.category</i18n>
+		</div>
+		<div class="row" ng-if="categories.selection().length > 1">
+			<i18n>forum.confirm.delete.categories</i18n>
+		</div>
+		<div class="row">
+			<button class="right-magnet" ng-click="removeSelectedCategories()"><i18n>remove</i18n></button>
+			<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelRemoveCategory()" />
+		</div>
+	</lightbox>
+</div>
+
+<lightbox show="display.editSubject" on-close="display.editSubject = false">
+    <h2><i18n>forum.subject.edit</i18n></h2>
+
+    <div class="row">
+        <input type="text" i18n-placeholder="forum.subject" ng-model="getSelectedSubjects()[0].title" class="twelve cell" />
+    </div>
+    <div class="row">
+        <input type="button" class="cancel cell right-magnet" i18n-value="cancel" ng-click="openCategory(getSelectedSubjects()[0].category); display.editSubject = false;" />
+        <input type="submit" i18n-value="save" class="cell right-magnet" ng-click="getSelectedSubjects[0].save(); display.editSubject = false;" />
+    </div>
+
+</lightbox>
+
+<div ng-if="display.confirmDeleteSubjects">
+    <lightbox show="display.confirmDeleteSubjects" on-close="cancelRemoveSubjects()">
+        <div class="row" ng-if="getSelectedSubjects().length === 1">
+            <i18n>forum.confirm.delete.subject</i18n>
+        </div>
+        <div class="row" ng-if="getSelectedSubjects().length > 1">
+            <i18n>forum.confirm.delete.subjects</i18n>
+        </div>
+        <div class="row">
+            <button class="right-magnet" ng-click="removeSelectedSubjects(getSelectedSubjects())"><i18n>remove</i18n></button>
+            <input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelRemoveSubjects()" />
+        </div>
+    </lightbox>
+</div>

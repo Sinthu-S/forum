@@ -42,7 +42,7 @@ model.build = function(){
 		return {
 			name: this.name,
 			icon: this.icon
-		}
+		};
 	};
 
 	// Build
@@ -50,6 +50,10 @@ model.build = function(){
 		sync: function(callback){
 			http().get('/forum/categories').done(function(categories){
 				this.load(categories);
+				this.forEach(function(category){
+					category.limitSubjects = 1;
+					category.open();
+				});
 				if(typeof callback === 'function'){
 					callback();
 				}

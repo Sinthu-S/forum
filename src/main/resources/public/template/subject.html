@@ -1,0 +1,92 @@
+<h1>
+    <i class="forum"></i><a ng-click="openMainPage()"><i18n>forum.title</i18n></a>
+    <side-panel class="cell">
+    	<nav class="vertical">
+            <ul>
+                <li ng-repeat="cat in categories.all">
+                    <h2><a ng-click="openCategory(cat)">[[cat.name]]</a></h2>
+                    <ul class="sublist">
+                        <li ng-repeat="subject in cat.subjects.all">
+                            <a ng-click="openSubject(subject)">[[subject.title]]</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </side-panel>
+</h1>
+<h2><a ng-click="openCategory(subject.category)">[[subject.category.name]]</a> / [[subject.title]]</h2>
+<a id="top" ng-click="scrollTo('bottom')" class="right-magnet">↓ <i18n><span class="no-style ng-scope">Voir le dernier message</span></i18n></a>
+
+<resource-right name="contrib" resource="subject" ng-if="!editedMessage._id">
+    <div class="illustrated-article bubble-container">
+        <div class="small illustration" ng-click="viewAuthor(message)">
+			<div class="image">
+				<img ng-src="/userbook/avatar/[[me.userId]]" />
+			</div>
+		</div>
+        <article class="illustrated-text bubble">
+    		<html-inline-editor ng-model="editedMessage.content" watch-collections="['messages.all']" required></html-inline-editor>
+    		<div class="ten cell warning" ng-if="editedMessage.error !== undefined" translate content="[[editedMessage.error]]">
+    		</div>
+            <div class="row">
+                <button ng-click="addMessage()" ng-if="!subject.locked"><i18n>forum.reply</i18n></button>
+            </div>
+    	</article>
+    </div>
+</resource-right>
+
+<div ng-repeat="message in messages.all | orderBy: '-created.$date'" class="toggle-buttons-spacer bubble-container alternate-container">
+	<div class="row vertical-spacing"></div>
+	<div class="illustrated-article">
+		<div class="small illustration" ng-click="viewAuthor(message)">
+            <div>
+                <strong>[[message.owner.displayName]]</strong>
+            </div>
+            <div>
+                <em class="small-text">[[formatDateFromNow(message.created.$date)]]</em>
+            </div>
+			<div class="image">
+				<img ng-src="/userbook/avatar/[[message.owner.userId]]" />
+			</div>
+		</div>
+		<article class="illustrated-text bubble" ng-if="message !== editedMessage">
+            <plus class="contextual-buttons right-magnet">
+                <div class="row">
+                    <resource-right name="publish" resource="subject">
+    					<button class="cell" ng-click="confirmRemoveMessage(message)"><i18n>forum.remove</i18n></button>
+    				</resource-right>
+					<!-- Moderators can edit all messages. Owner can edit his message only if the subject is not locked -->
+					<resource-right class="cell" name="publish" resource="subject" >
+						<button ng-click="editMessage(message)"><i18n>forum.edit</i18n></button>
+					</resource-right>
+					<button class="cell" ng-if="ownerCanEditMessage(subject, message) === true" ng-click="editMessage(message)">
+					    <i18n>forum.edit</i18n>
+					</button>
+                </div>
+            </plus>
+			<p bind-html="message.content"></p>
+		</article>
+		<article class="illustrated-text edit-message" ng-if="message === editedMessage">
+			<html-editor ng-model="editedMessage.content" required></html-editor>
+			<div class="ten cell warning" ng-if="editedMessage.error !== undefined" translate content="[[editedMessage.error]]">
+			</div>
+			<button class="right-magnet" ng-click="saveEditMessage()"><i18n>edit</i18n></button>
+			<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelEditMessage()" />
+		</article>
+	</div>
+</div>
+
+<a id="bottom" ng-click="scrollTo('top')" class="right-magnet">&uarr; <i18n>forum.go.to.top</i18n></a>
+
+<div ng-if="display.confirmDelete">
+	<lightbox show="display.confirmDelete" on-close="cancelRemoveMessage()">
+		<div class="row">
+			<i18n>forum.confirm.delete.message</i18n>
+		</div>
+		<div class="row">
+			<button class="right-magnet" ng-click="removeMessage()"><i18n>remove</i18n></button>
+			<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelRemoveMessage()" />
+		</div>
+	</lightbox>
+</div>

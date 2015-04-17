@@ -22,7 +22,7 @@ function ForumController($scope, template, model, date, route){
 
 	$scope.display = {};
 	$scope.editedMessage = new Behaviours.applicationsBehaviours.forum.namespace.Message();
-	
+
 	// Definition of actions
 	route({
 		goToCategory: function(params){
@@ -38,13 +38,13 @@ function ForumController($scope, template, model, date, route){
 				}
 				else{
 					$scope.notFound = false;
-					$scope.openCategory($scope.category);
+					//$scope.openCategory($scope.category);
 				}
 			});
 			model.categories.sync();
 		},
 		goToSubject: function(params){
-			template.open('categories', 'categories');
+            template.open('main', 'home');
 			model.categories.one('sync', function(){
 				$scope.category = undefined;
 				$scope.category = model.categories.find(function(category){
@@ -76,7 +76,7 @@ function ForumController($scope, template, model, date, route){
 			model.categories.sync();
 		},
 		mainPage: function(){
-			template.open('categories', 'categories');
+            template.open('main', 'home');
 		}
 	});
 
@@ -90,7 +90,7 @@ function ForumController($scope, template, model, date, route){
 			$scope.category.subjects.deselectAll();
 		}
 	};
-	
+
 	$scope.switchAllCategories = function(){
 		if($scope.display.selectCategories){
 			$scope.categories.forEach(function(item){
@@ -105,11 +105,14 @@ function ForumController($scope, template, model, date, route){
 	};
 
 	$scope.hideAlmostAllButtons = function(category){
-		$scope.categories.forEach(function(cat){
-			if(cat !== category){
-				cat.showButtons = false;
-			}
-		});
+        $scope.categories.selection();
+        if(category.selected){
+            $scope.categories.forEach(function(cat){
+    			if(cat !== category){
+    				cat.selected = false;
+    			}
+    		});
+        }
 	};
 
 	$scope.openCategory = function(category){
@@ -117,29 +120,32 @@ function ForumController($scope, template, model, date, route){
 		$scope.subjects = category.subjects;
 		$scope.categories.forEach(function(cat){
 			if(cat !== category){
-				cat.showButtons = false;
+				cat.selected = false;
 			}
 		});
 		category.open(function(){
-			template.open('main', 'subjects');
+			template.open('main', 'home');
+            category.limitSubjects = category.subjects.length();
 		});
 	};
 
 	$scope.openSubject = function(subject){
 		$scope.subject = subject;
 		subject.open(function(){
-			template.open('main', 'read-subject');
+			template.open('main', 'subject');
 		});
 		$scope.messages =  subject.messages;
 	};
-	
+
 	$scope.openMainPage = function(){
 		delete $scope.category;
-		template.close('main');
-	}
+        template.open('main', 'home');
+	};
 
-	$scope.newSubject = function(){
+	$scope.newSubject = function(category){
+        $scope.category = category;
 		$scope.subject = new Behaviours.applicationsBehaviours.forum.namespace.Subject();
+        $scope.subjects = category.subjects;
 		template.open('main', 'new-subject');
 	};
 
@@ -147,7 +153,7 @@ function ForumController($scope, template, model, date, route){
 		if ($scope.isTitleEmpty($scope.subject.title)) {
 			$scope.subject.title = undefined;
 			$scope.subject.error = 'forum.subject.missing.title';
-			return;	
+			return;
 		}
 
 		if ($scope.isTextEmpty($scope.editedMessage.content)) {
@@ -157,27 +163,28 @@ function ForumController($scope, template, model, date, route){
 
 		$scope.subject.error = undefined;
 		$scope.category.addSubject($scope.subject, function(){
-			$scope.subject.addMessage($scope.editedMessage);
+			$scope.subject.addMessage($scope.editedMessage, undefined, function(){ $scope.category.open(); });
 			$scope.messages = $scope.subject.messages;
 			$scope.editedMessage = new Behaviours.applicationsBehaviours.forum.namespace.Message();
 			$scope.editedMessage.content = "";
 		});
-		template.open('main', 'read-subject');
+		//template.open('main', 'read-subject');
+        template.open('main', 'subject');
 	};
 
 	$scope.closeSubject = function(){
 		$scope.subject.error = undefined;
 		$scope.subject = undefined;
 		$scope.subjects.sync();
-		template.open('main', 'subjects');
+        template.open('main', 'home');
 	};
 
 	$scope.confirmRemoveSelectedSubjects = function() {
 		$scope.display.confirmDeleteSubjects = true;
 	};
 
-	$scope.removeSelectedSubjects = function() {
-		$scope.subjects.removeSelection(function(){
+	$scope.removeSelectedSubjects = function(subjects) {
+		subjects[0].category.subjects.removeSelection(function(){
 			$scope.display.confirmDeleteSubjects = undefined;
 		});
 	};
@@ -196,11 +203,11 @@ function ForumController($scope, template, model, date, route){
 		$scope.subject.addMessage($scope.editedMessage);
 		$scope.editedMessage = new Behaviours.applicationsBehaviours.forum.namespace.Message();
 		$scope.editedMessage.content = "";
-		template.open('main', 'read-subject');
+        template.open('main', 'subject');
 	};
-	
+
 	$scope.cancelAddMessage = function(){
-		template.open('main', 'read-subject');
+        template.open('main', 'subject');
 	};
 
 	$scope.editMessage = function(message){
@@ -248,13 +255,14 @@ function ForumController($scope, template, model, date, route){
 		$scope.category = category;
 		$scope.display.showPanel = true;
 		event.stopPropagation();
+        template.open('main', 'share-category');
 	};
-	
+
 	$scope.closeEditCategory = function(){
 		$scope.category = model.categories.find(function(category){
 			return category._id === $scope.category._id;
 		});
-		$scope.openCategory($scope.category);
+		template.open('main', 'home');
 	};
 
 	$scope.saveCategoryEdit = function(){
@@ -272,12 +280,12 @@ function ForumController($scope, template, model, date, route){
 			});
 			$scope.categories.sync();
 		}
-		template.close('main');
+        template.open('main', 'home');
 	};
 
 	$scope.cancelCategoryEdit = function(){
 		$scope.category = undefined;
-		template.close('main');
+		template.open('main', 'home');
 	};
 
 	$scope.newCategory = function(){
@@ -295,7 +303,7 @@ function ForumController($scope, template, model, date, route){
 	$scope.removeSelectedCategories = function() {
 		$scope.categories.removeSelection(function(){
 			$scope.cancelRemoveCategory();
-			template.close('main');
+            template.open('main', 'home');
 		});
 	};
 
@@ -306,16 +314,20 @@ function ForumController($scope, template, model, date, route){
 
 	$scope.viewAuthor = function(message){
 		window.location.href = '/userbook/annuaire#/' + message.owner.userId;
-	}
+	};
 
 	$scope.formatDate = function(date){
 		return moment(date).format('DD MMMM YYYY HH[h]mm');
-	}
+	};
 
 	$scope.formatDateShort = function(date){
 		return moment(date).format('DD/MM/YYYY HH[h]mm');
-	}
-	
+	};
+
+    $scope.formatDateFromNow = function(date){
+        return moment(date).fromNow();
+    };
+
 	$scope.scrollTo = function(item){
 		window.scrollTo(0, $("#" + item)[0].offsetTop -100);
 	}
@@ -333,14 +345,26 @@ function ForumController($scope, template, model, date, route){
 		}
 		return true;
 	}
-	
+
 	$scope.ownerCanEditMessage = function(subject, message) {
 		// only the last message can be edited
-		return (!subject.myRights.publish && 
+		return (!subject.myRights.publish &&
 				!subject.category.myRights.publish &&
 				!subject.locked &&
-				model.me.userId === message.owner.userId && 
+				model.me.userId === message.owner.userId &&
 				subject.messages.all[subject.messages.all.length-1] === message
 				);
 	};
+
+    $scope.extractText = function(message){
+        return $("<span>"+message.content+"</span>").text();
+    };
+
+    $scope.getSelectedSubjects = function(){
+        return [].concat.apply([], $scope.categories.map(function(cat){
+            return cat.subjects.filter(function(filter){
+                return filter.selected;
+            });
+        }));
+    };
 }

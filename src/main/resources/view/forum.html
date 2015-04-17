@@ -10,16 +10,13 @@
 </head>
 <body ng-controller="ForumController">
 <portal>
-	<div class="row patchwork" ng-if="notFound === false">
-		<container template="main" class="flexible content cell"></container>
-		<!-- ugly hack to get around a bug in ie 10/11 that doesn't render neighbour when :empty selector changes -->
-		<container template="categories" class="flexible navigation" ng-class="{ 'empty-neighbour': template.isEmpty('main'), 'filled-neighbour': !template.isEmpty('main') }"></container>
+	<div class="row" ng-if="notFound === false">
+		<container template="main" class="twelve cell"></container>
 	</div>
-	
+
 	<div ng-if="notFound" class="row">
 		<container template="error"></container>
 	</div>
-
 </portal>
 </body>
 </html>

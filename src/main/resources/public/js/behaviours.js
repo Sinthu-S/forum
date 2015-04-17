@@ -138,7 +138,7 @@ forumNamespace.Subject.prototype.open = function(cb){
 	this.messages.sync();
 };
 
-forumNamespace.Subject.prototype.addMessage = function(message, excludeNotification){
+forumNamespace.Subject.prototype.addMessage = function(message, excludeNotification, cb){
 	message.subject = this;
 	message.owner = {
 		userId: model.me.userId,
@@ -147,6 +147,9 @@ forumNamespace.Subject.prototype.addMessage = function(message, excludeNotificat
 	this.messages.push(message);
 	message.save(function(){
 		message.subject.messages.sync();
+		if(typeof cb === 'function'){
+			cb();
+		}
 	}.bind(this), excludeNotification);
 };
 
@@ -282,8 +285,8 @@ Behaviours.register('forum', {
 		}
 
 		for(var behaviour in forumRights.resource){
-			if(model.me.hasRight(rightsContainer, forumRights.resource[behaviour]) 
-					|| model.me.userId === resource.owner.userId 
+			if(model.me.hasRight(rightsContainer, forumRights.resource[behaviour])
+					|| model.me.userId === resource.owner.userId
 					|| model.me.userId === rightsContainer.owner.userId){
 				if(resource.myRights[behaviour] !== undefined){
 					resource.myRights[behaviour] = resource.myRights[behaviour] && forumRights.resource[behaviour];
@@ -376,7 +379,7 @@ Behaviours.register('forum', {
                 	if (scope.isTitleEmpty(scope.current.subject.title)) {
 						scope.current.subject.title = undefined;
 						scope.current.subject.error = 'forum.subject.missing.title';
-						return;	
+						return;
 					}
 
 					if (scope.isTextEmpty(scope.current.message.content)) {
@@ -519,10 +522,10 @@ Behaviours.register('forum', {
 
 				ownerCanEditMessage : function(message) {
 					// only the last message can be edited
-					return (!message.subject.myRights.publish && 
+					return (!message.subject.myRights.publish &&
 							!message.subject.category.myRights.publish &&
 							!message.subject.locked &&
-							model.me.userId === message.owner.userId && 
+							model.me.userId === message.owner.userId &&
 							message.subject.messages.all[message.subject.messages.all.length-1] === message
 							);
 				},
