@@ -38,7 +38,8 @@ function ForumController($scope, template, model, date, route){
 				}
 				else{
 					$scope.notFound = false;
-					//$scope.openCategory($scope.category);
+					$scope.openCategory($scope.category);
+                    template.open('main', 'home');
 				}
 			});
 			model.categories.sync();
@@ -55,7 +56,7 @@ function ForumController($scope, template, model, date, route){
 					template.open('error', '404');
 				}
 				else{
-					$scope.category.subjects.one('sync', function(){
+					$scope.category.subjects.sync(function(){
 						$scope.subjects = $scope.category.subjects;
 						$scope.subject = undefined;
 						$scope.subject = $scope.subjects.find(function(subject){
@@ -70,7 +71,6 @@ function ForumController($scope, template, model, date, route){
 							$scope.openSubject($scope.subject);
 						}
 					});
-					$scope.category.subjects.sync();
 				}
 			});
 			model.categories.sync();
