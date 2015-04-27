@@ -407,11 +407,9 @@ Behaviours.register('forum', {
                 },
 
                 saveEditSubject : function() {
-                	var scope = this;
                 	this.current.subject.title = this.current.subject.newTitle;
-                	this.current.subject.save(function(){
-                		this.display.editSubject = false;
-                	});
+					this.display.editSubject = false;
+                	this.current.subject.save();
                 },
 
                 confirmDeleteSubject : function() {
