@@ -62,7 +62,7 @@
     "forum.sniplet.source.existing": "Utiliser une catégorie existante",
     "forum.sniplet.auto.category.title": "Forum du site {0}",
     "forum.sniplet.auto.subject.title": "Règles d'utilisation du forum",
-    "forum.sniplet.auto.first.message": "<h1>Bienvenue dans le forum du site {0}</h1><p>Merci de rester poli dans les échanges sur le forum</p>",
+    "forum.sniplet.auto.first.message": "<h1>Bienvenue dans le forum du site {0}</h1><p>Merci de rester poli(e) dans les échanges sur le forum</p>",
     "group.AdminLocal": "Tous les administrateurs locaux",
     "group.Personnel": "Tous les personnels du groupe {0}.",
     "group.Relative": "Tous les parents du groupe {0}.",
