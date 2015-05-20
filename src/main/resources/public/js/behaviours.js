@@ -314,7 +314,12 @@ Behaviours.register('forum', {
 	},*/
 	loadResources: function(callback) {
 		http().get('/forum/categories').done(function(categories) {
-			this.resources = categories;
+			this.resources = _.map(categories, function(category) {
+				category.title = category.name;
+				category.icon = category.icon || '/img/illustrations/forum-default.png';
+				category.path = '/forum#/view/' + category._id;
+				return category;
+			});
 			callback(this.resources);
 		}.bind(this));
 	},
