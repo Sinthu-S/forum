@@ -10,7 +10,7 @@
 		<tbody>
 			<tr ng-repeat="subject in subjects.all" ng-class="{ checked: subject.selected }">
 				<td ng-click="openSubject(subject)"><i class="prive" ng-if="subject.locked"></i> <a>[[subject.title]]</a></td>
-				<td ng-click="openSubject(subject)">[[subject.nbMessages]]<i18n>forum.subjects.column.messages</i18n></td>
+				<td ng-click="openSubject(subject)">[[subject.nbMessages]] <i18n>forum.subjects.column.messages</i18n></td>
 				<td ng-click="openSubject(subject)">
 					<i18n>forum.by</i18n>[[subject.lastMessage.owner.displayName]]<i18n>forum.on.the</i18n>[[formatDate(subject.lastMessage.created.$date)]]
 				</td>
