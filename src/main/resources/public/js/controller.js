@@ -360,11 +360,33 @@ function ForumController($scope, template, model, date, route){
         return $("<span>"+message.content+"</span>").text();
     };
 
-    $scope.getSelectedSubjects = function(){
-        return [].concat.apply([], $scope.categories.map(function(cat){
+	$scope.lockSelection = function(){
+		selectedSubjects.forEach(function(subject){
+			subject.locked = true;
+			subject.save();
+		});
+	};
+
+	$scope.unlockSelection = function(){
+		selectedSubjects.forEach(function(subject){
+			subject.locked = false;
+			subject.save();
+		});
+	};
+
+	var selectedSubjects = [];
+    $scope.getSelectedSubjects = function(filter){
+        var sel = [].concat.apply([], $scope.categories.map(function(cat){
             return cat.subjects.filter(function(filter){
                 return filter.selected;
             });
         }));
+		if(sel.length !== selectedSubjects.length){
+			selectedSubjects = sel;
+		}
+		if(typeof filter === 'object'){
+			selectedSubjects = _.where(selectedSubjects, filter);
+		}
+		return selectedSubjects;
     };
 }
