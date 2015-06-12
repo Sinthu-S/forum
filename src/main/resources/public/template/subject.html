@@ -18,25 +18,7 @@
 <h2><a ng-click="openCategory(subject.category)">[[subject.category.name]]</a> / [[subject.title]]</h2>
 <a id="top" ng-click="scrollTo('bottom')" class="right-magnet">↓ <i18n><span class="no-style ng-scope">Voir le dernier message</span></i18n></a>
 
-<resource-right name="contrib" resource="subject" ng-if="!editedMessage._id">
-    <div class="illustrated-article bubble-container">
-        <div class="small illustration" ng-click="viewAuthor(message)">
-			<div class="image">
-				<img ng-src="/userbook/avatar/[[me.userId]]" />
-			</div>
-		</div>
-        <article class="illustrated-text bubble">
-    		<html-inline-editor ng-model="editedMessage.content" watch-collections="['messages.all']" required></html-inline-editor>
-    		<div class="ten cell warning" ng-if="editedMessage.error !== undefined" translate content="[[editedMessage.error]]">
-    		</div>
-            <div class="row">
-                <button ng-click="addMessage()" ng-if="!subject.locked"><i18n>forum.reply</i18n></button>
-            </div>
-    	</article>
-    </div>
-</resource-right>
-
-<div ng-repeat="message in messages.all | orderBy: '-created.$date'" class="toggle-buttons-spacer bubble-container alternate-container">
+<div ng-repeat="message in messages.all | orderBy: 'created.$date'" class="toggle-buttons-spacer bubble-container alternate-container">
 	<div class="row vertical-spacing"></div>
 	<div class="illustrated-article">
 		<div class="small illustration" ng-click="viewAuthor(message)">
@@ -76,6 +58,24 @@
 		</article>
 	</div>
 </div>
+
+<resource-right name="contrib" resource="subject" ng-if="!editedMessage._id">
+    <div class="illustrated-article bubble-container">
+        <div class="small illustration" ng-click="viewAuthor(message)">
+			<div class="image">
+				<img ng-src="/userbook/avatar/[[me.userId]]" />
+			</div>
+		</div>
+        <article class="illustrated-text bubble">
+    		<html-inline-editor ng-model="editedMessage.content" watch-collections="['messages.all']" required></html-inline-editor>
+    		<div class="ten cell warning" ng-if="editedMessage.error !== undefined" translate content="[[editedMessage.error]]">
+    		</div>
+            <div class="row">
+                <button ng-click="addMessage()" ng-if="!subject.locked"><i18n>forum.reply</i18n></button>
+            </div>
+    	</article>
+    </div>
+</resource-right>
 
 <a id="bottom" ng-click="scrollTo('top')" class="right-magnet">&uarr; <i18n>forum.go.to.top</i18n></a>
 

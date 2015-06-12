@@ -51,7 +51,6 @@ model.build = function(){
 			http().get('/forum/categories').done(function(categories){
 				this.load(categories);
 				this.forEach(function(category){
-					category.limitSubjects = 1;
 					category.open();
 				});
 				if(typeof callback === 'function'){

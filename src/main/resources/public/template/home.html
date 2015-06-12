@@ -16,11 +16,11 @@
                         <input type="checkbox" class="cell" ng-hide="getSelectedSubjects().length > 0" ng-model="cat.selected" ng-change="hideAlmostAllButtons(cat)"/>
                     </resource-right>
                     <h1 class="eight cell">[[cat.name]]</h1>
-                    <a class="right-magnet" ng-if="cat.subjects.length() > 1 && cat.limitSubjects > 1"
-                       ng-click="cat.limitSubjects = 1" >
+                    <a class="right-magnet" ng-if="cat.subjects.length() > 1 && cat.limitSubjects > maxSubjects"
+                       ng-click="cat.limitSubjects = maxSubjects" >
                         <i18n>forum.hide.subjects</i18n>
                     </a>
-                    <a class="right-magnet" ng-if="cat.subjects.length() > 1 && cat.limitSubjects < 2"
+                    <a class="right-magnet" ng-if="cat.subjects.length() > maxSubjects && (!cat.limitSubjects || cat.limitSubjects <= maxSubjects)"
                        ng-click="cat.limitSubjects = cat.subjects.length()" >
                         <i18n>forum.show.subjects</i18n> ([[ cat.subjects.length() ]])
                     </a>
@@ -40,12 +40,12 @@
                 </div>
             </li>
             <ul class="twelve secondary-list">
-                <li ng-repeat="subject in cat.subjects.all | limitTo: cat.limitSubjects" ng-class="{ selected: subject.selected }">
+                <li ng-repeat="subject in cat.subjects.all | limitTo: (cat.limitSubjects ? cat.limitSubjects : maxSubjects)" ng-class="{ selected: subject.selected }">
                     <resource-right class="fixed-tiny" name="publish" resource="cat">
 						<input type="checkbox" ng-model="subject.selected"
                                ng-hide="categories.selection().length > 0 || getSelectedSubjects().length > 0 && getSelectedSubjects()[0].category !== cat"/>
 					</resource-right>
-                    <h4 class="fixed-large small-text" ng-click="openSubject(subject)"><i class="prive" ng-if="subject.locked"></i>[[subject.title]]</h4>
+                    <h4 class="fixed-large text" ng-click="openSubject(subject)"><i class="prive" ng-if="subject.locked"></i>[[subject.title]]</h4>
                     <em class="fixed-regular small-text">[[subject.nbMessages]] <i18n>forum.discussion.messages</i18n></em>
                     <div class="fixed-regular centered-text small-text">
                         [[subject.lastMessage.owner.displayName]]<br>

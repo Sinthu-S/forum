@@ -23,6 +23,8 @@ function ForumController($scope, template, model, date, route){
 	$scope.display = {};
 	$scope.editedMessage = new Behaviours.applicationsBehaviours.forum.namespace.Message();
 
+    $scope.maxSubjects = 3
+
 	// Definition of actions
 	route({
 		goToCategory: function(params){
