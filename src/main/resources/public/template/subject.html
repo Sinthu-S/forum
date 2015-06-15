@@ -18,10 +18,10 @@
 <h2><a ng-click="openCategory(subject.category)">[[subject.category.name]]</a> / [[subject.title]]</h2>
 <a id="top" ng-click="scrollTo('bottom')" class="right-magnet">↓ <i18n><span class="no-style ng-scope">Voir le dernier message</span></i18n></a>
 
-<div ng-repeat="message in messages.all | orderBy: 'created.$date'" class="toggle-buttons-spacer bubble-container alternate-container">
+<div ng-repeat="message in messages.all | orderBy: 'created.$date'" class="bubble-container alternate-container">
 	<div class="row vertical-spacing"></div>
-	<div class="illustrated-article">
-		<div class="small illustration" ng-click="viewAuthor(message)">
+	<div class="row rigid-grid">
+		<div class="two cell" ng-click="viewAuthor(message)">
             <div>
                 <strong>[[message.owner.displayName]]</strong>
             </div>
@@ -32,7 +32,7 @@
 				<img ng-src="/userbook/avatar/[[message.owner.userId]]" />
 			</div>
 		</div>
-		<article class="illustrated-text bubble" ng-if="message !== editedMessage">
+		<article class="margin-two bubble" ng-if="message !== editedMessage">
             <plus class="contextual-buttons right-magnet">
                 <div class="row">
                     <resource-right name="publish" resource="subject">
@@ -49,7 +49,7 @@
             </plus>
 			<p bind-html="message.content"></p>
 		</article>
-		<article class="illustrated-text edit-message" ng-if="message === editedMessage">
+		<article class="margin-two bubble" ng-if="message === editedMessage">
 			<html-editor ng-model="editedMessage.content" required></html-editor>
 			<div class="ten cell warning" ng-if="editedMessage.error !== undefined" translate content="[[editedMessage.error]]">
 			</div>
@@ -60,13 +60,13 @@
 </div>
 
 <resource-right name="contrib" resource="subject" ng-if="!editedMessage._id">
-    <div class="illustrated-article bubble-container">
-        <div class="small illustration" ng-click="viewAuthor(message)">
+    <div class="row rigid-grid bubble-container">
+        <div class="two cell" ng-click="viewAuthor(message)">
 			<div class="image">
 				<img ng-src="/userbook/avatar/[[me.userId]]" />
 			</div>
 		</div>
-        <article class="illustrated-text bubble">
+        <article class="margin-two bubble">
     		<html-inline-editor ng-model="editedMessage.content" watch-collections="['messages.all']" required></html-inline-editor>
     		<div class="ten cell warning" ng-if="editedMessage.error !== undefined" translate content="[[editedMessage.error]]">
     		</div>
