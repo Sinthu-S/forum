@@ -61,7 +61,7 @@
 	</div>
 </div>
 
-<resource-right name="contrib" resource="subject" ng-if="!editedMessage._id">
+<resource-right name="contrib" resource="subject" ng-if="!editedMessage._id && !subject.locked">
     <div class="row rigid-grid bubble-container">
         <div class="two cell centered-text" ng-click="viewAuthor(message)">
             <div>

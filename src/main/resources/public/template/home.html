@@ -101,16 +101,15 @@
     </div>
 </section>
 
-
 <div ng-if="display.confirmDeleteCategories">
 	<lightbox show="display.confirmDeleteCategories" on-close="cancelRemoveCategory()">
-		<div class="row" ng-if="categories.selection().length === 1">
+		<div class="eleven row reduce-block-eight" ng-if="categories.selection().length === 1">
 			<i18n>forum.confirm.delete.category</i18n>
 		</div>
-		<div class="row" ng-if="categories.selection().length > 1">
+		<div class="row reduce-block-eight" ng-if="categories.selection().length > 1">
 			<i18n>forum.confirm.delete.categories</i18n>
 		</div>
-		<div class="row">
+		<div class="row reduce-block-eight">
 			<button class="right-magnet" ng-click="removeSelectedCategories()"><i18n>remove</i18n></button>
 			<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelRemoveCategory()" />
 		</div>
@@ -132,13 +131,13 @@
 
 <div ng-if="display.confirmDeleteSubjects">
     <lightbox show="display.confirmDeleteSubjects" on-close="cancelRemoveSubjects()">
-        <div class="row" ng-if="getSelectedSubjects().length === 1">
+        <div class="eleven row reduce-block-eight" ng-if="getSelectedSubjects().length === 1">
             <i18n>forum.confirm.delete.subject</i18n>
         </div>
-        <div class="row" ng-if="getSelectedSubjects().length > 1">
+        <div class="row reduce-block-eight" ng-if="getSelectedSubjects().length > 1">
             <i18n>forum.confirm.delete.subjects</i18n>
         </div>
-        <div class="row">
+        <div class="row reduce-block-eight">
             <button class="right-magnet" ng-click="removeSelectedSubjects(getSelectedSubjects())"><i18n>remove</i18n></button>
             <input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelRemoveSubjects()" />
         </div>
