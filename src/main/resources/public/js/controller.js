@@ -214,6 +214,7 @@ function ForumController($scope, template, model, date, route){
 
 	$scope.editMessage = function(message){
 		$scope.editedMessage = message;
+        $scope.editedMessage.backupContent = message.content;
 	};
 
 	$scope.saveEditMessage = function(){
@@ -228,6 +229,7 @@ function ForumController($scope, template, model, date, route){
 	};
 
 	$scope.cancelEditMessage = function(){
+        $scope.editedMessage.content = $scope.editedMessage.backupContent;
 		$scope.editedMessage = new Behaviours.applicationsBehaviours.forum.namespace.Message();
 	};
 
