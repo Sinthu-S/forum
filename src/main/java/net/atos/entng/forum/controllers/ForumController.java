@@ -2,6 +2,7 @@ package net.atos.entng.forum.controllers;
 
 import java.util.Map;
 
+import net.atos.entng.forum.Forum;
 import net.atos.entng.forum.controllers.helpers.CategoryHelper;
 import net.atos.entng.forum.controllers.helpers.MessageHelper;
 import net.atos.entng.forum.controllers.helpers.SubjectHelper;
@@ -10,6 +11,8 @@ import net.atos.entng.forum.services.CategoryService;
 import net.atos.entng.forum.services.MessageService;
 import net.atos.entng.forum.services.SubjectService;
 
+import org.entcore.common.events.EventStore;
+import org.entcore.common.events.EventStoreFactory;
 import org.entcore.common.http.filter.ResourceFilter;
 import org.vertx.java.core.Vertx;
 import org.vertx.java.core.http.HttpServerRequest;
@@ -30,6 +33,8 @@ public class ForumController extends BaseController {
 	private final CategoryHelper categoryHelper;
 	private final SubjectHelper subjectHelper;
 	private final MessageHelper messageHelper;
+	private EventStore eventStore;
+	private enum ForumEvent { ACCESS }
 
 	public ForumController(final String collection, final CategoryService categoryService, final SubjectService subjectService, final MessageService messageService) {
 
@@ -44,6 +49,7 @@ public class ForumController extends BaseController {
 		this.categoryHelper.init(vertx, container, rm, securedActions);
 		this.subjectHelper.init(vertx, container, rm, securedActions);
 		this.messageHelper.init(vertx, container, rm, securedActions);
+		eventStore = EventStoreFactory.getFactory().getEventStore(Forum.class.getSimpleName());
 	}
 
 
@@ -51,6 +57,9 @@ public class ForumController extends BaseController {
 	@SecuredAction("forum.view")
 	public void view(HttpServerRequest request) {
 		renderView(request);
+
+		// Create event "access to application Forum" and store it, for module "statistics"
+		eventStore.createAndStoreEvent(ForumEvent.ACCESS.name(), request);
 	}
 
 	@Get("/categories")
