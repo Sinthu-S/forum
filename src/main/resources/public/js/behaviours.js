@@ -1,3 +1,5 @@
+console.log('forum behaviours loaded');
+
 var forumNamespace = {
 	Message : function() {
 	},
@@ -38,7 +40,10 @@ var forumNamespace = {
 					if(typeof callback === 'function'){
 						callback();
 					}
-				}.bind(this));
+				}.bind(this))
+				.e401(function(){
+
+				});
 			},
 			removeSelection: function(callback){
 				var counter = this.selection().length;
@@ -201,7 +206,8 @@ forumNamespace.Category.prototype.sync = function(cb){
 	http().get('/forum/category/' + this._id).done(function(category){
 		this.updateData(category);
 		this.subjects.sync(cb);
-	}.bind(this));
+	}.bind(this))
+	.e401(function(){});
 };
 
 forumNamespace.Category.prototype.createCategory = function(callback){
@@ -261,6 +267,9 @@ var forumRights = {
 		},
 		share: {
 			right: 'net-atos-entng-forum-controllers-ForumController|shareCategory'
+		},
+		read: {
+			right: 'net-atos-entng-forum-controllers-ForumController|getCategory'
 		}
 	},
 	workflow: {
@@ -346,9 +355,10 @@ Behaviours.register('forum', {
                 	};
                 	scope.current = {};
                 	var category = new forumNamespace.Category({ _id: this.source._id });
+
                     category.sync(function() {
                         scope.category = category;
-                        Behaviours.findRights('forum', category);
+						category.behaviours('forum');
                         scope.subjects = category.subjects;
                         scope.$apply('subjects');
                     });
