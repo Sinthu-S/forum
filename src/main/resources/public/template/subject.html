@@ -29,7 +29,7 @@
                 <em class="small-text">[[formatDateFromNow(message.created.$date)]]</em>
             </div>
 			<div class="image">
-				<img ng-src="/userbook/avatar/[[message.owner.userId]]" />
+				<img ng-src="/userbook/avatar/[[message.owner.userId]]?thumbnail=100x100" />
 			</div>
 		</div>
 		<article class="margin-two bubble" ng-if="message !== editedMessage" ng-init="disableResizableElement = true">
@@ -68,7 +68,7 @@
                 <strong>[[me.username]]</strong>
             </div>
 			<div class="image">
-				<img ng-src="/userbook/avatar/[[me.userId]]" />
+				<img ng-src="/userbook/avatar/[[me.userId]]?thumbnail=100x100" />
 			</div>
 		</div>
         <article class="margin-two bubble">
