@@ -136,7 +136,6 @@
 		<input type="button" class="cancel cell right-magnet" i18n-value="cancel" ng-click="display.editSubject = false" />
 		<input type="submit" i18n-value="save" class="cell right-magnet" ng-click="saveEditSubject()" />
 	</div>
-
 </lightbox>
 
 <lightbox show="display.deleteSubject" on-close="display.deleteSubject = false">
@@ -151,7 +150,7 @@
 <lightbox show="display.deleteMessage" on-close="display.deleteMessage = false">
 	<h2><i18n>forum.confirm.delete.message</i18n></h2>
 
-	<div class="twelve cell">
+	<div class="twelve cell reduce-block-eight">
 		<button class="right-magnet" ng-click="deleteMessage()"><i18n>remove</i18n></button>
 		<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="display.deleteMessage = false" />
 	</div>
