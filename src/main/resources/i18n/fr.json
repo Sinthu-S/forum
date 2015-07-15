@@ -53,6 +53,7 @@
     "forum.subjects.empty": "Aucun sujet de discussion n'a été ouvert dans cette catégorie.",
     "forum.the.category": "La catégorie",
     "forum.title": "Forum",
+    "forum.list.title": "Autre(s) forum(s)",
     "forum.view.error.404": "Ce contenu n'existe plus ou vous n'avez pas les droits d'accès nécessaires.",
     "forum.you.can.share.this.category": "Vous pouvez donner accès à cette catégorie aux autres utilisateurs.",
     "forum.sniplet.select": "Sélectionnez une catégorie",
