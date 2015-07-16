@@ -47,7 +47,6 @@ function ForumController($scope, template, model, date, route){
 			model.categories.sync();
 		},
 		goToSubject: function(params){
-            template.open('main', 'home');
 			model.categories.one('sync', function(){
 				$scope.category = undefined;
 				$scope.category = model.categories.find(function(category){
