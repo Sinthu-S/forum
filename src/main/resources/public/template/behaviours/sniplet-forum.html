@@ -1,4 +1,4 @@
-<div class="twelve cell" ng-if="display.state ===  display.STATE_CATEGORY && category.myRights.read">
+<div class="twelve cell" ng-if="display.state >= 0 && display.state ===  display.STATE_CATEGORY && category.myRights.read">
 	<table class="twelve list-view">
 		<thead>
 			<tr>
@@ -27,7 +27,7 @@
 	</div>
 </div>
 
-<div class="twelve cell articles-sniplet" ng-if="display.state === display.STATE_SUBJECT">
+<div class="twelve cell articles-sniplet" ng-if="display.state >= 0 && display.state === display.STATE_SUBJECT">
 	<div class="twelve cell">
 		<button class="cell" ng-click="backToCategory()">&lt;</button>
 		<h2 class="cell">[[current.subject.title]]</h2>
@@ -101,7 +101,7 @@
 
 </div>
 
-<div class="twelve cell" ng-if="display.state === display.STATE_CREATE">
+<div class="twelve cell" ng-if="display.state >= 0 && display.state === display.STATE_CREATE">
 	<div class="row articles-sniplet">
 		<div class="twelve-cell">
 			<button class="cell" ng-click="cancelCreateSubject()">&lt;</button>
