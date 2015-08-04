@@ -46,6 +46,7 @@ var forumNamespace = {
 				});
 			},
 			removeSelection: function(callback){
+				var that = this;
 				var counter = this.selection().length;
 				this.selection().forEach(function(item){
 					http().delete('/forum/category/' + category._id + '/subject/' + item._id).done(function(){
@@ -57,7 +58,7 @@ var forumNamespace = {
 								callback();
 							}
 						}
-					});
+					}.bind(that));
 				});
 			},
 			lockSelection: function(){
