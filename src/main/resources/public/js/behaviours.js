@@ -1,7 +1,10 @@
 console.log('forum behaviours loaded');
 
 var forumNamespace = {
-	Message : function() {
+    Message: function (data) {
+        if (data && data.owner) {
+            this.authorName = data.owner.displayName;
+        }
 	},
 
 	Subject : function () {

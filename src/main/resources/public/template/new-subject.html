@@ -7,7 +7,7 @@
 		<input type="text" i18n-placeholder="forum.subject.placeholder" class="ten cell" ng-model="subject.title" required />
 
 		<label class="twelve cell"><i18n>forum.subject.message</i18n></label>
-		<html-editor ng-model="editedMessage.content" required></html-editor>
+		<editor ng-model="editedMessage.content" required></editor>
 
 		<div class="ten cell warning" ng-if="subject.error !== undefined" translate content="[[subject.error]]">
 		</div>

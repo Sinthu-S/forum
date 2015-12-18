@@ -51,7 +51,7 @@
 			<p bind-html="message.content"></p>
 		</article>
 		<article class="margin-two bubble" ng-if="message === editedMessage" ng-init="disableResizableElement = false">
-            <html-editor ng-model="editedMessage.content" resize-images="true" required></html-editor>
+            <editor ng-model="editedMessage.content" required inline></editor>
 			<div class="ten cell warning" ng-if="editedMessage.error !== undefined" translate content="[[editedMessage.error]]">
 			</div>
             <div class="row">
@@ -73,7 +73,7 @@
 			</div>
 		</div>
         <article class="margin-two bubble">
-    		<html-editor ng-model="editedMessage.content" watch-collections="['messages.all']" inline-editor="true" resize-images="true" required></html-editor>
+    		<editor ng-model="editedMessage.content" inline required></editor>
     		<div class="ten cell warning" ng-if="editedMessage.error !== undefined" translate content="[[editedMessage.error]]">
     		</div>
             <div class="row">
