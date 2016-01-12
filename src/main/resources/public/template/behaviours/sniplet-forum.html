@@ -77,7 +77,7 @@
 		</article>
 
 		<article class="illustrated-text" ng-if="display.editMessage && message === current.message">
-			<html-editor ng-model="current.message.content" required></html-editor>
+			<editor ng-model="current.message.content" required></editor>
 			<div class="ten cell warning" ng-if="current.message.error !== undefined" translate content="[[current.message.error]]">
 			</div>
 			<button class="right-magnet" ng-click="saveEditMessage()"><i18n>edit</i18n></button>
@@ -89,7 +89,7 @@
 		<div class="row" ng-if="!current.subject.locked && !display.editMessage">
 			<h2><i18n>reply</i18n></h2>
 			<div class="twelve cell illustrated-article">
-				<html-editor ng-model="current.message.content" watch-collections="['current.subject.messages.all']" required></html-editor>
+				<editor ng-model="current.message.content" required></editor>
 				<div class="ten cell warning" ng-if="current.message.error !== undefined" translate content="[[current.message.error]]">
 				</div>
 				<div class="twelve cell">
@@ -113,7 +113,7 @@
 
 			<label class="twelve cell"><i18n>forum.subject.message</i18n></label>
 			<div class="twelve-cell">
-				<html-editor ng-model="current.message.content" required></html-editor>
+				<editor ng-model="current.message.content" required></editor>
 			</div>
 
 			<div class="cell warning" ng-if="current.subject.error !== undefined" translate content="[[current.subject.error]]">
