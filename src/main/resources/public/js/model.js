@@ -5,7 +5,7 @@ model.build = function(){
 		Behaviours.applicationsBehaviours.forum.namespace.Message
 	]);
 
-	Extensions.extendEditor();
+	window.ForumExtensions.extendEditor();
 
 	// Category prototype
 	Behaviours.applicationsBehaviours.forum.namespace.Category.prototype.open = function(cb){

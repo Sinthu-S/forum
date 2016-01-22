@@ -1,4 +1,4 @@
-﻿var Extensions = {
+﻿window.ForumExtensions = {
     extendEditor: function () {
         RTE.baseToolbarConf.option('quote', function (instance) {
             return {

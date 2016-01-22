@@ -366,6 +366,15 @@ Behaviours.register('forum', {
                         scope.subjects = category.subjects;
                         scope.$apply('subjects');
                     });
+
+                    if (!window.ForumExtensions) {
+                        loader.openFile({
+                            url: '/forum/public/js/extensions.js',
+                            success: function () {
+                                window.ForumExtensions.extendEditor();
+                            }
+                        });
+                    }
                 },
 
                 openSubject : function(subject) {

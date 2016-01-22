@@ -113,7 +113,7 @@
 
 			<label class="twelve cell"><i18n>forum.subject.message</i18n></label>
 			<div class="twelve-cell">
-				<editor ng-model="current.message.content" required></editor>
+				<editor ng-model="current.message.content" inline required></editor>
 			</div>
 
 			<div class="cell warning" ng-if="current.subject.error !== undefined" translate content="[[current.subject.error]]">
