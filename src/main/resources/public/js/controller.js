@@ -21,7 +21,7 @@ function ForumController($scope, template, model, date, route){
 	$scope.date = date;
 
 	$scope.display = {};
-	$scope.editedMessage = new Behaviours.applicationsBehaviours.forum.namespace.Message();
+	$scope.editedMessage = new forumModel.Message();
 
     $scope.maxSubjects = 3
 
@@ -135,7 +135,8 @@ function ForumController($scope, template, model, date, route){
 		subject.open(function(){
 			template.open('main', 'subject');
 		});
-		$scope.messages =  subject.messages;
+		$scope.messages = subject.messages;
+		$scope.editedMessage = new Behaviours.applicationsBehaviours.forum.namespace.Message();
 	};
 
 	$scope.openMainPage = function(){

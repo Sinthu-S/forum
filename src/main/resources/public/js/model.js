@@ -1,8 +1,10 @@
-model.build = function(){
+model.build = function () {
+    window.forumModel = Behaviours.applicationsBehaviours.forum.namespace;
+
 	this.makeModels([
-		Behaviours.applicationsBehaviours.forum.namespace.Category,
-		Behaviours.applicationsBehaviours.forum.namespace.Subject,
-		Behaviours.applicationsBehaviours.forum.namespace.Message
+		forumModel.Category,
+		forumModel.Subject,
+		forumModel.Message
 	]);
 
 	window.ForumExtensions.extendEditor();
