@@ -55,8 +55,8 @@
 			<div class="ten cell warning" ng-if="editedMessage.error !== undefined" translate content="[[editedMessage.error]]">
 			</div>
             <div class="row">
-    			<button class="right-magnet" ng-click="saveEditMessage()"><i18n>edit</i18n></button>
-    			<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelEditMessage()" />
+    			<button class="right-magnet" ng-mousedown="saveEditMessage()"><i18n>edit</i18n></button>
+    			<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-mousedown="cancelEditMessage()" />
             </div>
 		</article>
 	</div>
@@ -77,7 +77,7 @@
     		<div class="ten cell warning" ng-if="editedMessage.error !== undefined" translate content="[[editedMessage.error]]">
     		</div>
             <div class="row">
-                <button ng-click="addMessage()" ng-if="!subject.locked"><i18n>forum.reply</i18n></button>
+                <button ng-mousedown="addMessage()" ng-if="!subject.locked"><i18n>forum.reply</i18n></button>
             </div>
     	</article>
     </div>
