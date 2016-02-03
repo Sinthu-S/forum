@@ -1,20 +1,21 @@
+
+<side-panel class="cell">
+    <h1><i18n>forum.list.title</i18n></h1>
+        <nav class="vertical">
+            <ul>
+                <li ng-repeat="cat in categories.all">
+                    <h2><a ng-click="openCategory(cat)">[[cat.name]]</a></h2>
+                    <ul class="sublist">
+                        <li ng-repeat="subject in cat.subjects.all">
+                            <a ng-click="openSubject(subject)">[[subject.title]]</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+</side-panel>
 <h1>
     <i class="forum"></i><a ng-click="openMainPage()"><i18n>forum.title</i18n></a>
-    <side-panel class="cell">
-		<h1><i18n>forum.list.title</i18n></h1>
-			<nav class="vertical">
-				<ul>
-					<li ng-repeat="cat in categories.all">
-						<h2><a ng-click="openCategory(cat)">[[cat.name]]</a></h2>
-						<ul class="sublist">
-							<li ng-repeat="subject in cat.subjects.all">
-								<a ng-click="openSubject(subject)">[[subject.title]]</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</nav>
-    </side-panel>
 </h1>
 <h2><a ng-click="openCategory(subject.category)">[[subject.category.name]]</a> / [[subject.title]]</h2>
 <a id="top" ng-click="scrollTo('bottom')" class="right-magnet">↓ <i18n><span class="no-style ng-scope">Voir le dernier message</span></i18n></a>
