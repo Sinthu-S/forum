@@ -1,7 +1,10 @@
-<h1>
-    <i class="forum"></i><i18n ng-click="openMainPage()">forum.title</i18n>
-    <button workflow="forum.admin" class="right-magnet" ng-click="newCategory()"><i18n>forum.category.new</i18n></button>
-</h1>
+<app-title class="cell">
+    <h1>
+        <i class="forum"></i><i18n ng-click="openMainPage()">forum.title</i18n>
+    </h1>
+</app-title>
+
+<button workflow="forum.admin" class="right-magnet" ng-click="newCategory()"><i18n>forum.category.new</i18n></button>
 
 <nav class="illustrated-links">
     <ul>
@@ -48,7 +51,7 @@
                     <h4 class="fixed-large text" ng-click="openSubject(subject)"><i class="prive" ng-if="subject.locked"></i>[[subject.title]]</h4>
                     <em class="fixed-regular small-text">[[subject.nbMessages]] <i18n>forum.discussion.messages</i18n></em>
                     <div class="fixed-regular centered-text small-text">
-                        [[subject.lastMessage.owner.displayName]]<br>
+                        <span>[[subject.lastMessage.owner.displayName]]<br></span>
                         <em>[[formatDateFromNow(subject.lastMessage.created.$date)]]</em>
                     </div>
                     <div class="fixed-small centered-text">
