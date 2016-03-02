@@ -6,24 +6,23 @@
 <h2 ng-if="!category._id"><i18n>forum.create.a.category</i18n></h2>
 
 <article class="twelve cell">
-	<div class="two cell">
-		<image-select ng-model="category.icon" default="/img/illustrations/forum-default.png" thumbnails="[{ width: 290, height: 290 }]"></image-select>
-	</div>
-	<div class="ten cell height-one">
-		<div class="row">
-			<div class="twelve cell horizontal-spacing-twice">
-				<div class="row">
-					<label class="three cell"><i18n>forum.category</i18n></label>
-					<input type="text" class="nine cell" ng-model="category.name" required />
+	<form>
+		<div class="row rigid-grid">
+			<div class="two cell clip height-two three-mobile">
+				<image-select ng-model="category.icon" default="/img/illustrations/forum-default.png" thumbnails="[{ width: 290, height: 290 }]"></image-select>
+			</div>
+			<div class="margin-two height-two">
+				<div class="twelve cell horizontal-spacing">
+					<input type="text" class="twelve cell right-magnet" ng-model="category.name" required i18n-placeholder="forum.category"/>
+				</div>
+
+				<div class="row bottom-locked">
+					<button class="right-magnet" ng-click="saveCategoryEdit()">
+						<i18n>save</i18n>
+					</button>
+					<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelCategoryEdit()" />
 				</div>
 			</div>
 		</div>
-		<div class="lightbox-buttons">
-			<button class="right-magnet" ng-click="saveCategoryEdit()">
-				<i18n>save</i18n>
-			</button>
-			<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelCategoryEdit()" />
-		</div>
-	</div>
-
+	</form>
 </article>
