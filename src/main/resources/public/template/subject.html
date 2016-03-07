@@ -17,24 +17,24 @@
 
     <app-title>
         <h1>
-            <i class="forum"></i><a ng-click="openMainPage()"><i18n>forum.title</i18n></a>
+            <i class="forum"></i>
+            <span ng-click="openMainPage()"><i18n>forum.title</i18n></span>
         </h1>
     </app-title>
+    <h2 subtitle>
+        <a class="subtitle-item" ng-click="openCategory(subject.category)">[[subject.category.name]]</a> /
+        <span class="subtitle-item" >[[subject.title]]</span>
+    </h2>
+
 </div>
 
-
-<h2 class="subtitle">
-    <a ng-click="openCategory(subject.category)">[[subject.category.name]]</a>
-    <span> / [[subject.title]]</span>
- </h2>
-
-<section class="subtitle-push">
+<section>
     <a id="top" ng-click="scrollTo('bottom')" class="right-magnet">↓ <i18n><span class="no-style ng-scope">Voir le dernier message</span></i18n></a>
 
     <div ng-repeat="message in messages.all | orderBy: 'created.$date'" class="bubble-container alternate-container">
     	<div class="row vertical-spacing"></div>
     	<div class="row rigid-grid">
-    		<div class="two cell centered-text" ng-click="viewAuthor(message)">
+    		<div class="two cell centered-text twelve-mobile whose-bubble" ng-click="viewAuthor(message)">
                 <div>
                     <strong>[[message.owner.displayName]]</strong>
                 </div>
@@ -76,7 +76,7 @@
 
     <resource-right name="contrib" resource="subject" ng-if="!editedMessage._id && !subject.locked">
         <div class="row rigid-grid bubble-container">
-            <div class="two cell centered-text" ng-click="viewAuthor(message)">
+            <div class="two cell centered-text twelve-mobile whose-bubble" ng-click="viewAuthor(message)">
                 <div>
                     <strong>[[me.username]]</strong>
                 </div>
