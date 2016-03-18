@@ -1,4 +1,4 @@
-package net.atos.entng.forum.services.impl;
+package net.atos.entng.forum.events;
 
 import static net.atos.entng.forum.Forum.CATEGORY_COLLECTION;
 import static net.atos.entng.forum.Forum.SUBJECT_COLLECTION;

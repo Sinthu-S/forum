@@ -82,5 +82,8 @@
     "group.school.Relative": "Tous les parents de l'{0}.",
     "group.school.Student": "Tous les élèves de l'{0}.",
     "group.school.Teacher": "Tous les enseignants de l'{0}.",
-    "group.school.Guest": "Tous les invités de l'{0}."
+    "group.school.Guest": "Tous les invités de l'{0}.",
+    "forum.search.description.none": "Discussion intitulée : {0}.",
+    "forum.search.description.one": "Discussion intitulée : {0}, dont un message répond à vos critères de recherche.",
+    "forum.search.description.several" : "Discussion intitulée : {0}, dont {1} messages répondent à vos critères de recherche."
 }

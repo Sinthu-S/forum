@@ -1,10 +1,11 @@
 package net.atos.entng.forum;
 
 import net.atos.entng.forum.controllers.ForumController;
+import net.atos.entng.forum.events.ForumSearchingEvents;
 import net.atos.entng.forum.services.CategoryService;
 import net.atos.entng.forum.services.MessageService;
 import net.atos.entng.forum.services.SubjectService;
-import net.atos.entng.forum.services.impl.ForumRepositoryEvents;
+import net.atos.entng.forum.events.ForumRepositoryEvents;
 import net.atos.entng.forum.services.impl.MongoDbCategoryService;
 import net.atos.entng.forum.services.impl.MongoDbMessageService;
 import net.atos.entng.forum.services.impl.MongoDbSubjectService;
@@ -25,6 +26,7 @@ public class Forum extends BaseServer {
 		super.start();
 		// Subscribe to events published for transition
 		setRepositoryEvents(new ForumRepositoryEvents());
+		setSearchingEvents(new ForumSearchingEvents());
 
 		final MongoDbConf conf = MongoDbConf.getInstance();
 		conf.setCollection(CATEGORY_COLLECTION);
