@@ -19,12 +19,13 @@
         <h1>
             <i class="forum"></i>
             <span ng-click="openMainPage()"><i18n>forum.title</i18n></span>
+            <span subtitle>
+                <a class="subtitle-item" ng-click="openCategory(subject.category)">[[subject.category.name]]</a> /
+                <span class="subtitle-item" >[[subject.title]]</span>
+            </span>
         </h1>
     </app-title>
-    <h2 subtitle>
-        <a class="subtitle-item" ng-click="openCategory(subject.category)">[[subject.category.name]]</a> /
-        <span class="subtitle-item" >[[subject.title]]</span>
-    </h2>
+
 
 </div>
 
