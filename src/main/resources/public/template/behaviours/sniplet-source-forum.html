@@ -17,12 +17,12 @@
 		<div class="toggle">
 			<div class="content">
 				<div class="row">
-					<input type="search" ng-model="searchText" />
+					<input type="search" ng-model="searchCategory.searchText" />
 				</div>
 				<div class="row">
 				    <article>
 				        <ul class="illustrated-list">
-				            <li ng-repeat="c in categories | filter:searchCategory" ng-click="setSnipletSource(c); snipletResource.synchronizeRights();">
+				            <li ng-repeat="c in categories | filter:search" ng-click="setSnipletSource(c); snipletResource.synchronizeRights();">
 				            	<img skin-src="[[c.icon]]" class="illustration" />
 				                <a class="name">[[c.name]]</a>
 				                <em class="owner">[[c.owner.name]]</em>

@@ -342,13 +342,22 @@ Behaviours.register('forum', {
             title : 'Forum',
             description : 'Catégorie de forum dédiée',
             controller : {
-            	initSource : function() {
-                    Behaviours.applicationsBehaviours.forum.loadResources(function(resources){
-                        this.categories = resources;
+                initSource: function () {
+                    this.searchCategory = {};
+                    Behaviours.applicationsBehaviours.forum.loadResources(function (resources) {
+                        var $scope = this;
+                        this.categories = _.map(resources, function(category){
+                            category.matchSearch = function () {
+                                return this.name.toLowerCase().indexOf(($scope.searchCategory.searchText || '').toLowerCase()) !== -1
+                            }
+                            return category;
+                        });
                         this.$apply('categories');
                     }.bind(this));
                 },
-
+            	search: function(category){
+            	    return category.matchSearch();
+            	},
                 init : function() {
                 	var scope = this;
                 	scope.display = {
