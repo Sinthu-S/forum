@@ -203,9 +203,11 @@ function ForumController($scope, template, model, date, route){
 
 		$scope.editedMessage.error = undefined;
 		$scope.subject.addMessage($scope.editedMessage);
-		$scope.editedMessage = new Behaviours.applicationsBehaviours.forum.namespace.Message();
-		$scope.editedMessage.content = "";
-        template.open('main', 'subject');
+		setTimeout(function () {
+		    $scope.editedMessage = new Behaviours.applicationsBehaviours.forum.namespace.Message();
+		    $scope.editedMessage.content = "";
+		    template.open('main', 'subject');
+		}, 0);
 	};
 
 	$scope.cancelAddMessage = function(){
