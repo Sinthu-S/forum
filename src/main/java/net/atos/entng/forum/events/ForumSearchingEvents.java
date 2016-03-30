@@ -126,8 +126,7 @@ public class ForumSearchingEvents implements SearchingEvents {
 		worldsOrQuery.or(new QueryBuilder().and(listMainTitleField.toArray(new DBObject[listMainTitleField.size()])).get());
 		worldsOrQuery.or(new QueryBuilder().and(listContentMessagesField.toArray(new DBObject[listContentMessagesField.size()])).get());
 
-		final QueryBuilder categoryQuery = new QueryBuilder();
-		categoryQuery.start("category").in(mapIdName.keySet());
+		final QueryBuilder categoryQuery = new QueryBuilder().start("category").in(mapIdName.keySet());
 
 		final QueryBuilder query = new QueryBuilder().and(worldsOrQuery.get(), categoryQuery.get());
 
