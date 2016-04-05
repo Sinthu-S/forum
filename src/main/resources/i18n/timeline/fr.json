@@ -1,4 +1,10 @@
 {
+    "forum": "Forum",
+    "forum.category-shared": "Partage de catégorie",
+    "forum.message-created": "Nouveau message dans le forum",
+    "forum.message-updated": "Modification d'un message dans le forum",
+    "forum.subject-created": "Nouvelle discussion de forum",
+    "forum.subject-updated": "Modification d'une discussion dans le forum",
     "timeline.forum.category.shared": "vous a donné accès à la catégorie ",
     "timeline.forum.message.created": "a écrit un message dans la discussion ",
     "timeline.forum.message.updated": "a modifié son message dans la discussion ",

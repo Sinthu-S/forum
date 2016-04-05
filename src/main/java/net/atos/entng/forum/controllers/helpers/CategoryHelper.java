@@ -35,7 +35,6 @@ public class CategoryHelper extends MongoDbControllerHelper {
 	private ShareService shareService;
 
 	private static final String CATEGORY_ID_PARAMETER = "id";
-	private static final String EVENT_TYPE = "FORUM";
 
 	public CategoryHelper(final String managedCollection, final CategoryService categoryService) {
 		this(managedCollection, categoryService, null);
@@ -122,12 +121,12 @@ public class CategoryHelper extends MongoDbControllerHelper {
 			            badRequest(request);
 			            return;
 			        }
-					setTimelineEventType(EVENT_TYPE);
 					JsonObject params = new JsonObject()
 					.putString("profilUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
 					.putString("username", user.getUsername())
-					.putString("resourceUri", pathPrefix + "#/view/" + categoryId);
-					shareJsonSubmit(request, "notify-category-shared.html", false, params, "name");
+					.putString("resourceUri", container.config().getString("host", "http://localhost:8024") +
+							pathPrefix + "#/view/" + categoryId);
+					shareJsonSubmit(request, "forum.category-shared", false, params, "name");
 				} else {
 					unauthorized(request);
 				}

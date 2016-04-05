@@ -217,13 +217,13 @@ public class MessageHelper extends ExtractorHelper {
 											ids.add(id);
 										}
 									}
-									String template = null;
+									String notificationName = null;
 									if (eventType == NEW_MESSAGE_EVENT_TYPE) {
-										template = "notify-message-created.html";
+										notificationName = "forum.message-created";
 									}
 									else {
 										if(eventType == UPDATE_MESSAGE_EVENT_TYPE){
-											template = "notify-message-updated.html";
+											notificationName = "forum.message-updated";
 										}
 									}
 									String overview = message.getString("content");
@@ -243,10 +243,12 @@ public class MessageHelper extends ExtractorHelper {
 												"/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
 										.putString("username", user.getUsername())
 										.putString("subject", subject.getObject("result").getString("title"))
-										.putString("subjectUri", pathPrefix + "#/view/" + categoryId + "/" + subjectId)
+										.putString("subjectUri", container.config().getString("host", "http://localhost:8024") +
+												pathPrefix + "#/view/" + categoryId + "/" + subjectId)
 										.putString("overview", overview);
+									params.putString("resourceUri", params.getString("subjectUri"));
 									if (subjectId != null && !subjectId.trim().isEmpty()) {
-										notification.notifyTimeline(request, user, FORUM_NAME, eventType, ids, subjectId, template, params);
+										notification.notifyTimeline(request, notificationName, user, ids, subjectId, params);
 									}
 								}
 							}

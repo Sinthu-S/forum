@@ -281,22 +281,24 @@ public class SubjectHelper extends ExtractorHelper {
 
 		final String categoryId = extractParameter(request, CATEGORY_ID_PARAMETER);
 
-		String template = null;
+		String notificationName = null;
 		if (NEW_SUBJECT_EVENT_TYPE.equals(eventType)) {
-			template = "notify-subject-created.html";
+			notificationName = "forum.subject-created";
 		}
 		else if(UPDATE_SUBJECT_EVENT_TYPE.equals(eventType)){
-			template = "notify-subject-updated.html";
+			notificationName = "forum.subject-updated";
 		}
 
 		JsonObject params = new JsonObject()
 			.putString("profilUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
 			.putString("username", user.getUsername())
 			.putString("subject", subject.getString("title"))
-			.putString("subjectUri", pathPrefix + "#/view/" + categoryId + "/" + subjectId);
+			.putString("subjectUri", container.config().getString("host", "http://localhost:8024") +
+					pathPrefix + "#/view/" + categoryId + "/" + subjectId);
+		params.putString("resourceUri", params.getString("subjectUri"));
 
 		if (subjectId != null && !subjectId.isEmpty()) {
-			notification.notifyTimeline(request, user, FORUM_NAME, eventType, recipients, categoryId, template, params);
+			notification.notifyTimeline(request, notificationName, user, recipients, categoryId, params);
 		}
 	}
 }
