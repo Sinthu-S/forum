@@ -6,7 +6,7 @@
 <h2 ng-if="!category._id"><i18n>forum.create.a.category</i18n></h2>
 
 <article class="twelve cell">
-	<form>
+	<form ng-submit="saveCategoryEdit()">
 		<div class="row rigid-grid">
 			<div class="two cell clip height-two three-mobile">
 				<image-select ng-model="category.icon" default="/img/illustrations/forum-default.png" thumbnails="[{ width: 290, height: 290 }]"></image-select>
@@ -17,7 +17,7 @@
 				</div>
 
 				<div class="row bottom-locked">
-					<button class="right-magnet" ng-click="saveCategoryEdit()">
+					<button class="right-magnet">
 						<i18n>save</i18n>
 					</button>
 					<input type="button" class="cancel right-magnet" i18n-value="cancel" ng-click="cancelCategoryEdit()" />
