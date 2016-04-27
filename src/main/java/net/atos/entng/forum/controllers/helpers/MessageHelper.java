@@ -239,7 +239,7 @@ public class MessageHelper extends ExtractorHelper {
 										overview = overview.concat(" ... </p>");
 									}
 									JsonObject params = new JsonObject()
-										.putString("profilUri",
+										.putString("profilUri", container.config().getString("host", "http://localhost:8090") +
 												"/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
 										.putString("username", user.getUsername())
 										.putString("subject", subject.getObject("result").getString("title"))

@@ -290,11 +290,12 @@ public class SubjectHelper extends ExtractorHelper {
 		}
 
 		JsonObject params = new JsonObject()
-			.putString("profilUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
+			.putString("profilUri", container.config().getString("host", "http://localhost:8090") +
+				"/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
 			.putString("username", user.getUsername())
 			.putString("subject", subject.getString("title"))
 			.putString("subjectUri", container.config().getString("host", "http://localhost:8024") +
-					pathPrefix + "#/view/" + categoryId + "/" + subjectId);
+				pathPrefix + "#/view/" + categoryId + "/" + subjectId);
 		params.putString("resourceUri", params.getString("subjectUri"));
 
 		if (subjectId != null && !subjectId.isEmpty()) {
