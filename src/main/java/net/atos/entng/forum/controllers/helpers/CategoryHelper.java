@@ -122,7 +122,8 @@ public class CategoryHelper extends MongoDbControllerHelper {
 			            return;
 			        }
 					JsonObject params = new JsonObject()
-					.putString("profilUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
+					.putString("profilUri", container.config().getString("host", "http://localhost:8090") +
+							"/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
 					.putString("username", user.getUsername())
 					.putString("resourceUri", container.config().getString("host", "http://localhost:8024") +
 							pathPrefix + "#/view/" + categoryId);
