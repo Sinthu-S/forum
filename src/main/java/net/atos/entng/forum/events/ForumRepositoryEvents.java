@@ -64,7 +64,7 @@ public class ForumRepositoryEvents implements RepositoryEvents {
 
 	@Override
 	public void deleteUsers(JsonArray users) {
-		// TODO : make the user anonymous
+        //FIXME: anonymization is not relevant
 		if(users == null || users.size() == 0) {
 			log.warn("[ForumRepositoryEvents][deleteUsers] JsonArray users is null or empty");
 			return;
@@ -191,7 +191,7 @@ public class ForumRepositoryEvents implements RepositoryEvents {
 
 	/**
 	 * Tag as deleted a list of users in their own categories
-	 * @param userIds users identifiers
+	 * @param usersIds users identifiers
 	 */
 	private void tagUsersAsDeleted(final String[] usersIds) {
 		final JsonObject criteria = MongoQueryBuilder.build(QueryBuilder.start("owner.userId").in(usersIds));
