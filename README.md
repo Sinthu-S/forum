@@ -51,6 +51,8 @@ Associer une route d'entrée à la configuration du module proxy intégré (`"na
 ## Documentation
 Le forum est un outil de communication permettant aux utilisateurs d’échanger sur des thèmes spécifiques. Il contient des catégories, chaque catégorie contient des discussions et une discussion est une liste de messages.
 
+Le forum met en œuvre un comportement de recherche sur le sujet et le message des discussions.
+
 # Modèle de données - base MongoDB
 Deux collections sont utilisées : 
 	"forum.categories" : un document représente une catégorie
