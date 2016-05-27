@@ -40,6 +40,8 @@ function ForumController($scope, template, model, date, route){
 				}
 				else{
 					$scope.notFound = false;
+					$scope.category.selected = true;
+					$scope.categories.selection().push($scope.category);
 					$scope.openCategory($scope.category);
                     template.open('main', 'home');
 				}
@@ -119,6 +121,7 @@ function ForumController($scope, template, model, date, route){
 	$scope.openCategory = function(category){
 		$scope.category = category;
 		$scope.subjects = category.subjects;
+
 		$scope.categories.forEach(function(cat){
 			if(cat !== category){
 				cat.selected = false;
