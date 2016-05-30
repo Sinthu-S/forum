@@ -29,6 +29,8 @@ import fr.wseduc.webutils.I18n;
 import net.atos.entng.forum.Forum;
 import org.entcore.common.search.SearchingEvents;
 import org.entcore.common.service.VisibilityFilter;
+import org.entcore.common.service.impl.MongoDbSearchService;
+import org.entcore.common.utils.StringUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
@@ -131,7 +133,7 @@ public class ForumSearchingEvents implements SearchingEvents {
 			final List<DBObject> elemsMatch = new ArrayList<DBObject>();
 			for (String word : searchWords) {
 				final DBObject dbObject = QueryBuilder.start(field).regex(Pattern.compile(".*" +
-						word + ".*", Pattern.CASE_INSENSITIVE)).get();
+						MongoDbSearchService.accentTreating(word) + ".*", Pattern.CASE_INSENSITIVE)).get();
 				if ("title".equals(field)) {
 					listMainTitleField.add(dbObject);
 				} else {
@@ -195,6 +197,11 @@ public class ForumSearchingEvents implements SearchingEvents {
 		JsonObject modifiedRes = null;
 		Date modifiedMarker = null;
 
+		final List<String> unaccentWords = new ArrayList<String>();
+		for (final String word : words) {
+			unaccentWords.add(StringUtils.stripAccentsToLowerCase(word));
+		}
+
 		//get the last modified page that match with searched words for create the description
 		for(int i=0;i<ja.size();i++) {
 			final JsonObject jO = ja.get(i);
@@ -202,8 +209,8 @@ public class ForumSearchingEvents implements SearchingEvents {
 
 			final Date currentDate = MongoDb.parseIsoDate(jO.getObject("modified"));
 			boolean match = false;
-			for (final String word : words) {
-				if (content.toLowerCase().contains(word.toLowerCase())) {
+			for (final String word : unaccentWords) {
+				if (StringUtils.stripAccentsToLowerCase(content).contains(word)) {
 					match = true;
 					break;
 				}
