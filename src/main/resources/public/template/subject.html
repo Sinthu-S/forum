@@ -1,18 +1,18 @@
 <div class="row">
     <side-panel class="zero-mobile">
-        <h1><i18n>forum.list.title</i18n></h1>
-            <nav class="vertical">
-                <ul>
-                    <li ng-repeat="cat in categories.all">
-                        <h2><a ng-click="openCategory(cat)">[[cat.name]]</a></h2>
-                        <ul class="sublist">
-                            <li ng-repeat="subject in cat.subjects.all">
-                                <a ng-click="openSubject(subject)">[[subject.title]]</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </nav>
+        <nav class="vertical">
+            <h2><i18n>forum.list.title</i18n></h2>
+            <ul>
+                <li ng-repeat="cat in categories.all">
+                    <h2><a ng-click="openCategory(cat)">[[cat.name]]</a></h2>
+                    <ul class="sublist">
+                        <li ng-repeat="subject in cat.subjects.all">
+                            <a ng-click="openSubject(subject)">[[subject.title]]</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
     </side-panel>
 
     <app-title>
