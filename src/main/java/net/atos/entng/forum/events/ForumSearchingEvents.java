@@ -132,8 +132,8 @@ public class ForumSearchingEvents implements SearchingEvents {
 		for (String field : searchFields) {
 			final List<DBObject> elemsMatch = new ArrayList<DBObject>();
 			for (String word : searchWords) {
-				final DBObject dbObject = QueryBuilder.start(field).regex(Pattern.compile(".*" +
-						MongoDbSearchService.accentTreating(word) + ".*", Pattern.CASE_INSENSITIVE)).get();
+				final DBObject dbObject = QueryBuilder.start(field).regex(Pattern.compile(
+						"(>|\\G)([^<]*?)(" + MongoDbSearchService.accentTreating(word) + ")", Pattern.CASE_INSENSITIVE)).get();
 				if ("title".equals(field)) {
 					listMainTitleField.add(dbObject);
 				} else {
@@ -208,20 +208,19 @@ public class ForumSearchingEvents implements SearchingEvents {
 			final String content = jO.getString("content" ,"");
 
 			final Date currentDate = MongoDb.parseIsoDate(jO.getObject("modified"));
-			boolean match = false;
+			int match = unaccentWords.size();
 			for (final String word : unaccentWords) {
 				if (StringUtils.stripAccentsToLowerCase(content).contains(word)) {
-					match = true;
-					break;
+					match--;
 				}
 			}
-			if (countMatchMessages == 0 && match) {
+			if (countMatchMessages == 0 && match == 0) {
 				modifiedRes = jO.getObject("modified");
 			} else if (countMatchMessages > 0 && modifiedMarker.before(currentDate)) {
 				modifiedMarker = currentDate;
 				modifiedRes = jO.getObject("modified");
 			}
-			if (match) {
+			if (match == 0) {
 				modifiedMarker = currentDate;
 				countMatchMessages++;
 			}
