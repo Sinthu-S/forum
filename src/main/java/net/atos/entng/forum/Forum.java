@@ -45,7 +45,10 @@ public class Forum extends BaseServer {
 		super.start();
 		// Subscribe to events published for transition
 		setRepositoryEvents(new ForumRepositoryEvents());
-		setSearchingEvents(new ForumSearchingEvents());
+
+		if (config.getBoolean("searching-event", true)) {
+			setSearchingEvents(new ForumSearchingEvents());
+		}
 
 		final MongoDbConf conf = MongoDbConf.getInstance();
 		conf.setCollection(CATEGORY_COLLECTION);
