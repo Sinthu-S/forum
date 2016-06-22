@@ -120,36 +120,13 @@ public class ForumSearchingEvents implements SearchingEvents {
 	private void searchSubject(int page, int limit, List<String> searchWords, final Map<String,String> mapIdName, Handler<Either<String, JsonArray>> handler) {
 		final int skip = (0 == page) ? -1 : page * limit;
 
-		final List<String> searchFields = new ArrayList<String>();
-		//search on main title
-		searchFields.add("title");
-		//search on content of messages
-		searchFields.add("content");
-
-		final List<DBObject> listMainTitleField = new ArrayList<DBObject>();
-		final List<DBObject> listContentMessagesField = new ArrayList<DBObject>();
-
-		for (String field : searchFields) {
-			final List<DBObject> elemsMatch = new ArrayList<DBObject>();
-			for (String word : searchWords) {
-				final DBObject dbObject = QueryBuilder.start(field).regex(Pattern.compile(
-						"(>|\\G)([^<]*?)(" + MongoDbSearchService.accentTreating(word) + ")", Pattern.CASE_INSENSITIVE)).get();
-				if ("title".equals(field)) {
-					listMainTitleField.add(dbObject);
-				} else {
-					//content of messages
-					listContentMessagesField.add(QueryBuilder.start("messages").elemMatch(dbObject).get());
-				}
-			}
-		}
-
-		final QueryBuilder worldsOrQuery = new QueryBuilder();
-		worldsOrQuery.or(new QueryBuilder().and(listMainTitleField.toArray(new DBObject[listMainTitleField.size()])).get());
-		worldsOrQuery.or(new QueryBuilder().and(listContentMessagesField.toArray(new DBObject[listContentMessagesField.size()])).get());
+		final QueryBuilder worldsQuery = new QueryBuilder();
+		//Set locale to "none", allows to use simple tokenization with no list of stop words and no stemming (in fact, stemming works only with words)
+		worldsQuery.text(MongoDbSearchService.textSearchedComposition(searchWords), "none");
 
 		final QueryBuilder categoryQuery = new QueryBuilder().start("category").in(mapIdName.keySet());
 
-		final QueryBuilder query = new QueryBuilder().and(worldsOrQuery.get(), categoryQuery.get());
+		final QueryBuilder query = new QueryBuilder().and(worldsQuery.get(), categoryQuery.get());
 
 		JsonObject sort = new JsonObject().putNumber("modified", -1);
 		final JsonObject projection = new JsonObject();

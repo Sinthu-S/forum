@@ -30,6 +30,7 @@ import net.atos.entng.forum.services.MessageService;
 import org.bson.types.ObjectId;
 import org.entcore.common.service.VisibilityFilter;
 import org.entcore.common.user.UserInfos;
+import org.entcore.common.utils.StringUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
@@ -94,6 +95,7 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 			.putObject("owner", new JsonObject()
 				.putString("userId", user.getUserId())
 				.putString("displayName", user.getUsername()))
+				.putString("contentPlain",  StringUtils.stripHtmlTag(body.getString("content", "")))
 			.putObject("created", now).putObject("modified", now);
 
 		// Prepare Query
@@ -189,6 +191,7 @@ public class MongoDbMessageService extends AbstractService implements MessageSer
 			modifier.set("messages.$." + attr, body.getValue(attr));
 		}
 		modifier.set("messages.$.modified", MongoDb.now());
+		modifier.set("messages.$.contentPlain",  StringUtils.stripHtmlTag(body.getString("content", "")));
 
 		// Prepare Subject update
 		modifier.set("modified", MongoDb.now());
