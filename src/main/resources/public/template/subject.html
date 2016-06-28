@@ -6,8 +6,8 @@
                 <li ng-repeat="cat in categories.all">
                     <h2><a ng-click="openCategory(cat)">[[cat.name]]</a></h2>
                     <ul class="sublist">
-                        <li ng-repeat="subject in cat.subjects.all">
-                            <a ng-click="openSubject(subject)">[[subject.title]]</a>
+                        <li ng-repeat="mysubject in cat.subjects.all">
+                            <a ng-class="{selected : mysubject._id == subject._id }" ng-click="openSubject(mysubject)">[[mysubject.title]]</a>
                         </li>
                     </ul>
                 </li>
