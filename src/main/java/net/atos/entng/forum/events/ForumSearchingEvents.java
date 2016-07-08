@@ -121,8 +121,7 @@ public class ForumSearchingEvents implements SearchingEvents {
 		final int skip = (0 == page) ? -1 : page * limit;
 
 		final QueryBuilder worldsQuery = new QueryBuilder();
-		//Set locale to "", allows to use advanced tokenization with no stemming (in fact, stemming works only with words and for a given language)
-		worldsQuery.text(MongoDbSearchService.textSearchedComposition(searchWords), "");
+		worldsQuery.text(MongoDbSearchService.textSearchedComposition(searchWords));
 
 		final QueryBuilder categoryQuery = new QueryBuilder().start("category").in(mapIdName.keySet());
 
