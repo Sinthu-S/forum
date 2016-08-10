@@ -141,10 +141,10 @@ public class CategoryHelper extends MongoDbControllerHelper {
 			            return;
 			        }
 					JsonObject params = new JsonObject()
-					.putString("profilUri", container.config().getString("host", "http://localhost:8090") +
+					.putString("profilUri", getScheme(request) + "://" + getHost(request) +
 							"/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
 					.putString("username", user.getUsername())
-					.putString("resourceUri", container.config().getString("host", "http://localhost:8024") +
+					.putString("resourceUri", getScheme(request) + "://" + getHost(request) +
 							pathPrefix + "#/view/" + categoryId);
 					shareJsonSubmit(request, "forum.category-shared", false, params, "name");
 				} else {

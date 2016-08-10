@@ -309,11 +309,11 @@ public class SubjectHelper extends ExtractorHelper {
 		}
 
 		JsonObject params = new JsonObject()
-			.putString("profilUri", container.config().getString("host", "http://localhost:8090") +
+			.putString("profilUri", getScheme(request) + "://" + getHost(request) +
 				"/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
 			.putString("username", user.getUsername())
 			.putString("subject", subject.getString("title"))
-			.putString("subjectUri", container.config().getString("host", "http://localhost:8024") +
+			.putString("subjectUri", getScheme(request) + "://" + getHost(request) +
 				pathPrefix + "#/view/" + categoryId + "/" + subjectId);
 		params.putString("resourceUri", params.getString("subjectUri"));
 
