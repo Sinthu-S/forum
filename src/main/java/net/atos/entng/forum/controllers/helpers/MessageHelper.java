@@ -258,12 +258,10 @@ public class MessageHelper extends ExtractorHelper {
 										overview = overview.concat(" ... </p>");
 									}
 									JsonObject params = new JsonObject()
-										.putString("profilUri", getScheme(request) + "://" + getHost(request) +
-												"/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
+										.putString("profilUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
 										.putString("username", user.getUsername())
 										.putString("subject", subject.getObject("result").getString("title"))
-										.putString("subjectUri", getScheme(request) + "://" + getHost(request) +
-												pathPrefix + "#/view/" + categoryId + "/" + subjectId)
+										.putString("subjectUri", pathPrefix + "#/view/" + categoryId + "/" + subjectId)
 										.putString("overview", overview);
 									params.putString("resourceUri", params.getString("subjectUri"));
 									if (subjectId != null && !subjectId.trim().isEmpty()) {

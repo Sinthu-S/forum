@@ -309,12 +309,10 @@ public class SubjectHelper extends ExtractorHelper {
 		}
 
 		JsonObject params = new JsonObject()
-			.putString("profilUri", getScheme(request) + "://" + getHost(request) +
-				"/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
+			.putString("profilUri", "/userbook/annuaire#" + user.getUserId() + "#" + user.getType())
 			.putString("username", user.getUsername())
 			.putString("subject", subject.getString("title"))
-			.putString("subjectUri", getScheme(request) + "://" + getHost(request) +
-				pathPrefix + "#/view/" + categoryId + "/" + subjectId);
+			.putString("subjectUri", pathPrefix + "#/view/" + categoryId + "/" + subjectId);
 		params.putString("resourceUri", params.getString("subjectUri"));
 
 		if (subjectId != null && !subjectId.isEmpty()) {
