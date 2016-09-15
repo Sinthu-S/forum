@@ -30,7 +30,7 @@
 </div>
 
 <section>
-    <a id="top" ng-click="scrollTo('bottom')" class="right-magnet">↓ <i18n><span class="no-style ng-scope">Voir le dernier message</span></i18n></a>
+    <a id="top" ng-click="scrollTo('bottom')" class="right-magnet">↓ <span class="no-style ng-scope"><i18n>forum.go.to.last.message</i18n></span></a>
 
     <div ng-repeat="message in messages.all | orderBy: 'created.$date'" class="bubble-container alternate-container">
     	<div class="row vertical-spacing"></div>
