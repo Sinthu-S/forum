@@ -36,6 +36,7 @@ import fr.wseduc.mongodb.MongoDb;
 import fr.wseduc.mongodb.MongoQueryBuilder;
 import fr.wseduc.mongodb.MongoUpdateBuilder;
 import fr.wseduc.webutils.Either;
+import org.vertx.java.core.json.impl.Json;
 
 public class MongoDbSubjectService extends AbstractService implements SubjectService {
 
@@ -46,7 +47,7 @@ public class MongoDbSubjectService extends AbstractService implements SubjectSer
 	@Override
 	public void list(final String categoryId, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
 		// Query
-		QueryBuilder query = QueryBuilder.start("category").is(categoryId);
+			QueryBuilder query = QueryBuilder.start("category").is(categoryId);
 		JsonObject sort = new JsonObject().putNumber("modified", -1);
 
 		// Projection
@@ -54,6 +55,19 @@ public class MongoDbSubjectService extends AbstractService implements SubjectSer
 		JsonObject slice = new JsonObject();
 		slice.putNumber("$slice", -1);
 		projection.putObject("messages", slice);
+
+		mongo.find(subjects_collection, MongoQueryBuilder.build(query), sort, projection, validResultsHandler(handler));
+	}
+
+	@Override
+	public void listPlus(String[] categoryIdArray, UserInfos user, Handler<Either<String, JsonArray>> handler) {
+		QueryBuilder query = QueryBuilder.start("category").in(categoryIdArray);
+		JsonObject sort = new JsonObject().putNumber("modified", -1);
+
+		JsonObject projection = new JsonObject();
+		JsonObject slice = new JsonObject();
+		slice.putNumber("$slice", -1);
+		projection.putObject("message", slice);
 
 		mongo.find(subjects_collection, MongoQueryBuilder.build(query), sort, projection, validResultsHandler(handler));
 	}
@@ -129,4 +143,6 @@ public class MongoDbSubjectService extends AbstractService implements SubjectSer
 		projection.putNumber("title", 1);
 		mongo.findOne(subjects_collection, MongoQueryBuilder.build(query), projection, validActionResultHandler(handler));
 	}
+
+
 }

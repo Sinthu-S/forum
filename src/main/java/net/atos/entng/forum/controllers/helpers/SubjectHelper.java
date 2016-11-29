@@ -50,6 +50,7 @@ public class SubjectHelper extends ExtractorHelper {
 	private final CategoryService categoryService;
 
 	private static final String CATEGORY_ID_PARAMETER = "id";
+	private static final String CATEGORY_ID_LIST_PARAMETER = "idlist";
 	private static final String SUBJECT_ID_PARAMETER = "subjectid";
 	private static final String FORUM_NAME = "FORUM";
 	private static final String NEW_SUBJECT_EVENT_TYPE = FORUM_NAME + "_NEW_SUBJECT";
@@ -68,8 +69,29 @@ public class SubjectHelper extends ExtractorHelper {
 		this.notification = new TimelineHelper(vertx, eb, container);
 	}
 
+
+
+	public void listPlus(final HttpServerRequest request){
+		final String[] ids = extractParameterList(request, CATEGORY_ID_LIST_PARAMETER);
+		if(ids == null) {
+			return;
+		}
+
+		extractUserFromRequest(request, new Handler<UserInfos>() {
+			@Override
+			public void handle(UserInfos user) {
+				try {
+					subjectService.listPlus(ids, user, arrayResponseHandler(request));
+				}
+				catch (Exception e){
+					renderErrorException(request, e);
+				}
+			}
+		});
+	}
+
 	public void list(final HttpServerRequest request) {
-		final String categoryId = extractParameter(request, CATEGORY_ID_PARAMETER);
+			final String categoryId = extractParameter(request, CATEGORY_ID_PARAMETER);
 		if (categoryId == null) {
 			return;
 		}

@@ -25,6 +25,7 @@ import net.atos.entng.forum.Forum;
 import net.atos.entng.forum.controllers.helpers.CategoryHelper;
 import net.atos.entng.forum.controllers.helpers.MessageHelper;
 import net.atos.entng.forum.controllers.helpers.SubjectHelper;
+import net.atos.entng.forum.filters.impl.ForumDiscussion;
 import net.atos.entng.forum.filters.impl.ForumMessageMine;
 import net.atos.entng.forum.services.CategoryService;
 import net.atos.entng.forum.services.MessageService;
@@ -81,6 +82,16 @@ public class ForumController extends BaseController {
 		eventStore.createAndStoreEvent(ForumEvent.ACCESS.name(), request);
 	}
 
+
+
+	@Get("/categoriesdisc/:idlist")
+	@SecuredAction(value = "category.read", type = ActionType.RESOURCE)
+    @ResourceFilter(ForumDiscussion.class)
+	public void listSubjectsById(HttpServerRequest request) {
+	    System.out.println("listSubject");
+		subjectHelper.listPlus(request);
+	}
+
 	@Get("/categories")
 	@SecuredAction("forum.list")
 	public void listCategories(HttpServerRequest request) {
@@ -110,7 +121,6 @@ public class ForumController extends BaseController {
 	public void deleteCategory(HttpServerRequest request) {
 		categoryHelper.delete(request);
 	}
-
 
 	@Get("/share/json/:id")
 	@ApiDoc("Share thread by id.")

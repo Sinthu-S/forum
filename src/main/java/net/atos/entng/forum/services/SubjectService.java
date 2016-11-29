@@ -30,6 +30,8 @@ public interface SubjectService {
 
 	public void list(String categoryId, UserInfos user, Handler<Either<String, JsonArray>> handler);
 
+	public void listPlus(String[] categoryIdArray, UserInfos user, Handler<Either<String, JsonArray>> handler);
+
 	public void create(String categoryId, JsonObject body, UserInfos user, Handler<Either<String, JsonObject>> handler);
 
 	public void retrieve(String categoryId, String subjectId, UserInfos user, Handler<Either<String, JsonObject>> handler);
