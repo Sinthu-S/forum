@@ -398,23 +398,4 @@ function ForumController($scope, template, model, date, route){
 		}
 		return selectedSubjects;
     };
-
-
-    /* Solution 1 */
-    /*
-	$scope.getSubject = function(){
-		console.log("discussion")
-		console.log($scope.categories.length());
-		$scope.categories.all.forEach(function(cat){
-			cat.open();
-		})
-
-	};
-
-
-    setTimeout(function(){
-		$scope.getSubject();
-	}, 500);
-
-	*/
 }

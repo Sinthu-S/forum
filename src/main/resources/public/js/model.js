@@ -52,18 +52,6 @@ model.build = function () {
 
 	// Build
 	this.collection(Behaviours.applicationsBehaviours.forum.namespace.Category, {
-			/*sync: function(callback){
-			http().get('/forum/categories').done(function(categories){
-				this.load(categories);
-				console.log(model.categories);
-				this.forEach(function(category){
-					category.open();
-				});
-				if(typeof callback === 'function'){
-					callback();
-				}
-			}.bind(this));
-		}*/
 		sync: function(callback){
 			http().get('/forum/categories').done(function(categories){
 				this.load(categories);
