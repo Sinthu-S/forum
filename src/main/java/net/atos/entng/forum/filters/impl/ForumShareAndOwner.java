@@ -15,7 +15,7 @@ import org.vertx.java.core.http.HttpServerRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ForumDiscussion implements ResourcesProvider {
+public class ForumShareAndOwner implements ResourcesProvider {
 
     private MongoDbConf conf = MongoDbConf.getInstance();
 
