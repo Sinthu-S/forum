@@ -25,7 +25,7 @@ import net.atos.entng.forum.Forum;
 import net.atos.entng.forum.controllers.helpers.CategoryHelper;
 import net.atos.entng.forum.controllers.helpers.MessageHelper;
 import net.atos.entng.forum.controllers.helpers.SubjectHelper;
-import net.atos.entng.forum.filters.impl.ForumDiscussion;
+import net.atos.entng.forum.filters.impl.ForumShareAndOwner;
 import net.atos.entng.forum.filters.impl.ForumMessageMine;
 import net.atos.entng.forum.services.CategoryService;
 import net.atos.entng.forum.services.MessageService;
@@ -83,7 +83,7 @@ public class ForumController extends BaseController {
 
 	@Get("/categoriesdisc/:idlist")
 	@SecuredAction(value = "category.read", type = ActionType.RESOURCE)
-    @ResourceFilter(ForumDiscussion.class)
+    @ResourceFilter(ForumShareAndOwner.class)
 	public void listSubjectsById(HttpServerRequest request) {
 	    System.out.println("listSubject");
 		subjectHelper.listPlus(request);
