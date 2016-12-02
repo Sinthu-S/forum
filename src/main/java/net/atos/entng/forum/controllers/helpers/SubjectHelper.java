@@ -69,8 +69,6 @@ public class SubjectHelper extends ExtractorHelper {
 		this.notification = new TimelineHelper(vertx, eb, container);
 	}
 
-
-
 	public void listPlus(final HttpServerRequest request){
 		final String[] ids = extractParameterList(request, CATEGORY_ID_LIST_PARAMETER);
 		if(ids == null) {
@@ -83,7 +81,7 @@ public class SubjectHelper extends ExtractorHelper {
 				try {
 					subjectService.listPlus(ids, user, arrayResponseHandler(request));
 				}
-				catch (Exception e){
+				catch (Exception e) {
 					renderErrorException(request, e);
 				}
 			}
@@ -91,7 +89,7 @@ public class SubjectHelper extends ExtractorHelper {
 	}
 
 	public void list(final HttpServerRequest request) {
-			final String categoryId = extractParameter(request, CATEGORY_ID_PARAMETER);
+		final String categoryId = extractParameter(request, CATEGORY_ID_PARAMETER);
 		if (categoryId == null) {
 			return;
 		}

@@ -5,7 +5,7 @@ model.build = function () {
 		forumModel.Category,
 		forumModel.Subject,
 		forumModel.Message
-		]);
+	]);
 
 	window.ForumExtensions.extendEditor();
 
@@ -84,11 +84,9 @@ model.build = function () {
 								}
 								listCat[i].subjects.push(subjects[j]);
 							}
-
 						}
 					}
 				})
-			
 			if(typeof callback === 'function'){
 				callback();
 			}
@@ -111,5 +109,3 @@ model.build = function () {
 		behaviours: 'forum'
 	})
 };
-
-

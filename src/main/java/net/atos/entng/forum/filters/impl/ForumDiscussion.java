@@ -42,5 +42,4 @@ public class ForumDiscussion implements ResourcesProvider {
             handler.handle(false);
         }
     }
-
 }

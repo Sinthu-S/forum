@@ -72,7 +72,6 @@ public class ForumController extends BaseController {
 		eventStore = EventStoreFactory.getFactory().getEventStore(Forum.class.getSimpleName());
 	}
 
-
 	@Get("")
 	@SecuredAction("forum.view")
 	public void view(HttpServerRequest request) {
@@ -81,8 +80,6 @@ public class ForumController extends BaseController {
 		// Create event "access to application Forum" and store it, for module "statistics"
 		eventStore.createAndStoreEvent(ForumEvent.ACCESS.name(), request);
 	}
-
-
 
 	@Get("/categoriesdisc/:idlist")
 	@SecuredAction(value = "category.read", type = ActionType.RESOURCE)
@@ -143,7 +140,6 @@ public class ForumController extends BaseController {
 		categoryHelper.shareRemove(request);
 	}
 
-
 	@Get("/category/:id/subjects")
 	@SecuredAction(value = "category.read", type = ActionType.RESOURCE)
 	public void listSubjects(HttpServerRequest request) {
@@ -173,7 +169,6 @@ public class ForumController extends BaseController {
 	public void deleteSubject(HttpServerRequest request) {
 		subjectHelper.delete(request);
 	}
-
 
 	@Get("/category/:id/subject/:subjectid/messages")
 	@SecuredAction(value = "category.read", type = ActionType.RESOURCE)

@@ -47,7 +47,7 @@ public class MongoDbSubjectService extends AbstractService implements SubjectSer
 	@Override
 	public void list(final String categoryId, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
 		// Query
-			QueryBuilder query = QueryBuilder.start("category").is(categoryId);
+		QueryBuilder query = QueryBuilder.start("category").is(categoryId);
 		JsonObject sort = new JsonObject().putNumber("modified", -1);
 
 		// Projection
@@ -89,7 +89,6 @@ public class MongoDbSubjectService extends AbstractService implements SubjectSer
 		.putString("category", categoryId);
 
 		mongo.save(subjects_collection, body, validActionResultHandler(handler));
-
 	}
 
 	@Override
@@ -143,6 +142,4 @@ public class MongoDbSubjectService extends AbstractService implements SubjectSer
 		projection.putNumber("title", 1);
 		mongo.findOne(subjects_collection, MongoQueryBuilder.build(query), projection, validActionResultHandler(handler));
 	}
-
-
 }
