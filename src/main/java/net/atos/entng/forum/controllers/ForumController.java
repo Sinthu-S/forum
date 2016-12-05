@@ -81,6 +81,12 @@ public class ForumController extends BaseController {
 		eventStore.createAndStoreEvent(ForumEvent.ACCESS.name(), request);
 	}
 
+	@Get("/categories/all")
+	//@SecuredAction("forum.listPlus")
+	public void listCategoriesAndSubjects(HttpServerRequest request){
+		subjectHelper.listCategoriesAndSubject(request);
+	}
+
 	@Get("/categories")
 	@SecuredAction("forum.list")
 	public void listCategories(HttpServerRequest request) {

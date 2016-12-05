@@ -68,6 +68,43 @@ public class SubjectHelper extends ExtractorHelper {
 		this.notification = new TimelineHelper(vertx, eb, container);
 	}
 
+	public void listCategoriesAndSubject(final HttpServerRequest request) {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
+			@Override
+			public void handle(final UserInfos user) {
+				categoryService.list(user, new Handler<Either<String, JsonArray>>() {
+					@Override
+					public void handle(Either<String, JsonArray> event) {
+						if(event.isRight()){
+							final JsonArray listCategorie = event.right().getValue();
+							final ArrayList<String> categoriesId = new ArrayList<String>();
+							for (int i=0; i<listCategorie.size(); i++){
+								JsonObject tmp = listCategorie.get(i);
+								categoriesId.add(tmp.getString("_id"));
+							}
+							subjectService.listPlus(categoriesId, user, new Handler<Either<String, JsonArray>>() {
+								@Override
+								public void handle(Either<String, JsonArray> event) {
+									if(event.isRight()){
+										JsonArray listSubject = event.right().getValue();
+										JsonArray result = new JsonArray();
+										result.addArray(listCategorie);
+										result.addArray(listSubject);
+										arrayResponseHandler(request).handle(new Either.Right<String, JsonArray>(result));
+									}else{
+										arrayResponseHandler(request).handle(new Either.Right<String, JsonArray>(listCategorie));
+									}
+								}
+							});
+						}else{
+							arrayResponseHandler(request);
+						}
+					}
+				});
+			}
+		});
+	}
+
 	public void listPlus(final HttpServerRequest request){
 		final List<String> ids = extractParameterList(request, CATEGORY_ID_PARAMETER);
 		if(ids == null) {
