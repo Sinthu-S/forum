@@ -50,7 +50,6 @@ public class SubjectHelper extends ExtractorHelper {
 	private final CategoryService categoryService;
 
 	private static final String CATEGORY_ID_PARAMETER = "id";
-	private static final String CATEGORY_ID_LIST_PARAMETER = "idlist";
 	private static final String SUBJECT_ID_PARAMETER = "subjectid";
 	private static final String FORUM_NAME = "FORUM";
 	private static final String NEW_SUBJECT_EVENT_TYPE = FORUM_NAME + "_NEW_SUBJECT";
@@ -70,7 +69,7 @@ public class SubjectHelper extends ExtractorHelper {
 	}
 
 	public void listPlus(final HttpServerRequest request){
-		final String[] ids = extractParameterList(request, CATEGORY_ID_LIST_PARAMETER);
+		final List<String> ids = extractParameterList(request, CATEGORY_ID_PARAMETER);
 		if(ids == null) {
 			return;
 		}

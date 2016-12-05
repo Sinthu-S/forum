@@ -21,9 +21,8 @@ public class ForumShareAndOwner implements ResourcesProvider {
 
     @Override
     public void authorize(HttpServerRequest request, Binding binding, UserInfos user, Handler<Boolean> handler) {
-        String id = request.params().get("idlist");
-        String[] listId = id.split(",");
-        if (id != null && !id.trim().isEmpty()) {
+        List<String> idList = request.params().getAll("id");
+        if (idList != null && !idList.isEmpty()) {
             List<DBObject> groups = new ArrayList<>();
             String sharedMethod = binding.getServiceMethod().replaceAll("\\.", "-");
             groups.add(QueryBuilder.start("userId").is(user.getUserId())
@@ -32,12 +31,12 @@ public class ForumShareAndOwner implements ResourcesProvider {
                 groups.add(QueryBuilder.start("groupId").is(gpId)
                         .put(sharedMethod).is(true).get());
             }
-            QueryBuilder query = QueryBuilder.start("_id").in(listId).or(
+            QueryBuilder query = QueryBuilder.start("_id").in(idList).or(
                     QueryBuilder.start("owner.userId").is(user.getUserId()).get(),
                     QueryBuilder.start("shared").elemMatch(
                             new QueryBuilder().or(groups.toArray(new DBObject[groups.size()])).get()).get()
             );
-            MongoAppFilter.executeCountQuery(request, conf.getCollection(), MongoQueryBuilder.build(query), listId.length, handler);
+            MongoAppFilter.executeCountQuery(request, conf.getCollection(), MongoQueryBuilder.build(query), idList.size(), handler);
         } else {
             handler.handle(false);
         }

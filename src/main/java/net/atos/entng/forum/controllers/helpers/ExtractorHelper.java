@@ -29,8 +29,7 @@ import fr.wseduc.webutils.http.BaseController;
 import fr.wseduc.webutils.http.Renders;
 import fr.wseduc.webutils.request.RequestUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 
 public abstract class ExtractorHelper extends BaseController {
 
@@ -87,9 +86,9 @@ public abstract class ExtractorHelper extends BaseController {
 		}
 	}
 
-	protected String[] extractParameterList(final HttpServerRequest request, final String parameterKey) {
+	protected List<String> extractParameterList(final HttpServerRequest request, final String parameterKey) {
 		try {
-			return request.params().get(parameterKey).split(",");
+			return request.params().getAll(parameterKey);
 		}
 		catch (Exception e) {
 			log.error("Failed to extract parameter [ " + parameterKey + " : " + e.getMessage());

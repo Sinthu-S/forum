@@ -81,11 +81,10 @@ public class ForumController extends BaseController {
 		eventStore.createAndStoreEvent(ForumEvent.ACCESS.name(), request);
 	}
 
-	@Get("/categoriesdisc/:idlist")
+	@Get("/categories/allsubjects")
 	@SecuredAction(value = "category.read", type = ActionType.RESOURCE)
     @ResourceFilter(ForumShareAndOwner.class)
-	public void listSubjectsById(HttpServerRequest request) {
-	    System.out.println("listSubject");
+	public void getAllSubjects(HttpServerRequest request) {
 		subjectHelper.listPlus(request);
 	}
 

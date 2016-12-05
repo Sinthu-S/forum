@@ -38,6 +38,8 @@ import fr.wseduc.mongodb.MongoUpdateBuilder;
 import fr.wseduc.webutils.Either;
 import org.vertx.java.core.json.impl.Json;
 
+import java.util.List;
+
 public class MongoDbSubjectService extends AbstractService implements SubjectService {
 
 	public MongoDbSubjectService(final String categories_collection, final String subjects_collection) {
@@ -60,8 +62,8 @@ public class MongoDbSubjectService extends AbstractService implements SubjectSer
 	}
 
 	@Override
-	public void listPlus(String[] categoryIdArray, UserInfos user, Handler<Either<String, JsonArray>> handler) {
-		QueryBuilder query = QueryBuilder.start("category").in(categoryIdArray);
+	public void listPlus(List<String> categoryIdList, UserInfos user, Handler<Either<String, JsonArray>> handler) {
+		QueryBuilder query = QueryBuilder.start("category").in(categoryIdList);
 		JsonObject sort = new JsonObject().putNumber("modified", -1);
 
 		JsonObject projection = new JsonObject();

@@ -58,10 +58,10 @@ model.build = function () {
 				var listCat=this.all;
 				var listId="";
 				this.forEach(function(category){
-					listId += category._id + ",";
+					listId += "id="+category._id + "&";
 				});
 				console.log(listId);
-				http().get('/forum/categoriesdisc/'+listId).done(function(subjects){
+				http().get('/forum/categories/allsubjects?'+listId).done(function(subjects){
 					console.log(subjects);
 					for (var i = listCat.length - 1; i >= 0; i--) {
 						for (var j = subjects.length - 1; j >= 0; j--) {
