@@ -81,13 +81,6 @@ public class ForumController extends BaseController {
 		eventStore.createAndStoreEvent(ForumEvent.ACCESS.name(), request);
 	}
 
-	@Get("/categories/allsubjects")
-	@SecuredAction(value = "category.read", type = ActionType.RESOURCE)
-    @ResourceFilter(ForumShareAndOwner.class)
-	public void getAllSubjects(HttpServerRequest request) {
-		subjectHelper.listPlus(request);
-	}
-
 	@Get("/categories")
 	@SecuredAction("forum.list")
 	public void listCategories(HttpServerRequest request) {
@@ -155,6 +148,13 @@ public class ForumController extends BaseController {
 	@SecuredAction(value = "category.read", type = ActionType.RESOURCE)
 	public void getSubject(HttpServerRequest request) {
 		subjectHelper.retrieve(request);
+	}
+
+	@Get("/categories/allsubjects")
+	@SecuredAction(value = "category.read", type = ActionType.RESOURCE)
+	@ResourceFilter(ForumShareAndOwner.class)
+	public void getAllSubjects(HttpServerRequest request) {
+		subjectHelper.listPlus(request);
 	}
 
 	@Put("/category/:id/subject/:subjectid")
