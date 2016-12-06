@@ -82,7 +82,7 @@ public class SubjectHelper extends ExtractorHelper {
 								JsonObject tmp = listCategorie.get(i);
 								categoriesId.add(tmp.getString("_id"));
 							}
-							subjectService.listPlus(categoriesId, user, new Handler<Either<String, JsonArray>>() {
+							subjectService.list(categoriesId, user, new Handler<Either<String, JsonArray>>() {
 								@Override
 								public void handle(Either<String, JsonArray> event) {
 									if(event.isRight()){
@@ -105,40 +105,15 @@ public class SubjectHelper extends ExtractorHelper {
 		});
 	}
 
-	public void listPlus(final HttpServerRequest request){
+	public void listSubjectsByCategoriesId(final HttpServerRequest request){
 		final List<String> ids = extractParameterList(request, CATEGORY_ID_PARAMETER);
 		if(ids == null) {
 			return;
 		}
-
-		extractUserFromRequest(request, new Handler<UserInfos>() {
+		UserUtils.getUserInfos(eb, request, new Handler<UserInfos>() {
 			@Override
 			public void handle(UserInfos user) {
-				try {
-					subjectService.listPlus(ids, user, arrayResponseHandler(request));
-				}
-				catch (Exception e) {
-					renderErrorException(request, e);
-				}
-			}
-		});
-	}
-
-	public void list(final HttpServerRequest request) {
-		final String categoryId = extractParameter(request, CATEGORY_ID_PARAMETER);
-		if (categoryId == null) {
-			return;
-		}
-
-		extractUserFromRequest(request, new Handler<UserInfos>(){
-			@Override
-			public void handle(final UserInfos user) {
-				try {
-					subjectService.list(categoryId, user, arrayResponseHandler(request));
-				}
-				catch (Exception e) {
-					renderErrorException(request, e);
-				}
+					subjectService.list(ids, user, arrayResponseHandler(request));
 			}
 		});
 	}

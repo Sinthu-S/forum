@@ -47,22 +47,7 @@ public class MongoDbSubjectService extends AbstractService implements SubjectSer
 	}
 
 	@Override
-	public void list(final String categoryId, final UserInfos user, final Handler<Either<String, JsonArray>> handler) {
-		// Query
-		QueryBuilder query = QueryBuilder.start("category").is(categoryId);
-		JsonObject sort = new JsonObject().putNumber("modified", -1);
-
-		// Projection
-		JsonObject projection = new JsonObject();
-		JsonObject slice = new JsonObject();
-		slice.putNumber("$slice", -1);
-		projection.putObject("messages", slice);
-
-		mongo.find(subjects_collection, MongoQueryBuilder.build(query), sort, projection, validResultsHandler(handler));
-	}
-
-	@Override
-	public void listPlus(List<String> categoryIdList, UserInfos user, Handler<Either<String, JsonArray>> handler) {
+	public void list(List<String> categoryIdList, UserInfos user, Handler<Either<String, JsonArray>> handler) {
 		QueryBuilder query = QueryBuilder.start("category").in(categoryIdList);
 		JsonObject sort = new JsonObject().putNumber("modified", -1);
 

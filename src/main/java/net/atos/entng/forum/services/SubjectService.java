@@ -30,9 +30,7 @@ import java.util.List;
 
 public interface SubjectService {
 
-	public void list(String categoryId, UserInfos user, Handler<Either<String, JsonArray>> handler);
-
-	public void listPlus(List<String> categoryIdList, UserInfos user, Handler<Either<String, JsonArray>> handler);
+	public void list(List<String> categoryIdList, UserInfos user, Handler<Either<String, JsonArray>> handler);
 
 	public void create(String categoryId, JsonObject body, UserInfos user, Handler<Either<String, JsonObject>> handler);
 
