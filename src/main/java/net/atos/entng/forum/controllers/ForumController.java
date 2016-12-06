@@ -82,7 +82,7 @@ public class ForumController extends BaseController {
 	}
 
 	@Get("/categories/all")
-	//@SecuredAction("forum.listPlus")
+	@SecuredAction(value="forum.listall", type = ActionType.AUTHENTICATED)
 	public void listCategoriesAndSubjects(HttpServerRequest request){
 		subjectHelper.listCategoriesAndSubject(request);
 	}
