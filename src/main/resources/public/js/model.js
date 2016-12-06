@@ -58,9 +58,9 @@ model.build = function () {
 				var subjects = results[1];
 				var categories = this.all;
 				for (var i = categories.length - 1; i >= 0; i--) {
-					for (var j = subjects.length - 1; j >= 0; j--) {
+					for (var j = 0; j < subjects.length; j++) {
 						if(categories[i]._id == subjects[j].category){
-							subjects[j].category = this[i];
+							subjects[j].category = categories[i];
 							if (subjects[j].messages instanceof Array) {
 								subjects[j].lastMessage = subjects[j].messages[subjects[j].messages.length-1];
 							}
