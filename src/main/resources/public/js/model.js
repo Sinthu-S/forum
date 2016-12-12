@@ -68,7 +68,7 @@ model.build = function () {
 						}
 					}
 				}
-
+                this.trigger("sync");
 				if(typeof callback === 'function'){
 					callback();
 				}

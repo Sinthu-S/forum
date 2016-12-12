@@ -4,11 +4,19 @@
     </h1>
 </app-title>
 
+
+
+<button  class="changeWeekButtonBack" ng-click="previouspageButton(); ">&#8592;</button>
+<button class="changeWeekButtonNext" ng-click="nextPageButton(); ">&#8594;</button>
+<button class="" > [[ pageNumber +1 ]] sur [[ maxPageNumber ]]</button>
+<div class="four cell">
+    <input type="text" class="twelve cell" ng-model="forumName" ng-change="updateDisplayCategories(forumName)" translate="" i18n-placeholder="search" autocomplete="off">
+</div>
 <button workflow="forum.admin" class="right-magnet" ng-click="newCategory()"><i18n>forum.category.new</i18n></button>
 
 <nav class="illustrated-links">
     <ul>
-        <div ng-repeat="cat in categories.all">
+        <div ng-repeat="cat in displayCategories">
             <li ng-class="{ selected: cat.selected }">
                 <div class="tiny-illustration">
                     <img skin-src="/img/illustrations/forum-default.png" ng-if="(cat.icon === undefined)" class="cell" />

@@ -18,6 +18,10 @@ function ForumController($scope, template, model, date, route){
 
 	$scope.me = model.me;
 	$scope.categories = model.categories;
+	$scope.displayCategories;
+	$scope.displayNumber = 10;
+	$scope.pageNumber = 0;
+	$scope.maxPageNumber;
 	$scope.date = date;
 
 	$scope.display = {};
@@ -398,4 +402,46 @@ function ForumController($scope, template, model, date, route){
 		}
 		return selectedSubjects;
     };
+
+	$scope.updateDisplayCategories = function(forumName){
+		$scope.displayCategories = [];
+		if(forumName != undefined && forumName != ""){
+			$scope.pageNumber = 0;
+			for(var i = 0; i< $scope.categories.all.length; i++){
+				if($scope.categories.all[i].name.toLowerCase().indexOf(forumName.toLowerCase()) != -1){
+					$scope.displayCategories.push($scope.categories.all[i]);
+				}
+			}
+			$scope.setMaxPage($scope.displayCategories);
+		}else{
+			var index = $scope.pageNumber * $scope.displayNumber;
+			var size =  $scope.displayNumber;
+			if(size > $scope.categories.all.length-index)
+				size = $scope.categories.all.length-index
+			for(var i = 0; i< size; i++){
+				$scope.displayCategories[i] = $scope.categories.all[index+i];
+			}
+			$scope.setMaxPage($scope.categories.all);
+		}
+	};
+
+	$scope.setMaxPage = function(categories){
+		$scope.maxPageNumber = Math.ceil(categories.length/$scope.displayNumber);
+	};
+
+	$scope.previouspageButton = function(){
+		if($scope.pageNumber > 0){
+			$scope.pageNumber--;
+			$scope.updateDisplayCategories();
+		}
+	};
+
+	$scope.nextPageButton = function(){
+		if($scope.pageNumber+1 < $scope.categories.all.length/$scope.displayNumber){
+			$scope.pageNumber++;
+			$scope.updateDisplayCategories();
+		}
+	};
+
+	model.categories.one('sync',  $scope.updateDisplayCategories);
 }
